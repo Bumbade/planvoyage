@@ -77,10 +77,9 @@ if ($flash): ?>
                 <span><?php echo htmlspecialchars(t('password_confirm_label', 'Confirm Password:')); ?></span>
                 <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required>
             </label>
-            <label style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-                <input id="show_password" type="checkbox" aria-controls="password password_confirm">
-                <span><?php echo htmlspecialchars(t('show_password', 'Show password')); ?></span>
-            </label>
+            <div style="margin-top:6px;">
+                <button id="show_password_btn" type="button" class="btn btn--small" aria-controls="password password_confirm"><?php echo htmlspecialchars(t('show_password', 'Show password')); ?></button>
+            </div>
             <div id="pw-match" style="color:#b00;margin-top:6px;display:none;"><?php echo htmlspecialchars(t('pw_mismatch','Passwörter stimmen nicht überein')); ?></div>
             <div id="pw-rules" class="pw-rules" aria-live="polite">
                 <ul>
@@ -116,7 +115,7 @@ if ($flash): ?>
         special: document.getElementById('rule-special')
     };
     var pwMatchEl = document.getElementById('pw-match');
-    var showBox = document.getElementById('show_password');
+    var showBtn = document.getElementById('show_password_btn');
     function set(el, ok){ if(!el) return; el.className = ok ? 'valid' : 'invalid'; }
     function validate(val){
         set(rules.length, val.length >= 8);
@@ -127,7 +126,17 @@ if ($flash): ?>
     }
     pw.addEventListener('input', function(e){ validate(e.target.value); checkMatch(); });
     if(pwc) pwc.addEventListener('input', checkMatch);
-    if(showBox){ showBox.addEventListener('change', function(){ var t = this.checked ? 'text' : 'password'; try{ pw.type = t; if(pwc) pwc.type = t; }catch(e){} }); }
+    if(showBtn){
+        showBtn.addEventListener('click', function(){
+            try{
+                var isShown = showBtn.getAttribute('data-shown') === '1';
+                var newType = isShown ? 'password' : 'text';
+                pw.type = newType; if(pwc) pwc.type = newType;
+                showBtn.setAttribute('data-shown', isShown ? '0' : '1');
+                showBtn.textContent = isShown ? <?php echo json_encode(t('show_password','Show password')); ?> : <?php echo json_encode(t('hide_password','Hide password')); ?>;
+            }catch(e){}
+        });
+    }
 
     function checkMatch(){
         if(!pwc) return;
