@@ -2448,7 +2448,8 @@ export default class PoiMapManager {
                 // Wrap the marker in an outer element and set the CSS variable
                 // on the root so it's easy to query and CSS can reference it.
                 const html = `<div class="pv-div-icon-overpass-root" style="--pv-marker-bg:${color}"><div class="pv-marker pv-marker-overpass pv-marker--sm" style="--pv-marker-bg:${color}"></div></div>`;
-                return L.divIcon({ className: 'pv-div-icon pv-div-icon-overpass', html, iconSize: [20, 20], iconAnchor: [10, 10], popupAnchor: [0, -10] });
+                // Add a root class so the outer icon element can be selected directly
+                return L.divIcon({ className: 'pv-div-icon pv-div-icon-overpass pv-div-icon-overpass-root', html, iconSize: [20, 20], iconAnchor: [10, 10], popupAnchor: [0, -10] });
             }
             // If the POI has a custom logo provided (MySQL/app POI), try to use it as an icon.
             if (isAppPoi && poi && poi.logo) {
