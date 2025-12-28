@@ -9,378 +9,378 @@
    ============================================================================= */
 
 .auth-container {
-    max-width: 500px;
-    margin: var(--spacing-xl, 2rem) auto;
-    padding: var(--spacing-lg, 1.5rem);
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+    max-width: ;
+    margin: ;
+    padding: ;
+    background-color: ;
+    border-radius: ;
+    box-shadow: ;
 }\r\n\r\n.auth-header {
-    text-align: center;
-    margin-bottom: var(--spacing-xl, 2rem);
+    text-align: ;
+    margin-bottom: ;
 }\r\n\r\n.auth-header h1 {
-    color: var(--primary-color, #0044ff);
+    color: ;
 }\r\n\r\n.auth-header p {
-    color: var(--text-light, #b0b0b0);
-    font-size: var(--font-size-base, 1rem);
+    color: ;
+    font-size: ;
 }\r\n\r\n/* Form Styling */
 .auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md, 1rem);
+    display: ;
+    flex-direction: ;
+    gap: ;
 }\r\n\r\n.form-group {
-    display: flex;
-    flex-direction: column;
+    display: ;
+    flex-direction: ;
 }\r\n\r\n.form-group label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    margin-bottom: var(--spacing-sm, 0.5rem);
-    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: ;
+    color: ;
+    margin-bottom: ;
+    font-size: ;
 }\r\n\r\n.form-group input,
 .form-group select,
 .form-group textarea {
-    padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: var(--font-size-base, 1rem);
-    transition: var(--transition-fast, all 0.15s ease);
-    font-family: inherit;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
+    transition: ;
+    font-family: ;
 }\r\n\r\n.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color, #0044ff);
-    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
+    outline: ;
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n.form-group input::placeholder {
-    color: var(--text-lighter, #808080);
+    color: ;
 }\r\n\r\n.form-group.error input,
 .form-group.error select,
 .form-group.error textarea {
-    border-color: #e74c3c;
+    border-color: ;
 }\r\n\r\n.form-group.error .error-message {
-    color: #e74c3c;
-    font-size: var(--font-size-sm, 0.875rem);
-    margin-top: var(--spacing-xs, 0.25rem);
+    color: ;
+    font-size: ;
+    margin-top: ;
 }\r\n\r\n.form-group.success input,
 .form-group.success select {
-    border-color: #27ae60;
+    border-color: ;
 }\r\n\r\n/* Checkboxes and Radios */
 .form-check {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md, 1rem);
-    margin: var(--spacing-md, 1rem) 0;
+    display: ;
+    align-items: ;
+    gap: ;
+    margin: ;
 }\r\n\r\n.form-check input[type="checkbox"],
 .form-check input[type="radio"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+    width: ;
+    height: ;
+    cursor: ;
 }\r\n\r\n.form-check label {
-    margin-bottom: 0;
-    cursor: pointer;
-    font-weight: normal;
+    margin-bottom: ;
+    cursor: ;
+    font-weight: ;
 }\r\n\r\n/* Form Buttons */
 .form-actions {
-    display: flex;
-    gap: var(--spacing-md, 1rem);
-    margin-top: var(--spacing-xl, 2rem);
+    display: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n.form-actions button,
 .form-actions .btn {
-    flex: 1;
-    padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
-    border: none;
-    border-radius: 4px;
-    font-size: var(--font-size-base, 1rem);
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition-fast, all 0.15s ease);
+    flex: ;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
+    font-weight: ;
+    cursor: ;
+    transition: ;
 }\r\n\r\n.form-actions .btn-primary {
-    background-color: var(--primary-color, #0044ff);
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.form-actions .btn-primary:hover {
-    background-color: #0033cc;
-    box-shadow: 0 4px 12px rgba(0, 68, 255, 0.3);
+    background-color: ;
+    box-shadow: ;
 }\r\n\r\n.form-actions .btn-secondary {
-    background-color: var(--bg-lighter, #2d2d2d);
-    color: var(--text-dark, #e0e0e0);
-    border: 1px solid var(--border-color, #404040);
+    background-color: ;
+    color: ;
+    border: ;
 }\r\n\r\n.form-actions .btn-secondary:hover {
-    background-color: var(--bg-light, #1a1a1a);
+    background-color: ;
 }\r\n\r\n/* Auth Links */
 .auth-links {
-    text-align: center;
-    margin-top: var(--spacing-lg, 1.5rem);
-    padding-top: var(--spacing-lg, 1.5rem);
-    border-top: 1px solid var(--bg-lighter, #2d2d2d);
+    text-align: ;
+    margin-top: ;
+    padding-top: ;
+    border-top: ;
 }\r\n\r\n.auth-links p {
-    color: var(--text-light, #b0b0b0);
-    font-size: var(--font-size-sm, 0.875rem);
+    color: ;
+    font-size: ;
 }\r\n\r\n.auth-links a {
-    color: var(--primary-color, #0044ff);
-    text-decoration: none;
-    font-weight: 600;
+    color: ;
+    text-decoration: ;
+    font-weight: ;
 }\r\n\r\n.auth-links a:hover {
-    text-decoration: underline;
+    text-decoration: ;
 }\r\n\r\n/* Profile Section */
 .profile-section {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
+    margin-bottom: ;
 }\r\n\r\n.profile-section h2 {
-    color: var(--primary-color, #0044ff);
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
-    margin-top: 0;
+    color: ;
+    border-bottom: ;
+    padding-bottom: ;
+    margin-top: ;
 }\r\n\r\n.profile-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-md, 1rem);
-    margin-top: var(--spacing-md, 1rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n.profile-info-item {
-    padding: var(--spacing-md, 1rem);
-    background-color: var(--bg-light, #1a1a1a);
-    border-radius: 4px;
+    padding: ;
+    background-color: ;
+    border-radius: ;
 }\r\n\r\n.profile-info-item .label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    font-size: var(--font-size-sm, 0.875rem);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: var(--spacing-xs, 0.25rem);
+    font-weight: ;
+    color: ;
+    font-size: ;
+    text-transform: ;
+    letter-spacing: ;
+    margin-bottom: ;
 }\r\n\r\n.profile-info-item .value {
-    color: var(--text-light, #b0b0b0);
+    color: ;
 }\r\n\r\n/* Alerts */
 .alert {
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: 4px;
-    margin-bottom: var(--spacing-md, 1rem);
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-md, 1rem);
+    padding: ;
+    border-radius: ;
+    margin-bottom: ;
+    display: ;
+    align-items: ;
+    gap: ;
 }\r\n\r\n.alert.alert-success {
-    background-color: rgba(39, 174, 96, 0.2);
-    border: 1px solid var(--success-color, #27ae60);
-    color: var(--success-color, #27ae60);
+    background-color: ;
+    border: ;
+    color: ;
 }\r\n\r\n.alert.alert-error {
-    background-color: rgba(231, 76, 60, 0.2);
-    border: 1px solid var(--error-color, #e74c3c);
-    color: var(--error-color, #e74c3c);
+    background-color: ;
+    border: ;
+    color: ;
 }\r\n\r\n.alert.alert-info {
-    background-color: rgba(52, 152, 219, 0.2);
-    border: 1px solid var(--info-color, #3498db);
-    color: var(--info-color, #3498db);
+    background-color: ;
+    border: ;
+    color: ;
 }\r\n\r\n.alert.alert-warning {
-    background-color: rgba(243, 156, 18, 0.2);
-    border: 1px solid var(--warning-color, #f39c12);
-    color: var(--warning-color, #f39c12);
+    background-color: ;
+    border: ;
+    color: ;
 }\r\n\r\n/* Responsive Auth */
 @media (max-width: 768px) {
     .auth-container {
-        margin: var(--spacing-lg, 1.5rem) var(--spacing-md, 1rem);
-        padding: var(--spacing-md, 1rem);
+        margin: ;
+        padding: ;
     }\r\n\r\n.form-actions {
-        flex-direction: column;
+        flex-direction: ;
     }\r\n\r\n/* PV custom cluster (used by PoiMapManager) */
-.pv-cluster{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); background:var(--pv-bg,#888); }\r\n\r\n.pv-cluster--sm{ width:28px; height:28px; border-radius:50%; }\r\n\r\n.pv-cluster--md{ width:36px; height:36px; border-radius:50%; }\r\n\r\n.pv-cluster--lg{ width:52px; height:52px; border-radius:50%; }\r\n\r\n.pv-cluster-count{ display:inline-block; line-height:1; font-size:0.95rem; }\r\n\r\n.pv-cluster-label{ display:block; font-size:0.7rem; opacity:0.95; margin-top:2px; }\r\n\r\n/* Ensure the Leaflet icon container used for our cluster divIcon doesn't show the
+.pv-cluster{ display: ; align-items: ; justify-content: ; color: ; font-weight: ; border: ; box-shadow: ; background: ; }\r\n\r\n.pv-cluster--sm{ width: ; height: ; border-radius: ; }\r\n\r\n.pv-cluster--md{ width: ; height: ; border-radius: ; }\r\n\r\n.pv-cluster--lg{ width: ; height: ; border-radius: ; }\r\n\r\n.pv-cluster-count{ display: ; line-height: ; font-size: ; }\r\n\r\n.pv-cluster-label{ display: ; font-size: ; opacity: ; margin-top: ; }\r\n\r\n/* Ensure the Leaflet icon container used for our cluster divIcon doesn't show the
     default marker background-image (we still use CDN pins for normal markers). */
-.pv-cluster-icon{ background-image: none; background-color: transparent; border: none; display:flex; align-items:center; justify-content:center; }\r\n\r\n/* Stronger selectors to override Leaflet's default marker/div-icon backgrounds */
+.pv-cluster-icon{ background-image: ; background-color: ; border: ; display: ; align-items: ; justify-content: ; }\r\n\r\n/* Stronger selectors to override Leaflet's default marker/div-icon backgrounds */
 .pv-cluster-icon.leaflet-div-icon, .pv-cluster-icon.leaflet-marker-icon {
-    background-image: none;
-    background: transparent;
-    width: auto;
-    height: auto;
-}\r\n\r\n.pv-cluster-icon img { display: none; }\r\n\r\n/* Simplified cluster visuals */
-.pv-cluster-simple{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; background:var(--pv-bg,#888); border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); width:36px; height:36px; }\r\n\r\n.pv-cluster-simple .pv-cluster-count{ font-size:1rem; line-height:1; }\r\n\r\n.pv-cluster-icon.pv-cluster-simple{ background-image:none; }\r\n\r\n/* Strongest possible overrides for cluster containers to prevent Leaflet default pin */
+    background-image: ;
+    background: ;
+    width: ;
+    height: ;
+}\r\n\r\n.pv-cluster-icon img { display: ; }\r\n\r\n/* Simplified cluster visuals */
+.pv-cluster-simple{ display: ; align-items: ; justify-content: ; color: ; font-weight: ; border-radius: ; background: ; border: ; box-shadow: ; width: ; height: ; }\r\n\r\n.pv-cluster-simple .pv-cluster-count{ font-size: ; line-height: ; }\r\n\r\n.pv-cluster-icon.pv-cluster-simple{ background-image: ; }\r\n\r\n/* Strongest possible overrides for cluster containers to prevent Leaflet default pin */
 .leaflet-marker-icon.pv-cluster-icon, .leaflet-div-icon.pv-cluster-icon, .pv-cluster-icon.leaflet-marker-icon, .pv-cluster-icon.leaflet-div-icon {
-    background-image: none;
-    background: transparent;
-    background-size: 0;
-    background-position: 0 0;
-    border: 0;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-}\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { display: none; width:0; height:0; }\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { background-image:none; background:none; }\r\n\r\n/* Map-scoped overrides with higher specificity to prevent vendor/late rules from showing
+    background-image: ;
+    background: ;
+    background-size: ;
+    background-position: ;
+    border: ;
+    width: ;
+    height: ;
+    padding: ;
+}\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { display: ; width: ; height: ; }\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { background-image: ; background: ; }\r\n\r\n/* Map-scoped overrides with higher specificity to prevent vendor/late rules from showing
    Leaflet default marker background on cluster divIcons. Kept without !important. */
 #pois-map .leaflet-marker-icon.pv-cluster-icon,
 #pois-map .leaflet-div-icon.pv-cluster-icon,
 #pois-map .pv-cluster-icon.leaflet-marker-icon,
 #pois-map .pv-cluster-icon.leaflet-div-icon {
-    background-image: none;
-    background: transparent;
-    background-size: 0;
-    background-position: 0 0;
-    border: 0;
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}\r\n\r\n#pois-map .pv-cluster-icon img, #pois-map .pv-cluster-icon svg { display:none; width:0; height:0; }\r\n\r\n/* Ensure non-cluster Leaflet markers render their <img> icons inside the POI map. */
+    background-image: ;
+    background: ;
+    background-size: ;
+    background-position: ;
+    border: ;
+    width: ;
+    height: ;
+    padding: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
+}\r\n\r\n#pois-map .pv-cluster-icon img, #pois-map .pv-cluster-icon svg { display: ; width: ; height: ; }\r\n\r\n/* Ensure non-cluster Leaflet markers render their <img> icons inside the POI map. */
 #pois-map .leaflet-marker-icon:not(.pv-cluster-icon) {
-    background-image: none; /* prefer the IMG src over background images */
-    background: transparent;
+    background-image: ; /* prefer the IMG src over background images */
+    background: ;
 }\r\n\r\n#pois-map .leaflet-marker-icon:not(.pv-cluster-icon) img {
-    display: block;
-    width: auto;
-    height: auto;
-    max-width: 36px;
-    max-height: 36px;
-    object-fit: contain;
+    display: ;
+    width: ;
+    height: ;
+    max-width: ;
+    max-height: ;
+    object-fit: ;
 }\r\n\r\n/* Force cluster visual appearance inside the POI map: ensure the
    cluster 'div' (the circular badge) has a visible background and
    full opacity even if vendor styles use semi-transparent values. */
 #pois-map .marker-cluster, #pois-map .marker-cluster div {
-    opacity: 1;
+    opacity: ;
 }\r\n\r\n#pois-map .marker-cluster div {
-    background-color: var(--pv-bg, rgba(68,68,68,0.95));
-    color: #fff;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.85);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}\r\n\r\n#pois-map .marker-cluster span { color: #fff; font-weight:700; line-height:1; }\r\n\r\n/* Higher-specificity map-scoped rule to override any transparent vendor rules
+    background-color: ;
+    color: ;
+    border-radius: ;
+    border: ;
+    box-shadow: ;
+    width: ;
+    height: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
+}\r\n\r\n#pois-map .marker-cluster span { color: ; font-weight: ; line-height: ; }\r\n\r\n/* Higher-specificity map-scoped rule to override any transparent vendor rules
    and ensure the cluster badge is visibly filled. This targets the marker
    cluster container and the inner badge element we render (`.pv-cluster-simple`). */
 #pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon > .pv-cluster-simple,
 #pois-map .marker-cluster div.pv-cluster-simple,
 #pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon {
-    background-image: none;
-    background-color: var(--pv-bg, #4a4a4a);
-    opacity: 1;
-    color: #fff;
+    background-image: ;
+    background-color: ;
+    opacity: ;
+    color: ;
 }\r\n\r\n#pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon > .pv-cluster-simple {
-    border-radius: 50%;
-    width: 36px;
-    height: 36px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    border-radius: ;
+    width: ;
+    height: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
 }\r\n\r\n@media (max-width:600px){
-    .pv-cluster--sm{ width:24px; height:24px; }\r\n\r\n.pv-cluster--md{ width:28px; height:28px; }\r\n\r\n.pv-cluster--lg{ width:40px; height:40px; }\r\n\r\n.pv-cluster-count{ font-size:0.85rem; }\r\n\r\n.pv-cluster-label{ font-size:0.6rem; }\r\n\r\n}\r\n\r\n.profile-info {
-        grid-template-columns: 1fr;
+    .pv-cluster--sm{ width: ; height: ; }\r\n\r\n.pv-cluster--md{ width: ; height: ; }\r\n\r\n.pv-cluster--lg{ width: ; height: ; }\r\n\r\n.pv-cluster-count{ font-size: ; }\r\n\r\n.pv-cluster-label{ font-size: ; }\r\n\r\n}\r\n\r\n.profile-info {
+        grid-template-columns: ;
     }\r\n\r\n}\r\n\r\n/* PV custom marker (used by PoiMapManager) */
-    .pv-marker{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,0.4); background:var(--pv-marker-bg,#5b8e23); width:var(--pv-marker-size,20px); height:var(--pv-marker-size,20px); font-size:var(--pv-marker-font,10px); }\r\n\r\n.pv-marker--sm{ --pv-marker-size:20px; --pv-marker-font:10px; }\r\n\r\n.pv-marker--md{ --pv-marker-size:28px; --pv-marker-font:13px; }\r\n\r\n.pv-marker--lg{ --pv-marker-size:36px; --pv-marker-font:16px; }\r\n\r\n.pv-div-icon{ background:transparent; border:0; box-shadow:none; }\r\n\r\n/* extra marker size and state variants */
-    .pv-marker--xs{ --pv-marker-size:14px; --pv-marker-font:9px; }\r\n\r\n.pv-marker-overpass{ box-shadow:0 0 0 3px rgba(0,0,0,0.12); border:2px solid #fff; }\r\n\r\n.pv-marker-fallback{ border:2px solid #fff; }\r\n\r\n/* Dark Mode Auth Container - Premium Orange & Blue Theme */
+    .pv-marker{ display: ; align-items: ; justify-content: ; color: ; font-weight: ; border-radius: ; border: ; box-shadow: ; background: ; width: ; height: ; font-size: ; }\r\n\r\n.pv-marker--sm{ --pv-marker-size: ; --pv-marker-font: ; }\r\n\r\n.pv-marker--md{ --pv-marker-size: ; --pv-marker-font: ; }\r\n\r\n.pv-marker--lg{ --pv-marker-size: ; --pv-marker-font: ; }\r\n\r\n.pv-div-icon{ background: ; border: ; box-shadow: ; }\r\n\r\n/* extra marker size and state variants */
+    .pv-marker--xs{ --pv-marker-size: ; --pv-marker-font: ; }\r\n\r\n.pv-marker-overpass{ box-shadow: ; border: ; }\r\n\r\n.pv-marker-fallback{ border: ; }\r\n\r\n/* Dark Mode Auth Container - Premium Orange & Blue Theme */
 @media (prefers-color-scheme: dark) {
     .auth-container {
-        max-width: 400px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: none;
+        max-width: ;
+        margin: ;
+        padding: ;
+        background: ;
+        border-radius: ;
+        border: ;
+        box-shadow: ;
     }\r\n\r\n.auth-container h1 {
-        text-align: center;
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #ff8c00;
-        margin-bottom: 2rem;
-        font-family: 'Poppins', 'Segoe UI', sans-serif;
-        letter-spacing: -0.5px;
+        text-align: ;
+        font-size: ;
+        font-weight: ;
+        color: ;
+        margin-bottom: ;
+        font-family: ;
+        letter-spacing: ;
     }\r\n\r\n.auth-container form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        display: ;
+        flex-direction: ;
+        gap: ;
     }\r\n\r\n.auth-container label {
-        color: var(--text-dark);
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        color: ;
+        font-weight: ;
+        display: ;
+        flex-direction: ;
+        gap: ;
     }\r\n\r\n.auth-container input {
-        padding: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        padding: ;
+        border: ;
+        border-radius: ;
+        background: ;
+        color: ;
+        font-size: ;
+        transition: ;
     }\r\n\r\n.auth-container input::placeholder {
-        color: rgba(255, 255, 255, 0.5);
+        color: ;
     }\r\n\r\n.auth-container input:focus {
-        outline: none;
-        border-color: #ff8c00;
-        background: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 8px rgba(255, 140, 0, 0.2);
+        outline: ;
+        border-color: ;
+        background: ;
+        box-shadow: ;
     }\r\n\r\n.auth-container button {
-        padding: 12px;
-        background: linear-gradient(135deg, #0044ff, #0066ff);
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 0.5rem;
+        padding: ;
+        background: ;
+        color: ;
+        border: ;
+        border-radius: ;
+        font-size: ;
+        font-weight: ;
+        cursor: ;
+        transition: ;
+        margin-top: ;
     }\r\n\r\n.auth-container button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 68, 255, 0.3);
+        transform: ;
+        box-shadow: ;
     }\r\n\r\n.auth-container .error {
-        background: rgba(231, 76, 60, 0.2);
-        color: #ff6b6b;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 1rem;
-        border-left: 4px solid #e74c3c;
+        background: ;
+        color: ;
+        padding: ;
+        border-radius: ;
+        margin-bottom: ;
+        border-left: ;
     }\r\n\r\n.auth-container .flash-success {
-        background: rgba(39, 174, 96, 0.2);
-        color: #51cf66;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 1rem;
-        border-left: 4px solid #27ae60;
+        background: ;
+        color: ;
+        padding: ;
+        border-radius: ;
+        margin-bottom: ;
+        border-left: ;
     }\r\n\r\n}\r\n\r\n/* Light Mode Auth Container */
 @media (prefers-color-scheme: light) {
     .auth-container {
-        max-width: 400px;
-        margin: 2rem auto;
-        padding: 2rem;
-        background: rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+        max-width: ;
+        margin: ;
+        padding: ;
+        background: ;
+        border: ;
+        border-radius: ;
     }\r\n\r\n.auth-container h1 {
-        text-align: center;
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: #ff8c00;
-        margin-bottom: 2rem;
-        font-family: 'Poppins', 'Segoe UI', sans-serif;
-        letter-spacing: -0.5px;
+        text-align: ;
+        font-size: ;
+        font-weight: ;
+        color: ;
+        margin-bottom: ;
+        font-family: ;
+        letter-spacing: ;
     }\r\n\r\n.auth-container form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        display: ;
+        flex-direction: ;
+        gap: ;
     }\r\n\r\n.auth-container label {
-        color: var(--text-dark);
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+        color: ;
+        font-weight: ;
+        display: ;
+        flex-direction: ;
+        gap: ;
     }\r\n\r\n.auth-container input {
-        padding: 12px;
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        border-radius: 6px;
-        background: rgba(255, 255, 255, 0.8);
-        color: #2c3e50;
-        font-size: 1rem;
-        transition: all 0.3s ease;
+        padding: ;
+        border: ;
+        border-radius: ;
+        background: ;
+        color: ;
+        font-size: ;
+        transition: ;
     }\r\n\r\n.auth-container input::placeholder {
-        color: rgba(0, 0, 0, 0.4);
+        color: ;
     }\r\n\r\n.auth-container input:focus {
-        outline: none;
-        border-color: #ff8c00;
-        background: rgba(255, 255, 255, 1);
-        box-shadow: 0 0 8px rgba(255, 140, 0, 0.15);
+        outline: ;
+        border-color: ;
+        background: ;
+        box-shadow: ;
     }\r\n\r\n}\r\n\r\n/* ==== DOCUMENTS ====
 /* =============================================================================
    DOCUMENTS PAGE STYLES (Search, Create, View, Edit)
@@ -391,365 +391,365 @@
    ============================================================================= */
 
 .documents-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing-lg, 1.5rem);
+    max-width: ;
+    margin: ;
+    padding: ;
 }\r\n\r\n/* Documents List */
 .documents-list {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    overflow: hidden;
+    background-color: ;
+    border-radius: ;
+    box-shadow: ;
+    overflow: ;
 }\r\n\r\n.documents-list-header {
-    padding: var(--spacing-lg, 1.5rem);
-    background-color: var(--primary-color, #0044ff);
-    color: white;
+    padding: ;
+    background-color: ;
+    color: ;
 }\r\n\r\n.documents-list-header h2 {
-    margin-top: 0;
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-top: ;
+    margin-bottom: ;
 }\r\n\r\n.documents-search {
-    display: flex;
-    gap: var(--spacing-md, 1rem);
-    flex-wrap: wrap;
-    align-items: flex-end;
+    display: ;
+    gap: ;
+    flex-wrap: ;
+    align-items: ;
 }\r\n\r\n.documents-search .form-group {
-    flex: 1;
-    min-width: 250px;
-    margin-bottom: 0;
+    flex: ;
+    min-width: ;
+    margin-bottom: ;
 }\r\n\r\n.documents-search .form-group label {
-    margin-bottom: var(--spacing-xs, 0.25rem);
-    font-size: var(--font-size-sm, 0.875rem);
+    margin-bottom: ;
+    font-size: ;
 }\r\n\r\n.documents-search .form-group input {
-    padding: var(--spacing-md, 1rem);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: ;
+    border: ;
 }\r\n\r\n/* Search Input - Inline Style Replacement */
 #doc-search {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    margin-bottom: 1rem;
+    display: ;
+    gap: ;
+    align-items: ;
+    margin-bottom: ;
 }\r\n\r\n#doc-q {
-    width: 60%;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: 0.95rem;
+    width: ;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
 }\r\n\r\n#doc-q:focus {
-    outline: none;
-    border-color: var(--primary-color, #0044ff);
-    box-shadow: 0 0 0 2px rgba(0, 68, 255, 0.1);
+    outline: ;
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n#doc-search-btn {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color, #0044ff);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
+    padding: ;
+    background-color: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-weight: ;
+    transition: ;
 }\r\n\r\n#doc-search-btn:hover {
-    background-color: #0033cc;
+    background-color: ;
 }\r\n\r\n#doc-results {
-    margin-top: 1rem;
+    margin-top: ;
 }\r\n\r\n#doc-results ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    list-style: ;
+    padding: ;
+    margin: ;
 }\r\n\r\n#doc-results li {
-    padding: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 0.95rem;
+    padding: ;
+    border-bottom: ;
+    font-size: ;
 }\r\n\r\n#doc-results li:hover {
-    background-color: var(--bg-light);
+    background-color: ;
 }\r\n\r\n#doc-pager {
-    margin-top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
+    margin-top: ;
+    display: ;
+    gap: ;
+    align-items: ;
+    justify-content: ;
 }\r\n\r\n#doc-pager button {
-    padding: 0.5rem 1rem;
-    background-color: var(--primary-color, #0044ff);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
+    padding: ;
+    background-color: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-weight: ;
 }\r\n\r\n#doc-pager button:hover {
-    background-color: #0033cc;
+    background-color: ;
 }\r\n\r\n/* Error and Loading Messages */
 .doc-error {
-    color: var(--error-color);
-    background-color: rgba(231, 76, 60, 0.15);
-    padding: 1rem;
-    border-radius: 4px;
-    margin: 0.5rem 0;
-    border-left: 4px solid var(--error-color);
+    color: ;
+    background-color: ;
+    padding: ;
+    border-radius: ;
+    margin: ;
+    border-left: ;
 }\r\n\r\n.documents-search .form-group input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
+    color: ;
 }\r\n\r\n.documents-search .form-group input:focus {
-    outline: none;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    outline: ;
+    background-color: ;
+    border-color: ;
 }\r\n\r\n.documents-search-btn {
-    padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition-fast, all 0.15s ease);
+    padding: ;
+    background-color: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-weight: ;
+    transition: ;
 }\r\n\r\n.documents-search-btn:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    background-color: ;
+    border-color: ;
 }\r\n\r\n.documents-list-item {
-    padding: var(--spacing-lg, 1.5rem);
-    border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
-    cursor: pointer;
-    transition: var(--transition-fast, all 0.15s ease);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--spacing-lg, 1.5rem);
-    align-items: center;
+    padding: ;
+    border-bottom: ;
+    cursor: ;
+    transition: ;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    align-items: ;
 }\r\n\r\n.documents-list-item:hover {
-    background-color: var(--bg-light, #1a1a1a);
+    background-color: ;
 }\r\n\r\n.documents-list-item:last-child {
-    border-bottom: none;
+    border-bottom: ;
 }\r\n\r\n.document-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm, 0.5rem);
+    display: ;
+    flex-direction: ;
+    gap: ;
 }\r\n\r\n.document-info h3 {
-    margin: 0;
-    color: var(--primary-color, #0044ff);
+    margin: ;
+    color: ;
 }\r\n\r\n.document-info .meta {
-    display: flex;
-    gap: var(--spacing-lg, 1.5rem);
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--text-light, #b0b0b0);
-    flex-wrap: wrap;
+    display: ;
+    gap: ;
+    font-size: ;
+    color: ;
+    flex-wrap: ;
 }\r\n\r\n.document-info .meta span {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs, 0.25rem);
+    display: ;
+    align-items: ;
+    gap: ;
 }\r\n\r\n.document-badge {
-    display: inline-block;
-    padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
-    background-color: var(--bg-lighter, #2d2d2d);
-    border-radius: 12px;
-    font-size: var(--font-size-xs, 0.75rem);
-    color: var(--text-light, #b0b0b0);
+    display: ;
+    padding: ;
+    background-color: ;
+    border-radius: ;
+    font-size: ;
+    color: ;
 }\r\n\r\n.document-actions {
-    display: flex;
-    gap: var(--spacing-sm, 0.5rem);
+    display: ;
+    gap: ;
 }\r\n\r\n.document-actions .btn {
-    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: var(--font-size-sm, 0.875rem);
-    transition: var(--transition-fast, all 0.15s ease);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs, 0.25rem);
+    padding: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-size: ;
+    transition: ;
+    text-decoration: ;
+    display: ;
+    align-items: ;
+    gap: ;
 }\r\n\r\n.document-actions .btn-edit {
-    background-color: #3498db;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.document-actions .btn-edit:hover {
-    background-color: #2980b9;
+    background-color: ;
 }\r\n\r\n.document-actions .btn-delete {
-    background-color: #e74c3c;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.document-actions .btn-delete:hover {
-    background-color: #c0392b;
+    background-color: ;
 }\r\n\r\n.document-actions .btn-view {
-    background-color: #27ae60;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.document-actions .btn-view:hover {
-    background-color: #229954;
+    background-color: ;
 }\r\n\r\n.document-actions .btn-download {
-    background-color: #f39c12;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.document-actions .btn-download:hover {
-    background-color: #e67e22;
+    background-color: ;
 }\r\n\r\n/* Document Form */
 .document-form {
-    background-color: white;
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
+    margin-bottom: ;
 }\r\n\r\n.document-form h2 {
-    color: var(--primary-color, #0044ff);
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
-    margin-top: 0;
+    color: ;
+    border-bottom: ;
+    padding-bottom: ;
+    margin-top: ;
 }\r\n\r\n.form-section {
-    margin-bottom: var(--spacing-xl, 2rem);
-    padding-bottom: var(--spacing-xl, 2rem);
-    border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
+    margin-bottom: ;
+    padding-bottom: ;
+    border-bottom: ;
 }\r\n\r\n.form-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    border-bottom: ;
+    margin-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.form-section h3 {
-    color: var(--text-dark, #e0e0e0);
-    font-size: var(--font-size-lg, 1.125rem);
-    margin-top: 0;
-    margin-bottom: var(--spacing-md, 1rem);
+    color: ;
+    font-size: ;
+    margin-top: ;
+    margin-bottom: ;
 }\r\n\r\n.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md, 1rem);
-    margin-bottom: var(--spacing-md, 1rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.form-group {
-    display: flex;
-    flex-direction: column;
+    display: ;
+    flex-direction: ;
 }\r\n\r\n.form-group label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    margin-bottom: var(--spacing-xs, 0.25rem);
-    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: ;
+    color: ;
+    margin-bottom: ;
+    font-size: ;
 }\r\n\r\n.form-group input,
 .form-group select,
 .form-group textarea {
-    padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: var(--font-size-base, 1rem);
-    transition: var(--transition-fast, all 0.15s ease);
-    font-family: inherit;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
+    transition: ;
+    font-family: ;
 }\r\n\r\n.form-group textarea {
-    min-height: 120px;
-    resize: vertical;
+    min-height: ;
+    resize: ;
 }\r\n\r\n.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color, #0044ff);
-    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
+    outline: ;
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n.form-group .help-text {
-    font-size: var(--font-size-xs, 0.75rem);
-    color: var(--text-lighter, #808080);
-    margin-top: var(--spacing-xs, 0.25rem);
+    font-size: ;
+    color: ;
+    margin-top: ;
 }\r\n\r\n/* File Upload */
 .file-upload {
-    position: relative;
-    display: inline-block;
-    width: 100%;
+    position: ;
+    display: ;
+    width: ;
 }\r\n\r\n.file-upload input[type="file"] {
-    display: none;
+    display: ;
 }\r\n\r\n.file-upload-label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-lg, 1.5rem);
-    border: 2px dashed var(--border-color, #404040);
-    border-radius: 4px;
-    background-color: var(--bg-light, #1a1a1a);
-    cursor: pointer;
-    transition: var(--transition-fast, all 0.15s ease);
+    display: ;
+    align-items: ;
+    justify-content: ;
+    padding: ;
+    border: ;
+    border-radius: ;
+    background-color: ;
+    cursor: ;
+    transition: ;
 }\r\n\r\n.file-upload-label:hover {
-    border-color: var(--primary-color, #0044ff);
-    background-color: rgba(0, 68, 255, 0.1);
+    border-color: ;
+    background-color: ;
 }\r\n\r\n.file-upload.dragover .file-upload-label {
-    border-color: var(--primary-color, #0044ff);
-    background-color: rgba(0, 68, 255, 0.1);
+    border-color: ;
+    background-color: ;
 }\r\n\r\n.file-list {
-    margin-top: var(--spacing-md, 1rem);
+    margin-top: ;
 }\r\n\r\n.file-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--spacing-md, 1rem);
-    background-color: var(--bg-light, #1a1a1a);
-    border-radius: 4px;
-    margin-bottom: var(--spacing-sm, 0.5rem);
+    display: ;
+    align-items: ;
+    justify-content: ;
+    padding: ;
+    background-color: ;
+    border-radius: ;
+    margin-bottom: ;
 }\r\n\r\n.file-item-name {
-    font-weight: 500;
-    color: var(--text-dark, #e0e0e0);
+    font-weight: ;
+    color: ;
 }\r\n\r\n.file-item-size {
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--text-light, #b0b0b0);
+    font-size: ;
+    color: ;
 }\r\n\r\n.file-item-remove {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0;
+    background: ;
+    border: ;
+    color: ;
+    cursor: ;
+    font-size: ;
+    padding: ;
 }\r\n\r\n.file-item-remove:hover {
-    color: #c0392b;
+    color: ;
 }\r\n\r\n/* Document View */
 .document-view {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
 }\r\n\r\n.document-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-    margin-bottom: var(--spacing-lg, 1.5rem);
-    padding-bottom: var(--spacing-lg, 1.5rem);
-    border-bottom: 2px solid var(--bg-lighter, #2d2d2d);
+    display: ;
+    justify-content: ;
+    align-items: ;
+    margin-bottom: ;
+    padding-bottom: ;
+    border-bottom: ;
 }\r\n\r\n.document-title {
-    flex: 1;
+    flex: ;
 }\r\n\r\n.document-title h1 {
-    color: var(--primary-color, #0044ff);
-    margin: 0;
+    color: ;
+    margin: ;
 }\r\n\r\n.document-meta {
-    display: flex;
-    gap: var(--spacing-md, 1rem);
-    margin-top: var(--spacing-md, 1rem);
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--text-light, #b0b0b0);
+    display: ;
+    gap: ;
+    margin-top: ;
+    font-size: ;
+    color: ;
 }\r\n\r\n.document-content {
-    color: var(--text-dark, #e0e0e0);
-    line-height: 1.6;
+    color: ;
+    line-height: ;
 }\r\n\r\n.document-content h2,
 .document-content h3 {
-    color: var(--primary-color, #0044ff);
-    margin-top: var(--spacing-lg, 1.5rem);
+    color: ;
+    margin-top: ;
 }\r\n\r\n/* Responsive Documents */
 @media (max-width: 768px) {
     .documents-list-item {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md, 1rem);
+        grid-template-columns: ;
+        gap: ;
     }\r\n\r\n.document-actions {
-        width: 100%;
-        flex-wrap: wrap;
+        width: ;
+        flex-wrap: ;
     }\r\n\r\n.document-actions .btn {
-        flex: 1;
-        min-width: 100px;
+        flex: ;
+        min-width: ;
     }\r\n\r\n.documents-search {
-        flex-direction: column;
+        flex-direction: ;
     }\r\n\r\n.documents-search .form-group {
-        min-width: 100%;
+        min-width: ;
     }\r\n\r\n.form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: ;
     }\r\n\r\n.document-header {
-        flex-direction: column;
-        gap: var(--spacing-md, 1rem);
+        flex-direction: ;
+        gap: ;
     }\r\n\r\n}\r\n\r\n/* ====== DOCUMENT SEARCH EMBEDDED STYLES (CONSOLIDATION) ====== */
 
 /* Document Search Input */
 #doc-q {
-    width: 60%;
-    padding: 8px;
-    margin-right: 8px;
+    width: ;
+    padding: ;
+    margin-right: ;
 }\r\n\r\n/* Document Results Container */
 #doc-results {
-    margin-top: 16px;
+    margin-top: ;
 }\r\n\r\n/* Document Pager Container */
 #doc-pager {
-    margin-top: 12px;
+    margin-top: ;
 }\r\n\r\n/* Error Messages in Document Search */
 #doc-results .error-message,
 #doc-pager .error-message {
-    color: darkred;
+    color: ;
 }\r\n\r\n/* ==== LOCATIONS ====
 /* =============================================================================
    LOCATIONS/POI PAGE STYLES
@@ -760,99 +760,99 @@
    ============================================================================= */
 
 .locations-view {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: var(--spacing-lg, 1.5rem);
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.locations-sidebar {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    height: fit-content;
-    position: sticky;
-    top: 100px;
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
+    height: ;
+    position: ;
+    top: ;
 }\r\n\r\n.locations-sidebar h2 {
-    margin-top: 0;
-    font-size: var(--font-size-lg, 1.125rem);
-    color: var(--primary-color, #0044ff);
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
+    margin-top: ;
+    font-size: ;
+    color: ;
+    border-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.locations-sidebar .filter-group {
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    margin-bottom: ;
 }\r\n\r\n.locations-sidebar .filter-group label {
-    display: flex;
-    align-items: center;
-    margin-bottom: var(--spacing-sm, 0.5rem);
-    cursor: pointer;
-    font-weight: normal;
+    display: ;
+    align-items: ;
+    margin-bottom: ;
+    cursor: ;
+    font-weight: ;
 }\r\n\r\n.locations-sidebar .filter-group input[type="checkbox"],
 .locations-sidebar .filter-group input[type="radio"] {
-    margin-right: var(--spacing-md, 1rem);
-    cursor: pointer;
+    margin-right: ;
+    cursor: ;
 }\r\n\r\n/* Map Container */
 .map-container {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    height: 600px;
-    position: relative;
+    background-color: ;
+    border-radius: ;
+    overflow: ;
+    box-shadow: ;
+    height: ;
+    position: ;
 }\r\n\r\n.map-container #map {
-    width: 100%;
-    height: 100%;
+    width: ;
+    height: ;
 }\r\n\r\n.map-container .map-controls {
-    position: absolute;
-    top: var(--spacing-md, 1rem);
-    right: var(--spacing-md, 1rem);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm, 0.5rem);
-    z-index: 100;
+    position: ;
+    top: ;
+    right: ;
+    display: ;
+    flex-direction: ;
+    gap: ;
+    z-index: ;
 }\r\n\r\n.map-container .map-controls button {
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
-    background-color: var(--bg-lighter);
-    border: 1px solid var(--border-color);
-    color: var(--text-dark);
-    cursor: pointer;
-    transition: var(--transition-fast, all 0.15s ease);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+    width: ;
+    height: ;
+    border-radius: ;
+    background-color: ;
+    border: ;
+    color: ;
+    cursor: ;
+    transition: ;
+    box-shadow: ;
 }\r\n\r\n.map-container .map-controls button:hover {
-    background-color: var(--primary-color, #0044ff);
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n/* POI Info Box */
 .poi-info {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    margin-top: var(--spacing-lg, 1.5rem);
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
+    margin-top: ;
 }\r\n\r\n.poi-info h3 {
-    color: var(--primary-color, #0044ff);
-    margin-top: 0;
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
+    color: ;
+    margin-top: ;
+    border-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.poi-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md, 1rem);
-    margin-top: var(--spacing-md, 1rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n.poi-info-item {
-    padding: var(--spacing-md, 1rem);
-    background-color: var(--bg-light, #1a1a1a);
-    border-radius: 4px;
-    border-left: 3px solid var(--primary-color, #0044ff);
+    padding: ;
+    background-color: ;
+    border-radius: ;
+    border-left: ;
 }\r\n\r\n.poi-info-item .label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    font-size: var(--font-size-sm, 0.875rem);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: var(--spacing-xs, 0.25rem);
+    font-weight: ;
+    color: ;
+    font-size: ;
+    text-transform: ;
+    letter-spacing: ;
+    margin-bottom: ;
 }\r\n\r\n.poi-info-item .value {
-    color: var(--text-light, #b0b0b0);
+    color: ;
 }\r\n\r\n/* POI list/card/grid styles are canonicalized in
    src/assets/css/poi_list.css. Remove duplicates here to avoid
    conflicting rules. */
@@ -860,19 +860,19 @@
 /* Responsive Locations View */
 @media (max-width: 1024px) {
     .locations-view {
-        grid-template-columns: 1fr;
+        grid-template-columns: ;
     }\r\n\r\n.locations-sidebar {
-        position: static;
+        position: ;
     }\r\n\r\n.map-container {
-        height: 400px;
+        height: ;
     }\r\n\r\n}\r\n\r\n@media (max-width: 768px) {
     .locations-view {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md, 1rem);
+        grid-template-columns: ;
+        gap: ;
     }\r\n\r\n.map-container {
-        height: 300px;
+        height: ;
     }\r\n\r\n.poi-info-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: ;
     }\r\n\r\n}\r\n\r\n/* POI filter and list styles moved to src/assets/css/poi_list.css to avoid
    duplicate selectors across files. See that file for all authoritative
    POI list, card, grid and filter-related rules. */
@@ -882,362 +882,362 @@
 
 /* Hidden template row for tag editor */
 #tag-row-template {
-    display: none;
+    display: ;
 }\r\n\r\n/* Admin pages - general debug and layout styles */
 main[style*="padding"] {
-    padding: 18px;
+    padding: ;
 }\r\n\r\n.debug-section {
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #fff8f0;
-    margin-bottom: 12px;
+    padding: ;
+    border: ;
+    background: ;
+    margin-bottom: ;
 }\r\n\r\n.debug-list {
-    margin: 6px 0;
-    padding-left: 18px;
+    margin: ;
+    padding-left: ;
 }\r\n\r\n.debug-warning {
-    margin-top: 6px;
-    color: #700;
+    margin-top: ;
+    color: ;
 }\r\n\r\n.debug-success {
-    margin-top: 6px;
-    color: #070;
+    margin-top: ;
+    color: ;
 }\r\n\r\n.debug-message {
-    font-size: 0.9em;
-    color: #700;
+    font-size: ;
+    color: ;
 }\r\n\r\n/* Table styles for import and status displays */
 .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
+    width: ;
+    border-collapse: ;
+    margin-bottom: ;
 }\r\n\r\n.data-table thead {
-    background: #f5f5f5;
+    background: ;
 }\r\n\r\n.data-table th,
 .data-table td {
-    padding: 6px;
-    text-align: left;
-    border-top: 1px solid #eee;
+    padding: ;
+    text-align: ;
+    border-top: ;
 }\r\n\r\n.data-table th {
-    text-align: left;
-    font-weight: bold;
+    text-align: ;
+    font-weight: ;
 }\r\n\r\n.data-table tr {
-    border-top: 1px solid #eee;
+    border-top: ;
 }\r\n\r\n.data-table-summary {
-    margin-top: 8px;
+    margin-top: ;
 }\r\n\r\n.disk-space-info {
-    margin-bottom: 8px;
+    margin-bottom: ;
 }\r\n\r\n/* ==== POI-CONTROLS ====
 /* POI Controls and UI styles */
 
 #poi-load-controls {
-    margin-top: 0.5rem;
+    margin-top: ;
 }\r\n\r\n#reset-poi-filters {
-    margin-left: 0.5rem;
+    margin-left: ;
 }\r\n\r\n#poi-autoload,
 #poi-only-mine {
-    margin-right: 0.35rem;
+    margin-right: ;
 }\r\n\r\nlabel.poi-control-label {
-    margin-left: 0.75rem;
-    font-size: 0.95em;
+    margin-left: ;
+    font-size: ;
 }\r\n\r\n/* Center the load/reset buttons when placed in the side controls column */
 .pois-side #poi-load-controls {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    display: ;
+    justify-content: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n/* When load controls are children of the #poi-filter grid, make them span all columns and center */
 #poi-filter > #poi-load-controls {
-    grid-column: 1 / -1;
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    grid-column: ;
+    display: ;
+    justify-content: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n/* Center the page heading and map instruction paragraph */
-main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls { text-align: center; margin-bottom: 1rem; }\r\n\r\n/* Center the search block when it's inside the side column */
-.pois-side .margin-top-small { text-align: center; }\r\n\r\n.pois-side .flex-row { display:flex; justify-content:center; align-items:center; }\r\n\r\n.pois-side .form-input-flex { max-width: 220px; width: 100%; }\r\n\r\n.pois-side #poi-filter-heading { text-align: center; margin-top: 0.75rem; }\r\n\r\n#poi-filter {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.75rem;
-    border: none;
-    margin: 1.5rem 0;
-    padding: 0;
+main > h1 { text-align: ; margin-bottom: ; }\r\n\r\n#pois-controls { text-align: ; margin-bottom: ; }\r\n\r\n/* Center the search block when it's inside the side column */
+.pois-side .margin-top-small { text-align: ; }\r\n\r\n.pois-side .flex-row { display: ; justify-content: ; align-items: ; }\r\n\r\n.pois-side .form-input-flex { max-width: ; width: ; }\r\n\r\n.pois-side #poi-filter-heading { text-align: ; margin-top: ; }\r\n\r\n#poi-filter {
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    border: ;
+    margin: ;
+    padding: ;
 }\r\n\r\n.poi-filter-item {
-    display: block;
+    display: ;
 }\r\n\r\n.poi-filter-item input[type="checkbox"] {
-    display: none;
+    display: ;
 }\r\n\r\n.poi-filter-item input[type="checkbox"]:checked + .poi-filter-label {
     /* Do not fill the background when active; emphasize with a thicker blue border */
-    background-color: transparent;
-    color: var(--primary-color, #0044ff);
-    border-color: var(--primary-color, #0044ff);
-    border-width: 3px;
-    border-style: solid;
-    box-shadow: 0 0 0 4px rgba(0, 68, 255, 0.03);
+    background-color: ;
+    color: ;
+    border-color: ;
+    border-width: ;
+    border-style: ;
+    box-shadow: ;
 }\r\n\r\n.poi-filter-label {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 0.65rem 1rem;
-    background-color: var(--bg-secondary, #2a2a2a);
-    color: var(--text-primary, #e0e0e0);
-    border: 2px solid var(--color-border, #444);
-    border-radius: 0.375rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.2s ease-in-out;
-    user-select: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: ;
+    align-items: ;
+    justify-content: ;
+    gap: ;
+    padding: ;
+    background-color: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-size: ;
+    font-weight: ;
+    transition: ;
+    user-select: ;
+    white-space: ;
+    overflow: ;
+    text-overflow: ;
 }\r\n\r\n.poi-filter-label:hover {
-    background-color: var(--bg-lighter, #333);
-    border-color: var(--primary-color, #0044ff);
-    transform: translateY(-1px);
+    background-color: ;
+    border-color: ;
+    transform: ;
 }\r\n\r\n/* Grouping styles for POI filter categories */
 .poi-filter-group {
-    margin-bottom: 1rem;
-    padding: 0.25rem 0.25rem 0.75rem 0.25rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.6rem;
+    margin-bottom: ;
+    padding: ;
+    display: ;
+    flex-direction: ;
+    align-items: ;
+    justify-content: ;
+    gap: ;
     /* Allow grid children to stretch so all groups have equal height */
-    align-self: stretch;
-    box-sizing: border-box;
+    align-self: ;
+    box-sizing: ;
 }\r\n\r\n.poi-filter-group-heading {
-    margin: 0 0 0.5rem 0;
-    font-size: 0.95rem;
-    color: var(--text-light, #b0b0b0);
-    font-weight: 700;
-}\r\n\r\n.poi-filter-group .poi-filter-item { margin-right: 0.5rem; margin-bottom: 0.5rem; display: block; width: auto; }\r\n\r\n/* Make the overall filter container a 3-column grid (responsive breakpoints follow) */
+    margin: ;
+    font-size: ;
+    color: ;
+    font-weight: ;
+}\r\n\r\n.poi-filter-group .poi-filter-item { margin-right: ; margin-bottom: ; display: ; width: ; }\r\n\r\n/* Make the overall filter container a 3-column grid (responsive breakpoints follow) */
 #poi-filter {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(140px, 1fr));
-    gap: 0.75rem 1rem;
-    align-items: start;
-    width: 100%;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    align-items: ;
+    width: ;
 }\r\n\r\n/* Ensure each filter label fills the grid cell and lays out its content */
 #poi-filter > .poi-filter-item {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
+    display: ;
+    width: ;
+    box-sizing: ;
 }\r\n\r\n#poi-filter .poi-filter-label {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
+    display: ;
+    align-items: ;
+    justify-content: ;
+    gap: ;
+    width: ;
+    padding: ;
 }\r\n\r\n/* Responsive: 2 columns on medium screens, 1 column on narrow screens */
 @media (max-width: 900px) {
-    #poi-filter { grid-template-columns: repeat(2, minmax(140px, 1fr)); }\r\n\r\n}\r\n\r\n@media (max-width: 600px) {
-    #poi-filter { grid-template-columns: 1fr; }\r\n\r\n}\r\n\r\n/* Heading alignment */
+    #poi-filter { grid-template-columns: ; }\r\n\r\n}\r\n\r\n@media (max-width: 600px) {
+    #poi-filter { grid-template-columns: ; }\r\n\r\n}\r\n\r\n/* Heading alignment */
 .poi-filter-group-heading {
-    width: 100%;
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 0.75rem;
+    width: ;
+    text-align: ;
+    margin-top: ;
+    margin-bottom: ;
 }\r\n\r\n/* Normalize filter label/button sizes */
 .poi-filter-label {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: auto;
-    max-width: 100%;
+    min-height: ;
+    padding: ;
+    box-sizing: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
+    gap: ;
+    width: ;
+    max-width: ;
 }\r\n\r\n/* Make each .poi-filter-item shrink to content so labels can be horizontally centered */
-.poi-filter-group .poi-filter-item .poi-filter-label { margin: 0; }\r\n\r\n/* Wrapper for group items: center buttons vertically within the group's column */
+.poi-filter-group .poi-filter-item .poi-filter-label { margin: ; }\r\n\r\n/* Wrapper for group items: center buttons vertically within the group's column */
 .poi-filter-items {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* keep items starting at top so headings remain top-aligned */
-    align-items: center;     /* horizontally center buttons within the group */
-    gap: 0.6rem;
-    width: 100%;
-    box-sizing: border-box;
+    display: ;
+    flex-direction: ;
+    justify-content: ; /* keep items starting at top so headings remain top-aligned */
+    align-items: ;     /* horizontally center buttons within the group */
+    gap: ;
+    width: ;
+    box-sizing: ;
     /* Allow the items wrapper to grow so grid columns align to the tallest group */
-    flex: 1 1 auto;
+    flex: ;
 }\r\n\r\n.poi-count {
-    display: inline-block;
-    min-width: 1.5rem;
-    text-align: center;
-    font-size: 0.75rem;
-    opacity: 0.7;
+    display: ;
+    min-width: ;
+    text-align: ;
+    font-size: ;
+    opacity: ;
 }\r\n\r\n#poi-filter-buttons {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    padding: 1rem 0;
+    display: ;
+    justify-content: ;
+    flex-wrap: ;
+    gap: ;
+    margin-top: ;
+    padding: ;
 }\r\n\r\n#poi-filter-buttons .btn {
-    padding: 0.65rem 1.25rem;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.2s ease-in-out;
-    border-radius: 0.375rem;
+    padding: ;
+    font-weight: ;
+    font-size: ;
+    transition: ;
+    border-radius: ;
 }\r\n\r\n#poi-filter-buttons .btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: ;
+    box-shadow: ;
 }\r\n\r\n#poi-filter-buttons .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: ;
+    cursor: ;
 }\r\n\r\n.warning-notice {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background-color: var(--bg-secondary, #2a2a2a);
-    border-left: 4px solid var(--warning-color, #ff9800);
-    border-radius: 0.25rem;
-    text-align: center;
-    color: #ffffff; /* force white text for login/register notice */
-    font-size: 0.95rem;
+    margin-top: ;
+    padding: ;
+    background-color: ;
+    border-left: ;
+    border-radius: ;
+    text-align: ;
+    color: ; /* force white text for login/register notice */
+    font-size: ;
 }\r\n\r\n/* POI controls container: limit width and center within page */
 #pois-controls-side {
-    max-width: 1400px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 0.5rem;
+    max-width: ;
+    width: ;
+    box-sizing: ;
+    margin-left: ;
+    margin-right: ;
+    padding: ;
 }\r\n\r\n/* Filter icon: normalize appearance and override any inline sizing */
 .filter-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 6px;
-    vertical-align: middle;
-    display: inline-block;
+    width: ;
+    height: ;
+    margin-right: ;
+    vertical-align: ;
+    display: ;
 }\r\n\r\n/* Ensure labels wrap nicely when space is constrained */
 .poi-filter-label {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    white-space: ;
+    overflow: ;
+    text-overflow: ;
+    max-width: ;
 }\r\n\r\n.warning-notice strong {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--warning-color, #ff9800);
+    display: ;
+    margin-bottom: ;
+    color: ;
 }\r\n\r\n.warning-notice a {
-    color: #ffffff; /* links in the notice should be white */
-    text-decoration: underline;
-    font-weight: 600;
+    color: ; /* links in the notice should be white */
+    text-decoration: ;
+    font-weight: ;
 }\r\n\r\n.warning-notice a:hover {
-    opacity: 0.9;
+    opacity: ;
 }\r\n\r\n#poi-empty-hint {
-    margin-top: 1rem;
-    display: none;
+    margin-top: ;
+    display: ;
 }\r\n\r\n.poi-hint-item {
-    margin-top: 0.75rem;
-    display: flex;
-    justify-content: center;
+    margin-top: ;
+    display: ;
+    justify-content: ;
 }\r\n\r\n#poi-filter-heading {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary, #e0e0e0);
+    text-align: ;
+    margin-bottom: ;
+    font-size: ;
+    font-weight: ;
+    color: ;
 }\r\n\r\n#poi-filter-section {
-    border: 1px solid var(--color-border, #444);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-    background-color: var(--bg-surface, #1a1a1a);
+    border: ;
+    border-radius: ;
+    padding: ;
+    margin-top: ;
+    background-color: ;
 }\r\n\r\n/* ==== POI-FORM ====
 /* POI form and detail styles (keeps layout out of templates) */
 :root{
-  --gap:12px;
-  --muted: var(--text-lighter, #808080);
-  --panel-bg: var(--color-surface);
-  --border: var(--color-border);
+  --gap: ;
+  --muted: ;
+  --panel-bg: ;
+  --border: ;
 }\r\n\r\n.poi-container{
-  display:flex;
-  gap:16px;
-  align-items:flex-start;
-}\r\n\r\n.poi-main{flex:1;width:1200px}\r\n\r\n.poi-side{width:1000px}\r\n\r\n.poi-img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 2px 6px var(--shadow-08)}\r\n\r\n.poi-header{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}\r\n\r\n.poi-header-logo{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)}\r\n\r\n.poi-title{margin:0;font-size:1.6rem}\r\n\r\n.poi-header-logo-block{display:flex;flex-direction:column;align-items:center;justify-content:center}\r\n\r\n.poi-header-type{margin-top:6px;font-size:0.95rem;color:var(--color-text);text-align:center}\r\n\r\n.poi-section{margin-top:.8rem;margin-bottom:.35rem;font-size:1rem;font-weight:600}\r\n\r\n.poi-row{display:flex;gap:var(--gap);margin-bottom:10px}\r\n\r\n.poi-field{flex:1;min-width:120px}\r\n\r\n.poi-field-full{width:100%}\r\n\r\n.poi-logo-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}\r\n\r\n.poi-logo-large{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}\r\n\r\n.logo-display{display:flex;gap:8px;align-items:center}\r\n\r\n.notice{padding:.6rem;background:var(--color-warning-bg);border:1px solid var(--color-warning-border);border-radius:4px;margin-bottom:12px}\r\n\r\n.muted{color:var(--muted)}\r\n\r\n.details-section{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:var(--panel-bg)}\r\n\r\n.details-summary{font-weight:600;cursor:pointer;margin-bottom:8px}\r\n\r\n.details-grid{display:flex;flex-wrap:wrap;gap:12px;padding-top:8px}\r\n\r\n.details-grid > div{flex:1 1 48%;min-width:200px}\r\n\r\n.form-actions{text-align:right}\r\n\r\n.poi-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}\r\n\r\n.poi-textarea{width:100%;min-height:120px}\r\n\r\n.btn{background:var(--color-primary);color:var(--color-text-on-primary);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block;border:none;cursor:pointer}\r\n\r\n.btn:hover{background:var(--color-primary-dark)}\r\n\r\n.btn-cancel{margin-left:8px;background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block}\r\n\r\n.btn-cancel:hover{background:var(--overlay-04)}\r\n\r\n/* responsive tweaks */
+  display: ;
+  gap: ;
+  align-items: ;
+}\r\n\r\n.poi-main{flex: ;width: ; }\r\n\r\n.poi-side{width: ; }\r\n\r\n.poi-img{max-width: ;height: ;border-radius: ;box-shadow: ; }\r\n\r\n.poi-header{display: ;align-items: ;gap: ;justify-content: ;margin-bottom: ; }\r\n\r\n.poi-header-logo{width: ;height: ;object-fit: ;border-radius: ;border: ; }\r\n\r\n.poi-title{margin: ;font-size: ; }\r\n\r\n.poi-header-logo-block{display: ;flex-direction: ;align-items: ;justify-content: ; }\r\n\r\n.poi-header-type{margin-top: ;font-size: ;color: ;text-align: ; }\r\n\r\n.poi-section{margin-top: ;margin-bottom: ;font-size: ;font-weight: ; }\r\n\r\n.poi-row{display: ;gap: ;margin-bottom: ; }\r\n\r\n.poi-field{flex: ;min-width: ; }\r\n\r\n.poi-field-full{width: ; }\r\n\r\n.poi-logo-thumb{width: ;height: ;object-fit: ;border-radius: ;border: ; }\r\n\r\n.poi-logo-large{width: ;height: ;object-fit: ;border-radius: ;border: ; }\r\n\r\n.logo-display{display: ;gap: ;align-items: ; }\r\n\r\n.notice{padding: ;background: ;border: ;border-radius: ;margin-bottom: ; }\r\n\r\n.muted{color: ; }\r\n\r\n.details-section{margin-top: ;padding: ;border: ;border-radius: ;background: ; }\r\n\r\n.details-summary{font-weight: ;cursor: ;margin-bottom: ; }\r\n\r\n.details-grid{display: ;flex-wrap: ;gap: ;padding-top: ; }\r\n\r\n.details-grid > div{flex: ;min-width: ; }\r\n\r\n.form-actions{text-align: ; }\r\n\r\n.poi-actions{display: ;justify-content: ;align-items: ;margin-bottom: ; }\r\n\r\n.poi-textarea{width: ;min-height: ; }\r\n\r\n.btn{background: ;color: ;text-decoration: ;padding: ;border-radius: ;display: ;border: ;cursor: ; }\r\n\r\n.btn:hover{background: ; }\r\n\r\n.btn-cancel{margin-left: ;background: ;color: ;text-decoration: ;padding: ;border-radius: ;display: ; }\r\n\r\n.btn-cancel:hover{background: ; }\r\n\r\n/* responsive tweaks */
 @media (max-width:900px){
-  .poi-container{flex-direction:column}\r\n\r\n.poi-side{width:100%}\r\n\r\n}\r\n\r\n#poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}\r\n\r\n/* view and edit map share styling */
-#poi-map, #poi-map-view, .poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}\r\n\r\n.poi-map-wrap{margin-bottom:12px}\r\n\r\n.view-groups{display:flex;flex-wrap:wrap;gap:16px}\r\n\r\n.group-box{flex:1 1 48%;min-width:260px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--color-surface)}\r\n\r\n.group-box.group-location{flex-basis:100%}\r\n\r\n.group-box h4{margin-top:0}\r\n\r\n/* Tags editor styling */
-#tags-editor{margin-top:8px}\r\n\r\n#tags-editor .tag-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}\r\n\r\n#tags-editor .tag-row .tag-key{flex:0 0 35%;padding:6px;border:1px solid var(--border);border-radius:4px}\r\n\r\n#tags-editor .tag-row .tag-val{flex:1;padding:6px;border:1px solid var(--border);border-radius:4px}\r\n\r\n#tags-editor .tag-actions{margin-top:8px}\r\n\r\n.btn-small{padding:4px 8px;font-size:0.85rem}\r\n\r\n/* remove button style */
-.btn-remove-tag{background:#e74c3c;color:#fff;border-radius:4px;padding:4px 8px;border:none;cursor:pointer}\r\n\r\n.btn-remove-tag:hover{background:#c43a2a}\r\n\r\n.tag-row .btn-remove-tag{flex:0 0 auto}\r\n\r\n/* ==== POI_LIST ====
+  .poi-container{flex-direction: ; }\r\n\r\n.poi-side{width: ; }\r\n\r\n}\r\n\r\n#poi-map{height: ;border: ;border-radius: ;margin-bottom: ; }\r\n\r\n/* view and edit map share styling */
+#poi-map, #poi-map-view, .poi-map{height: ;border: ;border-radius: ;margin-bottom: ; }\r\n\r\n.poi-map-wrap{margin-bottom: ; }\r\n\r\n.view-groups{display: ;flex-wrap: ;gap: ; }\r\n\r\n.group-box{flex: ;min-width: ;padding: ;border: ;border-radius: ;background: ; }\r\n\r\n.group-box.group-location{flex-basis: ; }\r\n\r\n.group-box h4{margin-top: ; }\r\n\r\n/* Tags editor styling */
+#tags-editor{margin-top: ; }\r\n\r\n#tags-editor .tag-row{display: ;gap: ;align-items: ;margin-bottom: ; }\r\n\r\n#tags-editor .tag-row .tag-key{flex: ;padding: ;border: ;border-radius: ; }\r\n\r\n#tags-editor .tag-row .tag-val{flex: ;padding: ;border: ;border-radius: ; }\r\n\r\n#tags-editor .tag-actions{margin-top: ; }\r\n\r\n.btn-small{padding: ;font-size: ; }\r\n\r\n/* remove button style */
+.btn-remove-tag{background: ;color: ;border-radius: ;padding: ;border: ;cursor: ; }\r\n\r\n.btn-remove-tag:hover{background: ; }\r\n\r\n.tag-row .btn-remove-tag{flex: ; }\r\n\r\n/* ==== POI_LIST ====
 /* POI list styles extracted from runtime injection in pois.js
    Created to avoid CSP/inline-style issues and to provide a static stylesheet
 */
-#poi-list{ margin-top:12px; }\r\n\r\n.poi-group{ margin:18px 0; padding-bottom:8px; border-bottom:1px solid #eee; }\r\n\r\n.poi-group h3{ margin:8px 0 12px; font-size:1.1em; }\r\n\r\n.poi-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; align-items:start; }\r\n\r\n.poi-card{ background:#fff; border:1px solid #eee; border-radius:6px; padding:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04); display:flex; flex-direction:column; min-height:120px; }\r\n\r\n.poi-logo{ width:64px; height:64px; object-fit:cover; border-radius:50%; margin-bottom:8px; align-self:center; }\r\n\r\n.poi-name{ font-weight:600; margin-bottom:6px; text-align:center; }\r\n\r\n.poi-meta{ font-size:0.9em; color:#666; text-align:center; margin-bottom:6px; }\r\n\r\n.poi-card a{ color:#2b8af3; }\r\n\r\n.poi-group-header{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }\r\n\r\n.poi-group-header .poi-group-title{ display:flex; align-items:center; gap:12px; margin:0; }\r\n\r\n.poi-group-toggle{ font-size:14px; }\r\n\r\n.poi-country-group{ margin-top:12px; margin-bottom:12px; border-left:4px solid #2b8af3; padding-left:12px; }\r\n\r\n.poi-country-header{ display:flex; align-items:center; cursor:pointer; user-select:none; padding-top:4px; padding-bottom:4px; }\r\n\r\n.poi-country-content{ display:none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px; padding-top:8px; margin-bottom:8px; }\r\n\r\n.poi-country-content.collapsed{ display:none; }\r\n\r\n.poi-country-content:not(.collapsed){ display:grid; }\r\n\r\n.poi-group-header.collapsed + .poi-countries-container{ display:none; }\r\n\r\n.poi-group-header:not(.collapsed) + .poi-countries-container{ display:flex; flex-direction:column; }\r\n\r\n/* small helpers */
-.notice{ padding:12px; background:#fff; border:1px solid #eee; border-radius:6px; }\r\n\r\n/* make sure popup images don't overflow */
-.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:6px; }\r\n\r\n/* marker selected state fallback (also injected by JS) */
-.leaflet-marker-icon.poi-selected{ box-shadow: 0 0 8px 3px rgba(0,150,0,0.6); transform: scale(1.08); }\r\n\r\n.flash-poi{ animation: flash 1s ease; }\r\n\r\n@keyframes flash{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}\r\n\r\n/* Spinner rotation used by the loading indicator (was injected by JS before) */
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\r\n\r\n/* Spinner box and text used by the POI loading overlay */
-#pois-loading-spinner{ position: absolute; left: 50%; top: 10px; transform: translateX(-50%); z-index: 9999; display: none; }\r\n\r\n#pois-loading-spinner .poi-spinner-box{ background: rgba(255,255,255,0.95); padding:6px 10px; border-radius:6px; border:1px solid #ddd; box-shadow:0 2px 6px rgba(0,0,0,0.08); }\r\n\r\n#pois-loading-spinner .spinner{ display:inline-block; width:18px; height:18px; border:3px solid #ccc; border-top-color:#2b8af3; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle }\r\n\r\n#pois-loading-spinner .spinner-text{ vertical-align:middle }\r\n\r\n/* icon styling for category divIcons */
-.poi-div-icon .poi-icon{ display:inline-block; width:18px; height:18px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.35); border:2px solid #fff; }\r\n\r\n.poi-icon-large{ width:24px; height:24px; display:inline-block; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.4); }\r\n\r\n/* ==== CLUSTER MARKER STYLES ====
+#poi-list{ margin-top: ; }\r\n\r\n.poi-group{ margin: ; padding-bottom: ; border-bottom: ; }\r\n\r\n.poi-group h3{ margin: ; font-size: ; }\r\n\r\n.poi-grid{ display: ; grid-template-columns: ; gap: ; align-items: ; }\r\n\r\n.poi-card{ background: ; border: ; border-radius: ; padding: ; box-shadow: ; display: ; flex-direction: ; min-height: ; }\r\n\r\n.poi-logo{ width: ; height: ; object-fit: ; border-radius: ; margin-bottom: ; align-self: ; }\r\n\r\n.poi-name{ font-weight: ; margin-bottom: ; text-align: ; }\r\n\r\n.poi-meta{ font-size: ; color: ; text-align: ; margin-bottom: ; }\r\n\r\n.poi-card a{ color: ; }\r\n\r\n.poi-group-header{ display: ; align-items: ; justify-content: ; cursor: ; }\r\n\r\n.poi-group-header .poi-group-title{ display: ; align-items: ; gap: ; margin: ; }\r\n\r\n.poi-group-toggle{ font-size: ; }\r\n\r\n.poi-country-group{ margin-top: ; margin-bottom: ; border-left: ; padding-left: ; }\r\n\r\n.poi-country-header{ display: ; align-items: ; cursor: ; user-select: ; padding-top: ; padding-bottom: ; }\r\n\r\n.poi-country-content{ display: ; grid-template-columns: ; gap: ; padding-top: ; margin-bottom: ; }\r\n\r\n.poi-country-content.collapsed{ display: ; }\r\n\r\n.poi-country-content:not(.collapsed){ display: ; }\r\n\r\n.poi-group-header.collapsed + .poi-countries-container{ display: ; }\r\n\r\n.poi-group-header:not(.collapsed) + .poi-countries-container{ display: ; flex-direction: ; }\r\n\r\n/* small helpers */
+.notice{ padding: ; background: ; border: ; border-radius: ; }\r\n\r\n/* make sure popup images don't overflow */
+.poi-popup-img{ max-width: ; max-height: ; display: ; margin-bottom: ; }\r\n\r\n/* marker selected state fallback (also injected by JS) */
+.leaflet-marker-icon.poi-selected{ box-shadow: ; transform: ; }\r\n\r\n.flash-poi{ animation: ; }\r\n\r\n@keyframes flash{0%{transform: ; }50%{transform: ; }100%{transform: ; }}\r\n\r\n/* Spinner rotation used by the loading indicator (was injected by JS before) */
+@keyframes spin{from{transform: ; }to{transform: ; }}\r\n\r\n/* Spinner box and text used by the POI loading overlay */
+#pois-loading-spinner{ position: ; left: ; top: ; transform: ; z-index: ; display: ; }\r\n\r\n#pois-loading-spinner .poi-spinner-box{ background: ; padding: ; border-radius: ; border: ; box-shadow: ; }\r\n\r\n#pois-loading-spinner .spinner{ display: ; width: ; height: ; border: ; border-top-color: ; border-radius: ; animation: ; margin-right: ; vertical-align: ; }\r\n\r\n#pois-loading-spinner .spinner-text{ vertical-align: ; }\r\n\r\n/* icon styling for category divIcons */
+.poi-div-icon .poi-icon{ display: ; width: ; height: ; border-radius: ; box-shadow: ; border: ; }\r\n\r\n.poi-icon-large{ width: ; height: ; display: ; border-radius: ; border: ; box-shadow: ; }\r\n\r\n/* ==== CLUSTER MARKER STYLES ====
      Centralized cluster marker rules (merged from poi-clusters.css)
      Provide clear, high-contrast cluster counts and accessible touch targets.
 */
 .marker-cluster div {
-    width: 34px;
-    height: 34px;
-    margin-left: 3px;
-    margin-top: 3px;
-    border-radius: 1px;
-    background-clip: padding-box;
-    font: 600 14px/34px "Helvetica Neue", Arial, Helvetica, sans-serif;
-    color: #ffffff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
-    border: 2px solid rgba(255,255,255,0.65);
+    width: ;
+    height: ;
+    margin-left: ;
+    margin-top: ;
+    border-radius: ;
+    background-clip: ;
+    font: ;
+    color: ;
+    text-shadow: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
+    box-shadow: ;
+    border: ;
 }\r\n\r\n.marker-cluster {
-    border-radius: 1px;
-}\r\n\r\n.marker-cluster span { line-height: 1; }\r\n\r\n@media (max-width: 600px) {
+    border-radius: ;
+}\r\n\r\n.marker-cluster span { line-height: ; }\r\n\r\n@media (max-width: 600px) {
     .marker-cluster div {
-        width: 28px;
-        height: 28px;
-        border-radius: 1px;
-        font-size: 12px;
-        font-weight: 600;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.32);
+        width: ;
+        height: ;
+        border-radius: ;
+        font-size: ;
+        font-weight: ;
+        box-shadow: ;
     }\r\n\r\n}\r\n\r\n/* Map-scoped cluster color and size rules. These prefer the CSS variable
    `--pv-bg` provided by the cluster HTML and provide solid fallbacks without
    using `!important`. Size classes are added by the iconCreateFunction. */
 #pois-map .marker-cluster div.pv-cluster-simple {
-    background-color: var(--pv-bg, #4a4a4a);
-    opacity: 1;
-}\r\n\r\n#pois-map .marker-cluster.marker-cluster-small div.pv-cluster-simple { background-color: var(--pv-bg, #6ecc39); }\r\n\r\n#pois-map .marker-cluster.marker-cluster-medium div.pv-cluster-simple { background-color: var(--pv-bg, #f0c20c); }\r\n\r\n#pois-map .marker-cluster.marker-cluster-large div.pv-cluster-simple { background-color: var(--pv-bg, #f17817); }\r\n\r\n/* Popup classes replacing inline styles */
-.poi-popup{ min-width:180px }\r\n\r\n.poi-popup-title{ margin:0 0 .25rem 0 }\r\n\r\n.poi-nearby-count{ font-size:0.9em; color:#444; margin-bottom:6px }\r\n\r\n.poi-small{ margin:6px 0; padding:6px; background:#fafafa; border:1px solid #eee; border-radius:4px; overflow:auto }\r\n\r\n.poi-hours{ font-size:0.9em; color:#444 }\r\n\r\n.poi-actions{ margin-top:6px }\r\n\r\n.poi-detail-link{ margin-left:8px; color:#2b8af3 }\r\n\r\n/* Category color classes (used instead of inline background styles) */
-.poi-color-campgrounds{ background:#2b8f2b }\r\n\r\n.poi-color-provincial_parks{ background:#2b8af3 }\r\n\r\n.poi-color-shopping{ background:#2980b9 }\r\n\r\n.poi-color-banks{ background:#27ae60 }\r\n\r\n.poi-color-cannabis{ background:#228b22 }\r\n\r\n.poi-color-hotels{ background:#8a2bcb }\r\n\r\n.poi-color-food{ background:#d35400 }\r\n\r\n.poi-color-restaurants{ background:#e67e22 }\r\n\r\n.poi-color-gas_stations{ background:#e74c3c }\r\n\r\n.poi-color-dump_station{ background:#7f8c8d }\r\n\r\n.poi-color-attractions{ background:#f39c12 }\r\n\r\n.poi-color-fitness{ background:#e74c3c }\r\n\r\n.poi-color-laundry{ background:#16a085 }\r\n\r\n.poi-color-parking{ background:#95a5a6 }\r\n\r\n.poi-color-pharmacy{ background:#e67e22 }\r\n\r\n.poi-color-tobacco_vape{ background:#34495e }\r\n\r\n.poi-color-tobacco{ background:#34495e }\r\n\r\n.poi-color-tourist_info{ background:#9b59b6 }\r\n\r\n.poi-color-transportation{ background:#1abc9c }\r\n\r\n.poi-color-supermarket{ background:#f1c40f }\r\n\r\n.poi-color-default{ background:#ff6600 }\r\n\r\n/* Improved readability: card contrast, spacing and typography */
+    background-color: ;
+    opacity: ;
+}\r\n\r\n#pois-map .marker-cluster.marker-cluster-small div.pv-cluster-simple { background-color: ; }\r\n\r\n#pois-map .marker-cluster.marker-cluster-medium div.pv-cluster-simple { background-color: ; }\r\n\r\n#pois-map .marker-cluster.marker-cluster-large div.pv-cluster-simple { background-color: ; }\r\n\r\n/* Popup classes replacing inline styles */
+.poi-popup{ min-width: ; }\r\n\r\n.poi-popup-title{ margin: ; }\r\n\r\n.poi-nearby-count{ font-size: ; color: ; margin-bottom: ; }\r\n\r\n.poi-small{ margin: ; padding: ; background: ; border: ; border-radius: ; overflow: ; }\r\n\r\n.poi-hours{ font-size: ; color: ; }\r\n\r\n.poi-actions{ margin-top: ; }\r\n\r\n.poi-detail-link{ margin-left: ; color: ; }\r\n\r\n/* Category color classes (used instead of inline background styles) */
+.poi-color-campgrounds{ background: ; }\r\n\r\n.poi-color-provincial_parks{ background: ; }\r\n\r\n.poi-color-shopping{ background: ; }\r\n\r\n.poi-color-banks{ background: ; }\r\n\r\n.poi-color-cannabis{ background: ; }\r\n\r\n.poi-color-hotels{ background: ; }\r\n\r\n.poi-color-food{ background: ; }\r\n\r\n.poi-color-restaurants{ background: ; }\r\n\r\n.poi-color-gas_stations{ background: ; }\r\n\r\n.poi-color-dump_station{ background: ; }\r\n\r\n.poi-color-attractions{ background: ; }\r\n\r\n.poi-color-fitness{ background: ; }\r\n\r\n.poi-color-laundry{ background: ; }\r\n\r\n.poi-color-parking{ background: ; }\r\n\r\n.poi-color-pharmacy{ background: ; }\r\n\r\n.poi-color-tobacco_vape{ background: ; }\r\n\r\n.poi-color-tobacco{ background: ; }\r\n\r\n.poi-color-tourist_info{ background: ; }\r\n\r\n.poi-color-transportation{ background: ; }\r\n\r\n.poi-color-supermarket{ background: ; }\r\n\r\n.poi-color-default{ background: ; }\r\n\r\n/* Improved readability: card contrast, spacing and typography */
 :root{
-   --poi-card-bg:#ffffff;
-   --poi-card-border:#e6e6e6;
-   --poi-text:#ffffff;
-   --poi-subtext:#6b6b6b;
-   --poi-accent:#2b8af3;
+   --poi-card-bg: ;
+   --poi-card-border: ;
+   --poi-text: ;
+   --poi-subtext: ;
+   --poi-accent: ;
 }\r\n\r\n.poi-card{
-   background:var(--poi-card-bg);
-   color:var(--poi-text);
-   border:1px solid var(--poi-card-border);
-   border-radius:8px;
-   padding:14px;
-   box-shadow:0 1px 4px rgba(0,0,0,0.04);
-   display:flex;
-   flex-direction:column;
-   align-items:center;
-   justify-content:flex-start;
-   min-height:140px;
-}\r\n\r\n.poi-grid{ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:16px; }\r\n\r\n.poi-logo{ width:56px; height:56px; border-radius:50%; object-fit:cover; margin-bottom:10px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }\r\n\r\n.poi-name{ font-weight:700; margin-bottom:6px; font-size:14px; color:var(--poi-text); text-align:center; }\r\n\r\n.poi-meta{ font-size:13px; color:var(--poi-subtext); text-align:center; line-height:1.25; }\r\n\r\n.poi-card a{ color:var(--poi-accent); text-decoration:none }\r\n\r\n.poi-card a:hover{ text-decoration:underline }\r\n\r\n/* Ensure popup images and small blocks are readable */
-.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:8px; }\r\n\r\n.poi-small{ width:100%; }\r\n\r\n/* Actions and details */
-.poi-actions{ margin-top:8px; display:flex; gap:8px; justify-content:center }\r\n\r\n.poi-actions a{ padding:4px 6px; border-radius:4px; background:transparent; border:1px solid transparent }\r\n\r\n.poi-actions a.import-poi{ background:rgba(43,138,243,0.06); border-color:rgba(43,138,243,0.12); color:var(--poi-accent) }\r\n\r\n.poi-detail-link{ margin-left:8px; color:var(--poi-accent) }\r\n\r\n/* Improve country group visuals */
-.poi-country-content{ padding-top:8px; }\r\n\r\n/* POI map layout moved from inline viewPOIs.php */
-.pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}\r\n\r\n.pois-layout .pois-side{flex:0 0 900px;max-width:1000px}\r\n\r\n#pois-map{flex:1 1 800px;max-width:1200px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:900px}\r\n\r\n/* Ensure Leaflet controls remain visible above rounded corner */
-#pois-map .leaflet-control{z-index:650}\r\n\r\n/* Filter item compact spacing (moved from inline styles) */
-#poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}\r\n\r\n#poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}\r\n\r\n#poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}\r\n\r\n#poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}\r\n\r\n#poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex}\r\n\r\n/* tighten control buttons spacing */
-#poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px}\r\n\r\n/* Responsive: stack on narrow screens */
+   background: ;
+   color: ;
+   border: ;
+   border-radius: ;
+   padding: ;
+   box-shadow: ;
+   display: ;
+   flex-direction: ;
+   align-items: ;
+   justify-content: ;
+   min-height: ;
+}\r\n\r\n.poi-grid{ grid-template-columns: ; gap: ; }\r\n\r\n.poi-logo{ width: ; height: ; border-radius: ; object-fit: ; margin-bottom: ; box-shadow: ; }\r\n\r\n.poi-name{ font-weight: ; margin-bottom: ; font-size: ; color: ; text-align: ; }\r\n\r\n.poi-meta{ font-size: ; color: ; text-align: ; line-height: ; }\r\n\r\n.poi-card a{ color: ; text-decoration: ; }\r\n\r\n.poi-card a:hover{ text-decoration: ; }\r\n\r\n/* Ensure popup images and small blocks are readable */
+.poi-popup-img{ max-width: ; max-height: ; display: ; margin-bottom: ; }\r\n\r\n.poi-small{ width: ; }\r\n\r\n/* Actions and details */
+.poi-actions{ margin-top: ; display: ; gap: ; justify-content: ; }\r\n\r\n.poi-actions a{ padding: ; border-radius: ; background: ; border: ; }\r\n\r\n.poi-actions a.import-poi{ background: ; border-color: ; color: ; }\r\n\r\n.poi-detail-link{ margin-left: ; color: ; }\r\n\r\n/* Improve country group visuals */
+.poi-country-content{ padding-top: ; }\r\n\r\n/* POI map layout moved from inline viewPOIs.php */
+.pois-layout{display: ;gap: ;align-items: ;flex-wrap: ; }\r\n\r\n.pois-layout .pois-side{flex: ;max-width: ; }\r\n\r\n#pois-map{flex: ;max-width: ;background: ;border-radius: ;overflow: ;box-shadow: ;min-height: ; }\r\n\r\n/* Ensure Leaflet controls remain visible above rounded corner */
+#pois-map .leaflet-control{z-index: ; }\r\n\r\n/* Filter item compact spacing (moved from inline styles) */
+#poi-filter .poi-filter-items{display: ;flex-wrap: ;gap: ;margin: ;padding: ; }\r\n\r\n#poi-filter .poi-filter-item{margin: ;padding: ;border-radius: ;background: ;border: ;display: ;align-items: ;gap: ; }\r\n\r\n#poi-filter .poi-filter-item input[type="checkbox"]{margin: ; }\r\n\r\n#poi-filter .poi-filter-label{display: ;align-items: ;gap: ; }\r\n\r\n#poi-filter .filter-icon{width: ;height: ;align-items: ;overflow: ; }\r\n\r\n/* tighten control buttons spacing */
+#poi-filter-buttons .btn{margin: ;padding: ; }\r\n\r\n/* Responsive: stack on narrow screens */
 @media (max-width: 900px){
-    .pois-layout{flex-direction:column}\r\n\r\n.pois-layout .pois-side{width: 450px;max-width: 600px}\r\n\r\n#pois-map{width:100%;max-width:none}\r\n\r\n}\r\n\r\n/* Keep icons consistent */
-.poi-div-icon .poi-icon, .poi-icon, .poi-icon-large{ display:inline-block; vertical-align:middle }\r\n\r\n/* ==== POI POPUPS ==== */
+    .pois-layout{flex-direction: ; }\r\n\r\n.pois-layout .pois-side{width: ;max-width: ; }\r\n\r\n#pois-map{width: ;max-width: ; }\r\n\r\n}\r\n\r\n/* Keep icons consistent */
+.poi-div-icon .poi-icon, .poi-icon, .poi-icon-large{ display: ; vertical-align: ; }\r\n\r\n/* ==== POI POPUPS ==== */
 /**
  * POI Popup Styles
  * Styles for POI popups and UI elements
@@ -1245,198 +1245,198 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
 
 /* Popup Container */
 .poi-popup-container {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #333;
+    font-family: ;
+    font-size: ;
+    line-height: ;
+    color: ;
 }\r\n\r\n/* Popup Header */
 .poi-popup-header {
-    margin-bottom: 8px;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 6px;
+    margin-bottom: ;
+    border-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.poi-popup-header b {
-    display: block;
-    font-weight: 600;
-    font-size: 15px;
-    color: #1a1a1a;
-    margin-bottom: 2px;
-    word-wrap: break-word;
-    padding-right: 36px;
+    display: ;
+    font-weight: ;
+    font-size: ;
+    color: ;
+    margin-bottom: ;
+    word-wrap: ;
+    padding-right: ;
 }\r\n\r\n.poi-popup-header small {
-    font-size: 12px;
-    color: #666;
-    word-break: break-all;
+    font-size: ;
+    color: ;
+    word-break: ;
 }\r\n\r\n/* Popup Body */
 .poi-popup-body {
-    margin-bottom: 8px;
-    padding: 6px 0;
+    margin-bottom: ;
+    padding: ;
 }\r\n\r\n.poi-popup-link {
-    display: inline-block;
-    color: #0056b3;
-    text-decoration: none;
-    word-break: break-all;
+    display: ;
+    color: ;
+    text-decoration: ;
+    word-break: ;
 }\r\n\r\n.poi-popup-link:hover {
-    color: #004085;
-    text-decoration: underline;
+    color: ;
+    text-decoration: ;
 }\r\n\r\n/* Popup Footer */
 .poi-popup-footer {
-    display: flex;
-    gap: 6px;
+    display: ;
+    gap: ;
 }\r\n\r\n/* Import Button */
 .poi-import-btn {
-    flex: 1;
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: #ffffff;
-    border: 1px solid #0056b3;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    flex: ;
+    padding: ;
+    background-color: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
+    font-weight: ;
+    cursor: ;
+    transition: ;
 }\r\n\r\n.poi-import-btn:hover {
-    background-color: #0056b3;
-    border-color: #003d82;
+    background-color: ;
+    border-color: ;
 }\r\n\r\n.poi-import-btn:active {
-    background-color: #004085;
-    border-color: #003d82;
+    background-color: ;
+    border-color: ;
 }\r\n\r\n.poi-import-btn:disabled {
-    background-color: #cccccc;
-    border-color: #999999;
-    cursor: not-allowed;
-    opacity: 0.6;
+    background-color: ;
+    border-color: ;
+    cursor: ;
+    opacity: ;
 }\r\n\r\n/* Leaflet Popup Customization */
 .leaflet-popup-content {
-    margin: 0;
+    margin: ;
 }\r\n\r\n.leaflet-popup-content-wrapper {
-    border-radius: 6px;
-    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
-    position: relative;
+    border-radius: ;
+    box-shadow: ;
+    position: ;
 }\r\n\r\n/* Ensure the close button sits above popup content and remains visible
    even when the title is long. Also reserve space on the title's right side. */
 .leaflet-popup-close-button {
-    z-index: 9999;
-    right: 8px;
-    top: 8px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    width: 28px;
-    height: 28px;
-    line-height: 26px;
-    text-align: center;
-    padding: 0;
+    z-index: ;
+    right: ;
+    top: ;
+    background: ;
+    border-radius: ;
+    box-shadow: ;
+    width: ;
+    height: ;
+    line-height: ;
+    text-align: ;
+    padding: ;
 }\r\n\r\n/* Reserve space on the popup title to avoid being covered by the close button */
 .poi-popup-header b {
-    padding-right: 36px;
+    padding-right: ;
 }\r\n\r\n.leaflet-popup-tip {
-    background: #ffffff;
+    background: ;
 }\r\n\r\n/* POI List Styles */
 .poi-list-item-link {
-    color: #0056b3;
-    text-decoration: none;
-    word-break: break-word;
+    color: ;
+    text-decoration: ;
+    word-break: ;
 }\r\n\r\n.poi-list-item-link:hover {
-    color: #004085;
-    text-decoration: underline;
-    border-radius: 4px;
+    color: ;
+    text-decoration: ;
+    border-radius: ;
 }\r\n\r\n.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
+    color: ;
+    background-color: ;
+    border-color: ;
 }\r\n\r\n/* Loading Spinner */
 .poi-spinner-box {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: ;
+    align-items: ;
+    gap: ;
+    padding: ;
+    background: ;
+    border-radius: ;
+    box-shadow: ;
 }\r\n\r\n.poi-spinner-box .spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid #f3f3f3;
-    border-top: 2px solid #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+    display: ;
+    width: ;
+    height: ;
+    border: ;
+    border-top: ;
+    border-radius: ;
+    animation: ;
 }\r\n\r\n.poi-spinner-box .spinner-text {
-    font-size: 13px;
-    color: #666;
-    font-weight: 500;
+    font-size: ;
+    color: ;
+    font-weight: ;
 }\r\n\r\n@keyframes spin {
-    0% { transform: rotate(0deg); }\r\n\r\n100% { transform: rotate(360deg); }\r\n\r\n}\r\n\r\n/* Responsive Design */
+    0% { transform: ; }\r\n\r\n100% { transform: ; }\r\n\r\n}\r\n\r\n/* Responsive Design */
 @media (max-width: 600px) {
     .poi-popup-container {
-        font-size: 13px;
+        font-size: ;
     }\r\n\r\n.poi-import-btn {
-        padding: 5px 10px;
-        font-size: 12px;
+        padding: ;
+        font-size: ;
     }\r\n\r\n.leaflet-popup-content-wrapper {
-        max-width: 90vw;
+        max-width: ;
     }\r\n\r\n}\r\n\r\n/* POI Popup fields layout (labels and values) - no hardcoded colors */
 .poi-popup-fields {
-    --poi-popup-label-width: 120px; /* can be overridden by themes */
-    display: grid;
-    grid-template-columns: var(--poi-popup-label-width) 1fr;
-    column-gap: 10px;
-    row-gap: 6px;
-    align-items: start;
-    margin-top: 6px;
-    font-size: 13px;
+    --poi-popup-label-width: ; /* can be overridden by themes */
+    display: ;
+    grid-template-columns: ;
+    column-gap: ;
+    row-gap: ;
+    align-items: ;
+    margin-top: ;
+    font-size: ;
 }\r\n\r\n.poi-popup-fields dt {
-    margin: 0;
-    padding: 0;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 1.2;
-    opacity: 0.9;
+    margin: ;
+    padding: ;
+    font-weight: ;
+    font-size: ;
+    line-height: ;
+    opacity: ;
 }\r\n\r\n.poi-popup-fields dd {
-    margin: 0;
-    padding: 0;
-    line-height: 1.3;
-    word-break: break-word;
+    margin: ;
+    padding: ;
+    line-height: ;
+    word-break: ;
 }\r\n\r\n@media (max-width: 480px) {
     .poi-popup-fields {
-        grid-template-columns: 1fr;
-    }\r\n\r\n.poi-popup-fields dt { margin-top: 6px; }\r\n\r\n}\r\n\r\n/* ==== POI-TILES ====
+        grid-template-columns: ;
+    }\r\n\r\n.poi-popup-fields dt { margin-top: ; }\r\n\r\n}\r\n\r\n/* ==== POI-TILES ====
 /* POI tile card styles - no hardcoded colors; uses CSS variables from theme */
 :root{
-    --poi-tile-gap: 12px;
-    --poi-tile-padding: 12px;
-    --poi-tile-item-height: 120px; /* approx height used to cap visible items */
-    --poi-tile-bg: var(--card-bg, #fff);
-    --poi-tile-border: var(--card-border, #e6e6e6);
-    --poi-tile-radius: 8px;
-    --poi-tile-shadow: 0 1px 2px rgba(0,0,0,0.04);
-    --poi-tile-title-size: 1rem;
-    --poi-tile-sub-size: 0.9rem;
-}\r\n\r\n.poi-tiles-wrap{margin-top:18px}\r\n\r\n.poi-type-group{margin-bottom:28px}\r\n\r\n.poi-type-title{font-weight:600;margin:0 0 8px 0;display:flex;align-items:center;gap:12px}\r\n\r\n.poi-type-title .count-badge{background:transparent;border:1px solid var(--poi-tile-border);padding:2px 6px;border-radius:999px;font-size:0.85rem}\r\n\r\n.poi-country-group{margin:8px 0}\r\n\r\n.poi-country-title{font-size:0.95rem;margin:6px 0;color:var(--muted-color,#666)}\r\n\r\n.poi-tiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--poi-tile-gap)}\r\n\r\n.poi-tiles-list{max-height:calc((var(--poi-tile-item-height) * 5) + (var(--poi-tile-gap) * 4));overflow:auto;padding-right:6px}\r\n\r\n.poi-tile{background:var(--poi-tile-bg);border:1px solid var(--poi-tile-border);border-radius:var(--poi-tile-radius);padding:var(--poi-tile-padding);box-shadow:var(--poi-tile-shadow);display:flex;flex-direction:column;gap:8px}\r\n\r\n.poi-tile .poi-tile-header{display:flex;align-items:center;gap:8px}\r\n\r\n.poi-tile .poi-tile-title{font-size:var(--poi-tile-title-size);font-weight:600;color:var(--poi-tile-contrast-text,#000)}\r\n\r\n.poi-tile .poi-tile-meta{font-size:var(--poi-tile-sub-size);color:var(--muted-color,#666)}\r\n\r\n.poi-tile .poi-tile-actions{margin-top:auto;display:flex;gap:8px;justify-content:flex-end}\r\n\r\n.poi-tile .btn-small{padding:4px 8px;font-size:0.85rem}\r\n\r\n/* responsive tweaks */
+    --poi-tile-gap: ;
+    --poi-tile-padding: ;
+    --poi-tile-item-height: ; /* approx height used to cap visible items */
+    --poi-tile-bg: ;
+    --poi-tile-border: ;
+    --poi-tile-radius: ;
+    --poi-tile-shadow: ;
+    --poi-tile-title-size: ;
+    --poi-tile-sub-size: ;
+}\r\n\r\n.poi-tiles-wrap{margin-top: ; }\r\n\r\n.poi-type-group{margin-bottom: ; }\r\n\r\n.poi-type-title{font-weight: ;margin: ;display: ;align-items: ;gap: ; }\r\n\r\n.poi-type-title .count-badge{background: ;border: ;padding: ;border-radius: ;font-size: ; }\r\n\r\n.poi-country-group{margin: ; }\r\n\r\n.poi-country-title{font-size: ;margin: ;color: ; }\r\n\r\n.poi-tiles-grid{display: ;grid-template-columns: ;gap: ; }\r\n\r\n.poi-tiles-list{max-height: ;overflow: ;padding-right: ; }\r\n\r\n.poi-tile{background: ;border: ;border-radius: ;padding: ;box-shadow: ;display: ;flex-direction: ;gap: ; }\r\n\r\n.poi-tile .poi-tile-header{display: ;align-items: ;gap: ; }\r\n\r\n.poi-tile .poi-tile-title{font-size: ;font-weight: ;color: ; }\r\n\r\n.poi-tile .poi-tile-meta{font-size: ;color: ; }\r\n\r\n.poi-tile .poi-tile-actions{margin-top: ;display: ;gap: ;justify-content: ; }\r\n\r\n.poi-tile .btn-small{padding: ;font-size: ; }\r\n\r\n/* responsive tweaks */
 @media (max-width:600px){
-    .poi-tiles-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}\r\n\r\n}\r\n\r\n/* Collapsible country-first grouping styles (accessible, no JS inline styles) */
-.poi-country-section{border:1px solid var(--poi-tile-border);border-radius:8px;margin-bottom:12px;overflow:hidden}\r\n\r\n.poi-country-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--poi-tile-bg);}\r\n\r\n.poi-country-section summary::-webkit-details-marker{display:none}\r\n\r\n.poi-country-section .country-summary-left{display:flex;align-items:center;gap:12px}\r\n\r\n.poi-country-section .country-summary-title{font-weight:700}\r\n\r\n.poi-country-section .country-summary-count{font-size:0.9rem;color:var(--muted-color,#666);border:1px solid var(--poi-tile-border);padding:2px 8px;border-radius:999px}\r\n\r\n.poi-country-content{padding:8px 12px 16px;background:transparent}\r\n\r\n/* Ensure country and type summary titles remain high-contrast (black fallback) */
+    .poi-tiles-grid{grid-template-columns: ; }\r\n\r\n}\r\n\r\n/* Collapsible country-first grouping styles (accessible, no JS inline styles) */
+.poi-country-section{border: ;border-radius: ;margin-bottom: ;overflow: ; }\r\n\r\n.poi-country-section summary{list-style: ;cursor: ;display: ;align-items: ;justify-content: ;padding: ;background: ;}\r\n\r\n.poi-country-section summary::-webkit-details-marker{display: ; }\r\n\r\n.poi-country-section .country-summary-left{display: ;align-items: ;gap: ; }\r\n\r\n.poi-country-section .country-summary-title{font-weight: ; }\r\n\r\n.poi-country-section .country-summary-count{font-size: ;color: ;border: ;padding: ;border-radius: ; }\r\n\r\n.poi-country-content{padding: ;background: ; }\r\n\r\n/* Ensure country and type summary titles remain high-contrast (black fallback) */
 .country-summary-title,
 .poi-type-summary-title{
-    color: var(--poi-tile-contrast-text,#000);
+    color: ;
 }\r\n\r\n/* small zoom info control shown on the map */
-.poi-zoom-control{padding:6px 8px;background:var(--poi-tile-bg);color:var(--poi-tile-contrast-text,#000);border:1px solid var(--poi-tile-border);border-radius:4px;font-size:0.9rem}\r\n\r\n/* Ensure edit links in popups are readable (white text on primary background) */
+.poi-zoom-control{padding: ;background: ;color: ;border: ;border-radius: ;font-size: ; }\r\n\r\n/* Ensure edit links in popups are readable (white text on primary background) */
 .poi-popup-container .poi-edit-link,
 .poi-edit-link{
-    color: var(--poi-badge-color,#fff);
-    background-color: var(--poi-badge-bg,#0044ff);
-    border-color: var(--poi-badge-bg,#0044ff);
-    text-decoration: none;
+    color: ;
+    background-color: ;
+    border-color: ;
+    text-decoration: ;
 }\r\n\r\n/* Type groups within country: collapsed details too */
-.poi-type-section{margin-bottom:10px;border-top:1px dashed rgba(0,0,0,0.04)}\r\n\r\n.poi-type-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:8px 0}\r\n\r\n.poi-type-section summary::-webkit-details-marker{display:none}\r\n\r\n.poi-type-section .poi-type-summary-title{font-weight:600}\r\n\r\n.poi-type-section .poi-type-summary-count{font-size:0.85rem;color:var(--muted-color,#666)}\r\n\r\n/* Small visual affordance for collapsed content */
+.poi-type-section{margin-bottom: ;border-top: ; }\r\n\r\n.poi-type-section summary{list-style: ;cursor: ;display: ;align-items: ;justify-content: ;padding: ; }\r\n\r\n.poi-type-section summary::-webkit-details-marker{display: ; }\r\n\r\n.poi-type-section .poi-type-summary-title{font-weight: ; }\r\n\r\n.poi-type-section .poi-type-summary-count{font-size: ;color: ; }\r\n\r\n/* Small visual affordance for collapsed content */
 .poi-country-section[open] > summary .country-summary-title::after,
 .poi-type-section[open] > summary .poi-type-summary-title::after{
-    content: '▾';
-    margin-left:8px;color:var(--muted-color,#666);
+    content: ;
+    margin-left: ;color: ;
 }\r\n\r\n.poi-country-section:not([open]) > summary .country-summary-title::after,
 .poi-type-section:not([open]) > summary .poi-type-summary-title::after{
-    content: '▸';
-    margin-left:8px;color:var(--muted-color,#666);
+    content: ;
+    margin-left: ;color: ;
 }\r\n\r\n/* ==== ROUTES ====
 /* =============================================================================
    ROUTES PAGE STYLES (Create, View, Edit, List)
@@ -1447,777 +1447,777 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
    ============================================================================= */
 
 .routes-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--spacing-lg, 1.5rem);
+    max-width: ;
+    margin: ;
+    padding: ;
 }\r\n\r\n/* Route List */
 .routes-list {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    overflow: hidden;
+    background-color: ;
+    border-radius: ;
+    box-shadow: ;
+    overflow: ;
 }\r\n\r\n.routes-list-header {
-    padding: var(--spacing-lg, 1.5rem);
-    background-color: var(--primary-color, #0044ff);
-    color: white;
+    padding: ;
+    background-color: ;
+    color: ;
 }\r\n\r\n.routes-list-header h2 {
-    margin-top: 0;
-    margin-bottom: var(--spacing-md, 1rem);
+    margin-top: ;
+    margin-bottom: ;
 }\r\n\r\n.routes-list-actions {
-    display: flex;
-    gap: var(--spacing-md, 1rem);
-    flex-wrap: wrap;
+    display: ;
+    gap: ;
+    flex-wrap: ;
 }\r\n\r\n.routes-list-item {
-    padding: var(--spacing-lg, 1.5rem);
-    border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
-    cursor: pointer;
-    transition: var(--transition-fast, all 0.15s ease);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--spacing-lg, 1.5rem);
-    align-items: center;
+    padding: ;
+    border-bottom: ;
+    cursor: ;
+    transition: ;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    align-items: ;
 }\r\n\r\n.routes-list-item:hover {
-    background-color: var(--bg-light, #1a1a1a);
+    background-color: ;
 }\r\n\r\n.routes-list-item:last-child {
-    border-bottom: none;
+    border-bottom: ;
 }\r\n\r\n.route-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm, 0.5rem);
+    display: ;
+    flex-direction: ;
+    gap: ;
 }\r\n\r\n.route-info h3 {
-    margin: 0;
-    color: var(--primary-color, #0044ff);
+    margin: ;
+    color: ;
 }\r\n\r\n.route-info .meta {
-    display: flex;
-    gap: var(--spacing-lg, 1.5rem);
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--text-light, #b0b0b0);
+    display: ;
+    gap: ;
+    font-size: ;
+    color: ;
 }\r\n\r\n.route-info .meta span {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs, 0.25rem);
+    display: ;
+    align-items: ;
+    gap: ;
 }\r\n\r\n.route-actions {
-    display: flex;
-    gap: var(--spacing-sm, 0.5rem);
+    display: ;
+    gap: ;
 }\r\n\r\n.route-actions .btn {
-    padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: var(--font-size-sm, 0.875rem);
-    transition: var(--transition-fast, all 0.15s ease);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-xs, 0.25rem);
+    padding: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-size: ;
+    transition: ;
+    text-decoration: ;
+    display: ;
+    align-items: ;
+    gap: ;
 }\r\n\r\n.route-actions .btn-edit {
-    background-color: #3498db;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.route-actions .btn-edit:hover {
-    background-color: #2980b9;
+    background-color: ;
 }\r\n\r\n.route-actions .btn-delete {
-    background-color: #e74c3c;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.route-actions .btn-delete:hover {
-    background-color: #c0392b;
+    background-color: ;
 }\r\n\r\n.route-actions .btn-view {
-    background-color: #27ae60;
-    color: white;
+    background-color: ;
+    color: ;
 }\r\n\r\n.route-actions .btn-view:hover {
-    background-color: #229954;
+    background-color: ;
 }\r\n\r\n/* Route Form */
 .route-form {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
 }\r\n\r\n.route-form h2 {
-    color: var(--primary-color, #0044ff);
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
-    margin-top: 0;
+    color: ;
+    border-bottom: ;
+    padding-bottom: ;
+    margin-top: ;
 }\r\n\r\n.form-section {
-    margin-bottom: var(--spacing-xl, 2rem);
-    padding-bottom: var(--spacing-xl, 2rem);
-    border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
+    margin-bottom: ;
+    padding-bottom: ;
+    border-bottom: ;
 }\r\n\r\n.form-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+    border-bottom: ;
+    margin-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.form-section h3 {
-    color: var(--text-dark, #e0e0e0);
-    font-size: var(--font-size-lg, 1.125rem);
-    margin-top: 0;
-    margin-bottom: var(--spacing-md, 1rem);
+    color: ;
+    font-size: ;
+    margin-top: ;
+    margin-bottom: ;
 }\r\n\r\n.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--spacing-md, 1rem);
-    margin-bottom: var(--spacing-md, 1rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.form-group {
-    display: flex;
-    flex-direction: column;
+    display: ;
+    flex-direction: ;
 }\r\n\r\n.form-group label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    margin-bottom: var(--spacing-xs, 0.25rem);
-    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: ;
+    color: ;
+    margin-bottom: ;
+    font-size: ;
 }\r\n\r\n.form-group input,
 .form-group select,
 .form-group textarea {
-    padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: var(--font-size-base, 1rem);
-    transition: var(--transition-fast, all 0.15s ease);
-    font-family: inherit;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
+    transition: ;
+    font-family: ;
 }\r\n\r\n.form-group textarea {
-    min-height: 120px;
-    resize: vertical;
+    min-height: ;
+    resize: ;
 }\r\n\r\n.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color, #0044ff);
-    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
+    outline: ;
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n/* Route Editor Map */
 .route-editor {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: var(--spacing-lg, 1.5rem);
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.route-map-container {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    height: 500px;
-    position: relative;
+    background-color: ;
+    border-radius: ;
+    overflow: ;
+    box-shadow: ;
+    height: ;
+    position: ;
 }\r\n\r\n.route-map-container #routeMap {
-    width: 100%;
-    height: 100%;
+    width: ;
+    height: ;
 }\r\n\r\n.route-sidebar {
-    background-color: var(--bg-lighter);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-    height: fit-content;
-    max-height: 500px;
-    overflow-y: auto;
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    box-shadow: ;
+    height: ;
+    max-height: ;
+    overflow-y: ;
 }\r\n\r\n.route-sidebar h3 {
-    color: var(--primary-color, #0044ff);
-    margin-top: 0;
-    border-bottom: 2px solid var(--primary-color, #0044ff);
-    padding-bottom: var(--spacing-md, 1rem);
+    color: ;
+    margin-top: ;
+    border-bottom: ;
+    padding-bottom: ;
 }\r\n\r\n.route-waypoint {
-    padding: var(--spacing-md, 1rem);
-    background-color: var(--bg-light, #1a1a1a);
-    border-left: 3px solid var(--primary-color, #0044ff);
-    margin-bottom: var(--spacing-md, 1rem);
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: ;
+    background-color: ;
+    border-left: ;
+    margin-bottom: ;
+    border-radius: ;
+    display: ;
+    justify-content: ;
+    align-items: ;
 }\r\n\r\n.route-waypoint.active {
-    background-color: var(--primary-light, rgba(77, 148, 255, 0.1));
-    border-left-color: var(--primary-color, #0044ff);
+    background-color: ;
+    border-left-color: ;
 }\r\n\r\n.route-waypoint-info {
-    flex: 1;
+    flex: ;
 }\r\n\r\n.route-waypoint-name {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    margin-bottom: var(--spacing-xs, 0.25rem);
+    font-weight: ;
+    color: ;
+    margin-bottom: ;
 }\r\n\r\n.route-waypoint-remove {
-    background: none;
-    border: none;
-    color: #e74c3c;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0;
+    background: ;
+    border: ;
+    color: ;
+    cursor: ;
+    font-size: ;
+    padding: ;
 }\r\n\r\n.route-waypoint-remove:hover {
-    color: #c0392b;
+    color: ;
 }\r\n\r\n/* Route Summary */
 .route-summary {
-    background-color: var(--bg-light, #1a1a1a);
-    border-radius: 8px;
-    padding: var(--spacing-lg, 1.5rem);
-    margin-bottom: var(--spacing-lg, 1.5rem);
+    background-color: ;
+    border-radius: ;
+    padding: ;
+    margin-bottom: ;
 }\r\n\r\n.route-summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-md, 1rem);
+    display: ;
+    grid-template-columns: ;
+    gap: ;
 }\r\n\r\n.route-summary-item {
-    padding: var(--spacing-md, 1rem);
-    background-color: white;
-    border-radius: 4px;
-    border-left: 3px solid var(--primary-color, #0044ff);
+    padding: ;
+    background-color: ;
+    border-radius: ;
+    border-left: ;
 }\r\n\r\n.route-summary-item .label {
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
-    font-size: var(--font-size-sm, 0.875rem);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: var(--spacing-xs, 0.25rem);
+    font-weight: ;
+    color: ;
+    font-size: ;
+    text-transform: ;
+    letter-spacing: ;
+    margin-bottom: ;
 }\r\n\r\n.route-summary-item .value {
-    color: var(--primary-color, #0044ff);
-    font-size: var(--font-size-lg, 1.125rem);
-    font-weight: 600;
+    color: ;
+    font-size: ;
+    font-weight: ;
 }\r\n\r\n/* Responsive Routes */
 @media (max-width: 1024px) {
     .route-editor {
-        grid-template-columns: 1fr;
+        grid-template-columns: ;
     }\r\n\r\n.route-sidebar {
-        max-height: 300px;
+        max-height: ;
     }\r\n\r\n}\r\n\r\n@media (max-width: 768px) {
     .routes-list-item {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md, 1rem);
+        grid-template-columns: ;
+        gap: ;
     }\r\n\r\n.route-actions {
-        width: 100%;
+        width: ;
     }\r\n\r\n.route-map-container {
-        height: 300px;
+        height: ;
     }\r\n\r\n.form-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: ;
     }\r\n\r\n}\r\n\r\n/* Quick Map Planner Section */
 #quick-planner {
-    margin-top: 1rem;
-    border: 1px solid var(--border-color, #404040);
-    padding: 15px;
-    background: var(--bg-light, #1a1a1a);
-    border-radius: 6px;
+    margin-top: ;
+    border: ;
+    padding: ;
+    background: ;
+    border-radius: ;
 }\r\n\r\n#quick-planner h3 {
-    margin-top: 0;
+    margin-top: ;
 }\r\n\r\n#quick-planner > p {
-    color: var(--text-light, #b0b0b0);
-    margin: 0.5rem 0 1rem 0;
+    color: ;
+    margin: ;
 }\r\n\r\n/* Planner Grid Layout */
 #quick-planner > div {
-    display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 1.5rem;
-    margin-top: 1rem;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n/* Controls Panel */
 .planner-controls {
-    background: var(--bg-lighter, #2d2d2d);
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid var(--border-color, #404040);
-    height: fit-content;
-    position: sticky;
-    top: 10px;
+    background: ;
+    padding: ;
+    border-radius: ;
+    border: ;
+    height: ;
+    position: ;
+    top: ;
 }\r\n\r\n.planner-controls > div {
-    margin-bottom: 12px;
+    margin-bottom: ;
 }\r\n\r\n.planner-controls label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: var(--text-dark, #e0e0e0);
+    display: ;
+    margin-bottom: ;
+    font-weight: ;
+    color: ;
 }\r\n\r\n.planner-controls select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: 14px;
+    width: ;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
 }\r\n\r\n#planner-calc,
 #planner-export {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 8px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: background 0.3s;
+    width: ;
+    padding: ;
+    margin-bottom: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
+    font-weight: ;
+    font-size: ;
+    transition: ;
 }\r\n\r\n#planner-calc {
-    background: var(--primary-color, #0044ff);
+    background: ;
 }\r\n\r\n#planner-calc:hover {
-    background: #003366;
+    background: ;
 }\r\n\r\n#planner-export {
-    background: #27ae60;
+    background: ;
 }\r\n\r\n#planner-export:hover {
-    background: #229954;
+    background: ;
 }\r\n\r\n.planner-stats {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border-color, #404040);
-    font-size: 12px;
-    color: var(--text-light, #b0b0b0);
+    margin-top: ;
+    padding-top: ;
+    border-top: ;
+    font-size: ;
+    color: ;
 }\r\n\r\n.planner-stats > div {
-    margin-bottom: 4px;
+    margin-bottom: ;
 }\r\n\r\n/* Summary Panel */
 .planner-summary-container {
-    background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    overflow: hidden;
+    background: ;
+    border: ;
+    border-radius: ;
+    overflow: ;
 }\r\n\r\n.planner-summary-header {
-    padding: 12px;
-    border-bottom: 1px solid var(--border-color, #404040);
-    background: var(--bg-light, #1a1a1a);
-    font-weight: bold;
-    font-size: 16px;
+    padding: ;
+    border-bottom: ;
+    background: ;
+    font-weight: ;
+    font-size: ;
 }\r\n\r\n#planner-summary {
-    padding: 12px;
-    max-height: 500px;
-    overflow-y: auto;
+    padding: ;
+    max-height: ;
+    overflow-y: ;
 }\r\n\r\n#planner-distance {
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--primary-color, #0044ff);
+    margin-bottom: ;
+    font-weight: ;
+    color: ;
 }\r\n\r\n#planner-duration {
-    margin-bottom: 12px;
-    font-weight: 600;
-    color: #27ae60;
+    margin-bottom: ;
+    font-weight: ;
+    color: ;
 }\r\n\r\n#planner-legs {
-    margin-top: 8px;
-    font-size: 13px;
+    margin-top: ;
+    font-size: ;
 }\r\n\r\n/* Planner Leg Styling */
 .planner-leg {
-    background: var(--bg-lighter, #2d2d2d);
-    border-left: 4px solid var(--primary-color, #0044ff);
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    font-size: 12px;
+    background: ;
+    border-left: ;
+    padding: ;
+    margin-bottom: ;
+    border-radius: ;
+    font-size: ;
 }\r\n\r\n.planner-leg strong {
-    color: var(--text-dark, #e0e0e0);
-    display: block;
-    margin-bottom: 4px;
+    color: ;
+    display: ;
+    margin-bottom: ;
 }\r\n\r\n.leg-swatch {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
-    margin-right: 6px;
-    vertical-align: middle;
+    display: ;
+    width: ;
+    height: ;
+    border-radius: ;
+    margin-right: ;
+    vertical-align: ;
 }\r\n\r\n.planner-leg button {
-    padding: 4px 8px;
-    font-size: 11px;
-    background: var(--primary-color, #0044ff);
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    padding: ;
+    font-size: ;
+    background: ;
+    color: ;
+    border: ;
+    border-radius: ;
+    cursor: ;
 }\r\n\r\n.planner-leg button:hover {
-    background: #003366;
+    background: ;
 }\r\n\r\n/* Readonly Date Fields */
 .readonly-date-field {
-    background-color: var(--bg-lighter);
-    cursor: not-allowed;
-    opacity: 0.9;
+    background-color: ;
+    cursor: ;
+    opacity: ;
 }\r\n\r\n/* ====== ROUTE/PLANNER EMBEDDED STYLES (CONSOLIDATION) ====== */
 
 /* Planner Markers */
 .planner-marker {
-    position: relative;
-    width: 36px;
-    height: 36px;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    position: ;
+    width: ;
+    height: ;
+    border-radius: ;
+    overflow: ;
+    box-shadow: ;
 }\r\n\r\n.planner-marker img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: ;
+    height: ;
+    object-fit: ;
+    display: ;
 }\r\n\r\n.planner-num {
-    position: absolute;
-    right: -6px;
-    bottom: -6px;
-    background: #ff6600;
-    color: #fff;
-    border-radius: 10px;
-    padding: 2px 6px;
-    font-size: 12px;
-    font-weight: 700;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    position: ;
+    right: ;
+    bottom: ;
+    background: ;
+    color: ;
+    border-radius: ;
+    padding: ;
+    font-size: ;
+    font-weight: ;
+    box-shadow: ;
 }\r\n\r\n.planner-item-dragging {
-    opacity: 0.5;
+    opacity: ;
 }\r\n\r\n#planner-waypoints li {
-    cursor: grab;
+    cursor: ;
 }\r\n\r\n/* Drag & Drop Visual Indicators */
 #route-items li {
-    position: relative;
-    padding: 10px 6px;
-    transition: background-color 120ms;
+    position: ;
+    padding: ;
+    transition: ;
 }\r\n\r\n#route-items li.over {
-    background: var(--primary-light, rgba(77, 148, 255, 0.1));
+    background: ;
 }\r\n\r\n#route-items li.over-top::before,
 #route-items li.over-bottom::after {
-    content: '';
-    position: absolute;
-    left: 6px;
-    right: 6px;
-    height: 4px;
-    background: #0077cc;
-    border-radius: 3px;
-    box-shadow: 0 0 4px rgba(0, 119, 204, 0.3);
+    content: ;
+    position: ;
+    left: ;
+    right: ;
+    height: ;
+    background: ;
+    border-radius: ;
+    box-shadow: ;
 }\r\n\r\n#route-items li.over-top::before {
-    top: 4px;
+    top: ;
 }\r\n\r\n#route-items li.over-bottom::after {
-    bottom: 4px;
+    bottom: ;
 }\r\n\r\n/* Animated Placeholder Gap */
 .route-placeholder {
-    list-style: none;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-    height: 0;
-    margin: 0;
-    border-radius: 6px;
-    transition: height 160ms ease, margin 160ms ease;
-    background: rgba(0, 119, 204, 0.04);
-    border: 1px dashed rgba(0, 119, 204, 0.12);
+    list-style: ;
+    display: ;
+    width: ;
+    box-sizing: ;
+    overflow: ;
+    height: ;
+    margin: ;
+    border-radius: ;
+    transition: ;
+    background: ;
+    border: ;
 }\r\n\r\n.route-placeholder.active {
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+    box-shadow: ;
 }\r\n\r\n/* Saving Indicator */
 .saving-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-light, #b0b0b0);
+    display: ;
+    align-items: ;
+    gap: ;
+    font-size: ;
+    color: ;
 }\r\n\r\n.saving-indicator .spinner {
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(0, 0, 0, 0.12);
-    border-top-color: #0077cc;
-    border-radius: 50%;
-    animation: spin 0.9s linear infinite;
+    width: ;
+    height: ;
+    border: ;
+    border-top-color: ;
+    border-radius: ;
+    animation: ;
 }\r\n\r\n/* Drag Ghost Preview */
 .drag-ghost {
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999;
-    opacity: 0.95;
-    transform: translate(-50%, -50%);
-    background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    padding: 6px 10px;
-    border-radius: 6px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    position: ;
+    pointer-events: ;
+    z-index: ;
+    opacity: ;
+    transform: ;
+    background: ;
+    border: ;
+    box-shadow: ;
+    padding: ;
+    border-radius: ;
+    display: ;
+    align-items: ;
+    gap: ;
+    font-size: ;
 }\r\n\r\n.drag-ghost img {
-    width: 28px;
-    height: 28px;
-    object-fit: cover;
-    border-radius: 4px;
+    width: ;
+    height: ;
+    object-fit: ;
+    border-radius: ;
 }\r\n\r\n@keyframes spin {
     from {
-        transform: rotate(0deg);
+        transform: ;
     }\r\n\r\nto {
-        transform: rotate(360deg);
+        transform: ;
     }\r\n\r\n}\r\n\r\n/* Select POIs Modal Card Styles */
 .poi-select-card {
-    background: var(--bg-lighter, #2d2d2d);
-    border: 2px solid var(--border-color, #404040);
-    border-radius: 6px;
-    padding: 10px;
-    cursor: pointer;
-    transition: all 200ms;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    background: ;
+    border: ;
+    border-radius: ;
+    padding: ;
+    cursor: ;
+    transition: ;
+    display: ;
+    flex-direction: ;
+    gap: ;
 }\r\n\r\n.poi-select-card:hover {
-    border-color: #0077cc;
-    box-shadow: 0 4px 12px rgba(0, 119, 204, 0.15);
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n.poi-select-card.selected {
-    background: rgba(52, 152, 219, 0.2);
-    border-color: var(--info-color, #3498db);
-    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background: ;
+    border-color: ;
+    box-shadow: ;
 }\r\n\r\n.poi-select-card input[type="checkbox"] {
-    margin-right: 0.35rem;
-    cursor: pointer;
+    margin-right: ;
+    cursor: ;
 }\r\n\r\n.poi-select-logo {
-    width: 100%;
-    height: 80px;
-    object-fit: contain;
-    border-radius: 3px;
+    width: ;
+    height: ;
+    object-fit: ;
+    border-radius: ;
 }\r\n\r\n.poi-select-name {
-    font-weight: 700;
-    color: #222;
-    font-size: 0.95rem;
+    font-weight: ;
+    color: ;
+    font-size: ;
 }\r\n\r\n.poi-select-meta {
-    font-size: 0.8rem;
-    color: var(--text-light, #b0b0b0);
+    font-size: ;
+    color: ;
 }\r\n\r\n.poi-select-checkbox-wrapper {
-    display: flex;
-    align-items: center;
-    margin-top: 8px;
+    display: ;
+    align-items: ;
+    margin-top: ;
 }\r\n\r\n/* ====== SELECT POIS VIEW STYLES ====== */
 
 .trip-header {
-    margin-bottom: 1rem;
-    padding: 10px;
-    background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    margin-bottom: ;
+    padding: ;
+    background: ;
+    border: ;
 }\r\n\r\n.trip-header h2 {
-    margin: 0 0 6px 0;
+    margin: ;
 }\r\n\r\n.trip-header p {
-    color: var(--text-light, #b0b0b0);
-    margin: 0;
+    color: ;
+    margin: ;
 }\r\n\r\n.filter-section {
-    margin-bottom: 1.5rem;
-    padding: 15px;
-    background: var(--bg-light, #1a1a1a);
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
+    margin-bottom: ;
+    padding: ;
+    background: ;
+    border: ;
+    border-radius: ;
 }\r\n\r\n.filter-section h3 {
-    margin-top: 0;
+    margin-top: ;
 }\r\n\r\n.filter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.filter-group-select {
-    display: block;
+    display: ;
 }\r\n\r\n.filter-group-select label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 0.35rem;
+    display: ;
+    font-weight: ;
+    margin-bottom: ;
 }\r\n\r\n.filter-group-select select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: 1rem;
+    width: ;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
 }\r\n\r\n.button-group {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    display: ;
+    gap: ;
+    flex-wrap: ;
 }\r\n\r\n.button-group button {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: ;
+    font-size: ;
 }\r\n\r\n.pois-status {
-    margin-left: 1rem;
-    color: #666;
-    line-height: 2.5;
+    margin-left: ;
+    color: ;
+    line-height: ;
 }\r\n\r\n.map-container-modal {
-    margin-bottom: 1.5rem;
+    margin-bottom: ;
 }\r\n\r\n#pois-map-select {
-    height: 500px;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
+    height: ;
+    border: ;
+    border-radius: ;
 }\r\n\r\n.selected-pois-section {
-    margin-bottom: 1.5rem;
-    padding: 15px;
-    background: rgba(52, 152, 219, 0.15);
-    border: 1px solid var(--info-color, #3498db);
-    border-radius: 4px;
+    margin-bottom: ;
+    padding: ;
+    background: ;
+    border: ;
+    border-radius: ;
 }\r\n\r\n.selected-pois-section h3 {
-    margin-top: 0;
+    margin-top: ;
 }\r\n\r\n.selected-count-badge {
-    background: var(--info-color, #3498db);
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    margin-left: 0.5rem;
-    display: none;
+    background: ;
+    color: ;
+    padding: ;
+    border-radius: ;
+    font-size: ;
+    margin-left: ;
+    display: ;
 }\r\n\r\n.selected-count-badge.active {
-    display: inline-block;
+    display: ;
 }\r\n\r\n#selected-pois-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.selected-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    display: ;
+    gap: ;
+    margin-top: ;
 }\r\n\r\n#add-selected-to-route {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: ;
+    font-size: ;
 }\r\n\r\n#add-selected-to-route:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: ;
+    cursor: ;
 }\r\n\r\n.back-link {
-    margin-bottom: 2rem;
+    margin-bottom: ;
 }\r\n\r\n/* ====== ROUTE VIEW PAGE STYLES ====== */
 
 .trip-header {
-    margin-bottom: 1rem;
-    padding: 10px;
-    background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    margin-bottom: ;
+    padding: ;
+    background: ;
+    border: ;
 }\r\n\r\n.trip-metadata {
-    font-size: 90%;
-    color: var(--text-light, #b0b0b0);
+    font-size: ;
+    color: ;
 }\r\n\r\n.trip-metadata .meta-row {
-    margin-top: 6px;
+    margin-top: ;
 }\r\n\r\n.route-map {
-    height: 600px;
-    margin-top: 1rem;
-    border: 1px solid var(--border-color, #404040);
+    height: ;
+    margin-top: ;
+    border: ;
 }\r\n\r\n.route-controls {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+    display: ;
+    gap: ;
+    align-items: ;
+    justify-content: ;
+    margin-bottom: ;
 }\r\n\r\n.route-form-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    display: ;
+    grid-template-columns: ;
+    gap: ;
+    margin-bottom: ;
 }\r\n\r\n.form-group-half {
-    display: flex;
-    flex-direction: column;
+    display: ;
+    flex-direction: ;
 }\r\n\r\n.form-group-half label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+    font-weight: ;
+    margin-bottom: ;
 }\r\n\r\n.form-group-half input,
 .form-group-half select {
-    padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: ;
+    border: ;
+    border-radius: ;
+    font-size: ;
 }\r\n\r\n.map-selector-panel {
-    display: none;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    overflow: hidden;
-    background: var(--bg-lighter, #2d2d2d);
+    display: ;
+    border: ;
+    border-radius: ;
+    overflow: ;
+    background: ;
 }\r\n\r\n.map-selector-panel.show {
-    display: block;
+    display: ;
 }\r\n\r\n.map-selector-container {
-    height: 300px;
-    border-top: 1px solid var(--border-color, #404040);
+    height: ;
+    border-top: ;
 }\r\n\r\n.map-selected-info {
-    padding: 0.75rem;
-    background: rgba(52, 152, 219, 0.2);
-    border-top: 1px solid var(--border-color, #404040);
-    font-size: 0.9rem;
-    text-align: center;
-    color: var(--info-color, #3498db);
-    display: none;
+    padding: ;
+    background: ;
+    border-top: ;
+    font-size: ;
+    text-align: ;
+    color: ;
+    display: ;
 }\r\n\r\n.map-selected-info.show {
-    display: block;
+    display: ;
 }\r\n\r\n.route-popup-image {
-    max-width: 80px;
-    display: block;
-    margin-top: 6px;
+    max-width: ;
+    display: ;
+    margin-top: ;
 }\r\n\r\n.route-items-list {
-    list-style: none;
-    padding: 0;
+    list-style: ;
+    padding: ;
 }\r\n\r\n.route-items-list li {
-    padding: 8px;
-    border: 1px solid var(--border-color, #404040);
-    margin-bottom: 6px;
-    background: var(--bg-lighter, #2d2d2d);
-    display: flex;
-    gap: 12px;
-    align-items: center;
+    padding: ;
+    border: ;
+    margin-bottom: ;
+    background: ;
+    display: ;
+    gap: ;
+    align-items: ;
 }\r\n\r\n.route-item-col-fixed {
-    width: 110px;
-    flex: 0 0 110px;
+    width: ;
+    flex: ;
 }\r\n\r\n.route-item-col-dates {
-    width: 160px;
-    flex: 0 0 160px;
+    width: ;
+    flex: ;
 }\r\n\r\n.route-item-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    flex: ;
+    display: ;
+    align-items: ;
+    justify-content: ;
+    gap: ;
 }\r\n\r\n.route-item-poi-info {
-    flex: 1;
+    flex: ;
 }\r\n\r\n.route-item-poi-type {
-    font-size: 90%;
-    color: var(--text-light, #b0b0b0);
+    font-size: ;
+    color: ;
 }\r\n\r\n.route-item-controls {
-    display: flex;
-    gap: 6px;
-    flex: 0 0 auto;
+    display: ;
+    gap: ;
+    flex: ;
 }\r\n\r\n/* Control Buttons for Route Items */
 .move-up,
 .move-down,
 .remove-item {
-    padding: 6px 10px;
-    border: 1px solid var(--border-color, #404040);
-    border-radius: 4px;
-    background-color: var(--bg-lighter, #2d2d2d);
-    color: var(--text-dark, #e0e0e0);
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
+    padding: ;
+    border: ;
+    border-radius: ;
+    background-color: ;
+    color: ;
+    cursor: ;
+    font-size: ;
+    transition: ;
 }\r\n\r\n.move-up:hover,
 .move-down:hover {
-    background-color: var(--primary-color, #0044ff);
-    color: white;
-    border-color: var(--primary-color, #0044ff);
+    background-color: ;
+    color: ;
+    border-color: ;
 }\r\n\r\n.remove-item:hover {
-    background-color: var(--error-color, #e74c3c);
-    color: white;
-    border-color: var(--error-color, #e74c3c);
+    background-color: ;
+    color: ;
+    border-color: ;
 }\r\n\r\n/* Map Selector POI Button */
 .map-select-poi-btn {
-    padding: 6px 12px;
-    margin-top: 6px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--primary-color, #0044ff);
-    color: white;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s ease;
-    display: inline-block;
+    padding: ;
+    margin-top: ;
+    border: ;
+    border-radius: ;
+    background-color: ;
+    color: ;
+    cursor: ;
+    font-size: ;
+    transition: ;
+    display: ;
 }\r\n\r\n.map-select-poi-btn:hover {
-    background-color: var(--primary-dark, #003366);
+    background-color: ;
 }\r\n\r\n/* ==== ROUTES-VIEW ====
 /* Route Views Styles */
 
 #date-error {
-    display: none;
-    margin-top: 6px;
+    display: ;
+    margin-top: ;
 }\r\n\r\n#date-error.visible {
-    display: block;
+    display: ;
 }\r\n\r\n/* Map marker popup images */
 .marker-popup-image {
-    max-width: 80px;
-    display: block;
-    margin-top: 6px;
+    max-width: ;
+    display: ;
+    margin-top: ;
 }\r\n\r\n/* Location dropdown selector */
 .select-min-width {
-    min-width: 220px;
+    min-width: ;
 }\r\n\r\n/* Toggle map selector button */
 #toggle-map-selector {
-    padding: 0.5rem;
-    margin-bottom: 0.75rem;
-    display: none;
-    width: 100%;
+    padding: ;
+    margin-bottom: ;
+    display: ;
+    width: ;
 }\r\n\r\n#toggle-map-selector.visible {
-    display: block;
+    display: ;
 }\r\n\r\n/* Back button with bottom margin */
 .btn-back-routes {
-    display: inline-block;
-    margin-bottom: 1rem;
+    display: ;
+    margin-bottom: ;
 }\r\n\r\n/* POI legend: ensure label text is black while preserving circle initials */
-#pv-poi-legend { color: #000; }\r\n\r\n#pv-poi-legend .pv-legend div > div + div { color: #000; }\r\n\r\n/* Navigation buttons to match site style */
+#pv-poi-legend { color: ; }\r\n\r\n#pv-poi-legend .pv-legend div > div + div { color: ; }\r\n\r\n/* Navigation buttons to match site style */
 .nav-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 0.75rem;
-    border-radius: 6px;
-    border: 1px solid rgba(0,0,0,0.08);
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.04));
-    color: var(--text-dark, #222);
-    text-decoration: none;
-    font-weight: 600;
+    display: ;
+    align-items: ;
+    gap: ;
+    padding: ;
+    border-radius: ;
+    border: ;
+    background: ;
+    color: ;
+    text-decoration: ;
+    font-weight: ;
 }\r\n\r\n.nav-btn:hover, .nav-btn:focus {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transform: ;
+    box-shadow: ;
 }\r\n\r\n/* Dark theme override for nav buttons */
 .theme-dark .nav-btn {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
-    border-color: rgba(255,255,255,0.04);
-    color: var(--color-on-surface, #e0e0e0);
+    background: ;
+    border-color: ;
+    color: ;
 }\r\n\r\n
 
