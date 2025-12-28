@@ -107,7 +107,25 @@ export default class PoiMapManager {
         healthcare: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                if (tags && (tags.amenity === 'hospital' || tags.amenity === 'pharmacy')) return true;
+                // Common amenity values for healthcare locations
+                if (tags && tags.amenity) {
+                    const a = String(tags.amenity).trim().toLowerCase();
+                    const healthcareAmenities = ['hospital','pharmacy','clinic','doctors','dentist','healthcare','medical_center','urgent_care','doctors_office','walk_in_clinic','outpatient_centre'];
+                    if (healthcareAmenities.includes(a)) return true;
+                }
+                // Some places use shop=chemist or shop=pharmacy
+                if (tags && tags.shop) {
+                    const s = String(tags.shop).trim().toLowerCase();
+                    if (s === 'chemist' || s === 'pharmacy') return true;
+                }
+                // Fallback: name-based heuristic (catch clinics, medical, pharmacy, hospital, dentist, centre/center)
+                if (name && /\b(clinic|medical|health|pharm|pharmacy|hospital|dentist|doctor|centre|center|walk[- ]?in|urgent|care)\b/i.test(name)) return true;
+                // Some OSM data uses a dedicated `healthcare` key
+                if (tags && typeof tags.healthcare !== 'undefined') {
+                    const hc = String(tags.healthcare).trim().toLowerCase();
+                    const known = ['clinic','general_practitioner','primary_care','specialist','hospital','pharmacy','health_centre','health_center'];
+                    if (known.includes(hc) || hc === 'yes') return true;
+                }
             } catch (e) {}
             return false;
         },
@@ -153,15 +171,22 @@ export default class PoiMapManager {
         transport: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                if (tags && (tags.public_transport === 'stop_position' || tags.public_transport === 'station')) return true;
-                if (tags && tags.railway && tags.railway === 'station') return true;
+                console.error('TRANSPORT PREDICATE CHECK for', name, ': tags.highway =', tags?.highway, 'tags.amenity =', tags?.amenity);
+                if (tags && tags.amenity && ['bus_station','ferry_terminal'].includes(String(tags.amenity).trim().toLowerCase())) return true;
+                if (tags && tags.highway && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
+                    console.error('TRANSPORT PREDICATE: highway bus_stop matched for', name);
+                    return true;
+                }
+                if (tags && tags.railway && String(tags.railway).trim().toLowerCase() === 'station') return true;
+                if (tags && tags.aeroway && String(tags.aeroway).trim().toLowerCase() === 'aerodrome') return true;
+                if (tags && (String(tags.public_transport).trim().toLowerCase() === 'stop_position' || String(tags.public_transport).trim().toLowerCase() === 'station')) return true;
             } catch (e) {}
             return false;
         },
         dump_station: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                if (tags && tags.amenity && tags.amenity === 'sanitary_dump_station') return true;
+                if (tags && tags.amenity && (tags.amenity === 'sanitary_dump_station' || tags.amenity === 'waste_disposal')) return true;
             } catch (e) {}
             return false;
         },
@@ -175,67 +200,47 @@ export default class PoiMapManager {
     };
 
     static CATEGORY_COLORS = {
-        campgrounds: '#2c8c2c',
-        provincial_parks: '#2b8af3',
-        shopping: '#2980b9',
-        cafes: '#c66f00',
-        fast_food: '#d35400',
-        banks: '#27ae60',
-        cannabis: '#5b8e23',
-        hotels: '#8a2bcb',
         hotel: '#8a2bcb',
         attraction: '#f39c12',
+        tourist_info: '#9b59b6',
+        food: '#e67e22',
         nightlife: '#f39c12',
-        fuel: '#e74c3c',
+        gas_stations: '#e74c3c',
+        charging_station: '#e67e22',
+        parking: '#95a5a6',
         bank: '#27ae60',
         healthcare: '#27ae60',
-        tobacco: '#34495e',
-        transport: '#1abc9c',
-        food: '#e67e22',
-        restaurants: '#e67e22',
-        gas_stations: '#e74c3c',
-        dump_station: '#7f8c8d',
-        attractions: '#f39c12',
         fitness: '#16a085',
         laundry: '#3498db',
-        parking: '#95a5a6',
-        pharmacy: '#27ae60',
-        tobacco_vape: '#34495e',
-        tourist_info: '#9b59b6',
-        transportation: '#1abc9c',
-        supermarket: '#f1c40f'
+        supermarket: '#f1c40f',
+        tobacco: '#34495e',
+        cannabis: '#5b8e23',
+        transport: '#1abc9c',
+        dump_station: '#7f8c8d',
+        campgrounds: '#2c8c2c',
+        natureparks: '#2b8af3'
     };
 
     static CATEGORY_ICONS = {
-        campgrounds: 'campground.png',
-        provincial_parks: 'national_park.png',
-        cafes: 'cafe.png',
-        fast_food: 'fast_food.png',
-        shopping: 'shopping.png',
-        banks: 'bank.png',
-        cannabis: 'Cannabis.png',
-        hotels: 'hotel.png',
         hotel: 'hotel.png',
         attraction: 'Attractions.png',
+        tourist_info: 'TouristInfo.png',
+        food: 'food.png',
         nightlife: 'Attractions.png',
-        fuel: 'gas_station.png',
+        gas_stations: 'gas_station.png',
+        charging_station: 'gas_station.png',
+        parking: 'Parking.png',
         bank: 'bank.png',
         healthcare: 'Pharmacy.png',
-        tobacco: 'TabacoVape.png',
-        transport: 'Transportation.png',
-        food: 'food.png',
-        restaurants: 'restaurant.png',
-        gas_stations: 'gas_station.png',
-        dump_station: 'dump_station.png',
-        attractions: 'Attractions.png',
         fitness: 'Fitness.png',
         laundry: 'Laundry.png',
-        parking: 'Parking.png',
-        pharmacy: 'Pharmacy.png',
-        tobacco_vape: 'TabacoVape.png',
-        tourist_info: 'TouristInfo.png',
-        transportation: 'Transportation.png',
-        supermarket: 'supermarket.png'
+        supermarket: 'supermarket.png',
+        tobacco: 'tobaccoVape.png',
+        cannabis: 'Cannabis.png',
+        transport: 'Transportation.png',
+        dump_station: 'dump_station.png',
+        campgrounds: 'campground.png',
+        natureparks: 'national_park.png'
     };
 
     // Return a canonical key for a POI to deduplicate across different source shapes.
@@ -297,7 +302,9 @@ export default class PoiMapManager {
         cannabis: 'C',
         transport: 'M',
         dump_station: 'D',
-        campgrounds: 'C'
+        campgrounds: 'C',
+        natureparks: 'N',
+        charging_station: 'C'
     };
 
     static _colorForOsm(osmId) {
@@ -481,28 +488,64 @@ export default class PoiMapManager {
 
     _getCategoryForPoi(poi) {
         if (!poi) return null;
-        let tags = (typeof poi.tags === 'object' && poi.tags) ? poi.tags : PoiMapManager.parseHstore(poi.tags);
-        // If the Overpass endpoint returned amenity/tourism/shop/leisure etc as top-level
-        // fields (rather than a single `tags` object), include them as a fallback so
-        // CATEGORY_PREDICATES can evaluate those values.
-        try {
-            if ((!tags || Object.keys(tags).length === 0) && poi) {
-                const fallback = {};
-                if (typeof poi.amenity !== 'undefined' && poi.amenity !== '') fallback.amenity = poi.amenity;
-                if (typeof poi.tourism !== 'undefined' && poi.tourism !== '') fallback.tourism = poi.tourism;
-                if (typeof poi.shop !== 'undefined' && poi.shop !== '') fallback.shop = poi.shop;
-                if (typeof poi.leisure !== 'undefined' && poi.leisure !== '') fallback.leisure = poi.leisure;
-                if (typeof poi.brand !== 'undefined' && poi.brand !== '') fallback.brand = poi.brand;
-                if (typeof poi.operator !== 'undefined' && poi.operator !== '') fallback.operator = poi.operator;
-                if (Object.keys(fallback).length) tags = Object.assign({}, fallback, tags || {});
-            }
-        } catch (e) {}
+        
+        // Try to get tags - could be object or hstore string
+        let tags = null;
+        if (typeof poi.tags === 'object' && poi.tags) {
+            tags = poi.tags;
+        } else if (typeof poi.tags === 'string' && poi.tags.trim()) {
+            tags = PoiMapManager.parseHstore(poi.tags) || {};
+        } else {
+            tags = {};
+        }
+        
+        // ALWAYS merge top-level OSM fields into tags object
+        // This ensures highway, railway, aeroway etc. are recognized
+        const fallback = {};
+        if (typeof poi.amenity !== 'undefined' && poi.amenity !== '') fallback.amenity = poi.amenity;
+        if (typeof poi.tourism !== 'undefined' && poi.tourism !== '') fallback.tourism = poi.tourism;
+        if (typeof poi.shop !== 'undefined' && poi.shop !== '') fallback.shop = poi.shop;
+        if (typeof poi.leisure !== 'undefined' && poi.leisure !== '') fallback.leisure = poi.leisure;
+        if (typeof poi.highway !== 'undefined' && poi.highway !== '') fallback.highway = poi.highway;
+        if (typeof poi.railway !== 'undefined' && poi.railway !== '') fallback.railway = poi.railway;
+        if (typeof poi.aeroway !== 'undefined' && poi.aeroway !== '') fallback.aeroway = poi.aeroway;
+        if (typeof poi.natural !== 'undefined' && poi.natural !== '') fallback.natural = poi.natural;
+        if (typeof poi.waterway !== 'undefined' && poi.waterway !== '') fallback.waterway = poi.waterway;
+        if (typeof poi.public_transport !== 'undefined' && poi.public_transport !== '') fallback.public_transport = poi.public_transport;
+        if (typeof poi.brand !== 'undefined' && poi.brand !== '') fallback.brand = poi.brand;
+        if (typeof poi.operator !== 'undefined' && poi.operator !== '') fallback.operator = poi.operator;
+        
+        // Merge: fallback first (lower priority), then tags (higher priority)
+        tags = Object.assign({}, fallback, tags || {});
 
         const name = poi.name || (tags ? tags.name : '');
-        try { if (window.POI_DEBUG && console && console.debug) console.debug('_getCategoryForPoi tags', { osm_id: poi?.osm_id, tags, name }); } catch (e) {}
+        
+        // DEBUG: Log tags for transport-like POIs
+        if (poi.osm_id && (poi.highway === 'bus_stop' || tags.highway === 'bus_stop' || poi.name === 'Rupert' || poi.name === 'Renfrew' || poi.name === 'Boundary Loop')) {
+            // Only log once per POI to avoid spam
+            if (!window.__DEBUG_LOGGED_POIS) window.__DEBUG_LOGGED_POIS = {};
+            const logKey = `${poi.osm_id}`;
+            if (!window.__DEBUG_LOGGED_POIS[logKey]) {
+                window.__DEBUG_LOGGED_POIS[logKey] = true;
+                console.debug('_getCategoryForPoi DETAILED DEBUG:', {
+                    osm_id: poi.osm_id,
+                    name: poi.name,
+                    fallback_keys: Object.keys(fallback),
+                    fallback_highway: fallback.highway,
+                    tags_keys: Object.keys(tags),
+                    tags_highway: tags.highway,
+                    tags_amenity: tags.amenity,
+                    tags_railway: tags.railway,
+                    test_transport: PoiMapManager.CATEGORY_PREDICATES.transport ? PoiMapManager.CATEGORY_PREDICATES.transport(tags, name) : 'PREDICATE NOT FOUND'
+                });
+            }
+        }
 
         for (const category in PoiMapManager.CATEGORY_PREDICATES) {
             if (PoiMapManager.CATEGORY_PREDICATES[category](tags, name)) {
+                if (poi.osm_id && (poi.highway === 'bus_stop' || tags.highway === 'bus_stop' || poi.name === 'Rupert' || poi.name === 'Renfrew' || poi.name === 'Boundary Loop')) {
+                    console.log(`MATCHED CATEGORY: ${category} for ${poi.name}`);
+                }
                 return category;
             }
         }
@@ -527,7 +570,6 @@ export default class PoiMapManager {
         if (!this._isAppPoi(poi)) return null;
 
         const category = this._getCategoryForPoi(poi);
-        try { if (window.POI_DEBUG && console && console.debug) console.debug('getIconForPoi called (app poi)', { app_id: poi?.id, osm_id: poi?.osm_id, logo: poi?.logo, category }); } catch (e) {}
         // Prefer explicit logo set on the POI (comes from MySQL `locations.logo`) when available
         // This lets imported locations show their assigned icon filenames.
         // Ensure APP_BASE has trailing slash
@@ -569,7 +611,6 @@ export default class PoiMapManager {
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
         });
-        try { if (window.POI_DEBUG && console && console.debug) console.debug('getIconForPoi -> category icon created', { category, iconFile, iconUrl: icon.options && icon.options.iconUrl }); } catch (e) {}
         this._iconCache[category] = icon;
         return icon;
     }
@@ -578,8 +619,31 @@ export default class PoiMapManager {
     _getColoredMarkerIcon(poi) {
         try {
             if (!poi) return null;
-            const category = this._getCategoryForPoi(poi) || '';
+            let category = this._getCategoryForPoi(poi) || '';
+
+            // If Overpass returned highway=bus_stop (either in tags or top-level),
+            // force the transport category so bus stops get the transport color.
+            if (category !== 'transport') {
+                // obtain tags (object or hstore string)
+                let tags = null;
+                if (typeof poi.tags === 'object' && poi.tags) {
+                    tags = poi.tags;
+                } else if (typeof poi.tags === 'string' && poi.tags.trim()) {
+                    tags = PoiMapManager.parseHstore(poi.tags) || {};
+                } else {
+                    tags = {};
+                }
+                // merge relevant top-level OSM fields if present
+                if (typeof poi.highway !== 'undefined' && poi.highway !== '') tags.highway = tags.highway || poi.highway;
+                if (typeof poi.railway !== 'undefined' && poi.railway !== '') tags.railway = tags.railway || poi.railway;
+                if (typeof poi.aeroway !== 'undefined' && poi.aeroway !== '') tags.aeroway = tags.aeroway || poi.aeroway;
+                if (typeof tags.highway !== 'undefined' && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
+                    category = 'transport';
+                }
+            }
+
             const color = PoiMapManager.CATEGORY_COLORS[category] || PoiMapManager._colorForOsm(poi?.osm_id);
+            console.debug('_getColoredMarkerIcon:', { osm_id: poi.osm_id, name: poi.name, category, color, isTransport: category === 'transport' });
             const key = `colored:${category || 'osm'}:${color}`;
             if (this._iconCache[key]) return this._iconCache[key];
             const size = 20;
@@ -1374,19 +1438,20 @@ export default class PoiMapManager {
         if (opts && opts.forceOverpass) onlyMine = false;
 
         let types = this.getSelectedCategories();
-        // Map frontend category keys to server-expected `types` keys
+        // Map frontend category keys to server-expected types (matching 19 active filters)
         let serverTypes = [];
         try {
             const serverTypeMap = {
-                hotel: 'hotels',
-                attraction: 'attractions',
+                hotel: 'hotel',
+                attraction: 'attraction',
                 tourist_info: 'tourist_info',
                 food: 'food',
                 nightlife: 'nightlife',
-                fuel: 'fuel',
+                gas_stations: 'gas_stations',
+                charging_station: 'charging_station',
                 parking: 'parking',
                 bank: 'bank',
-                healthcare: 'pharmacy',
+                healthcare: 'healthcare',
                 fitness: 'fitness',
                 laundry: 'laundry',
                 supermarket: 'supermarket',
@@ -1394,7 +1459,8 @@ export default class PoiMapManager {
                 cannabis: 'cannabis',
                 transport: 'transport',
                 dump_station: 'dump_station',
-                campgrounds: 'campgrounds'
+                campgrounds: 'campgrounds',
+                natureparks: 'natureparks'
             };
             if (Array.isArray(types) && types.length) serverTypes = types.map(t => serverTypeMap[t] || t);
         } catch (e) { serverTypes = types; }
@@ -1800,7 +1866,6 @@ export default class PoiMapManager {
                 let cat = null;
                 try {
                     cat = this._getCategoryForPoi(poi);
-                    if (window.POI_DEBUG && console && console.debug) console.debug('marker create', { osmKey, osm_id: poi.osm_id, logo: poi.logo, category: cat, iconUrl: icon && icon.options && icon.options.iconUrl });
                 } catch (e) {}
                 const markerOptions = {
                     osm_id: poi.osm_id,
@@ -1860,36 +1925,9 @@ export default class PoiMapManager {
                 } catch (e) {}
             });
 
-            // Debug: report counts and marker DOM presence to help diagnose invisible markers
-            try {
-                if (window.POI_DEBUG && console && console.debug) {
-                    console.debug('POI load summary', { requestedCount: data.length });
-                    try {
-                        const clusterLayers = (this.markers && this.markers.getLayers) ? this.markers.getLayers().length : null;
-                        console.debug('Markers in cluster layer', clusterLayers);
-                    } catch (e) {}
-                    try {
-                        const pane = document.querySelector('.leaflet-marker-pane');
-                        console.debug('leaflet-marker-pane child count', pane ? pane.children.length : null);
-                    } catch (e) {}
-                    try {
-                        const sample = (this.markers && this.markers.getLayers) ? this.markers.getLayers().slice(0,5) : [];
-                        sample.forEach((m, idx) => {
-                            const el = (m && m.getElement) ? m.getElement() : (m && m._icon ? m._icon : null);
-                            console.debug('sample marker element', idx, !!el, el && el.outerHTML ? el.outerHTML.slice(0,200) : (el && el.tagName ? el.tagName : String(el)));
-                        });
-                    } catch (e) {}
-                }
-            } catch (e) {}
-
             // Final status (refresh after icons/markers created)
             const mysqlCountFinal = data.reduce((acc, p) => acc + ((p && (p.source === 'mysql' || p._is_app === true)) ? 1 : 0), 0);
             const overpassCountFinal = data.length - mysqlCountFinal;
-            // Log final deduplicated counts and visible marker count
-            try {
-                const visibleMarkers = (this.markers && typeof this.markers.getLayers === 'function') ? this.markers.getLayers().length : null;
-                console.info(`POI fetch (final): total=${data.length}, mysql=${mysqlCountFinal}, overpass=${overpassCountFinal}, markers=${visibleMarkers}`);
-            } catch (e) {}
             this.setStatus(data.length > 0 ? `${data.length} POIs loaded — MySQL: ${mysqlCountFinal}, Overpass: ${overpassCountFinal}` : 'No POIs found in this area.', false, false);
 
         } catch (error) {

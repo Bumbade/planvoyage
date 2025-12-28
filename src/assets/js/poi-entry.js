@@ -11,8 +11,21 @@ function applyServerFilters() {
     try {
         if (typeof window !== 'undefined' && window.POI_FILTERS && Object.keys(window.POI_FILTERS).length) {
             const built = PoiMapManager._buildPredicatesFromMap(window.POI_FILTERS);
-            PoiMapManager.CATEGORY_PREDICATES = Object.assign({}, PoiMapManager.CATEGORY_PREDICATES, built);
-            console.info('poi-entry: applied server POI_FILTERS');
+            // Merge built predicates with existing ones: preserve local predicate logic
+            for (const cat of Object.keys(built)) {
+                const serverPred = built[cat];
+                const localPred = PoiMapManager.CATEGORY_PREDICATES[cat];
+                if (typeof localPred === 'function') {
+                    // Compose: local OR server
+                    PoiMapManager.CATEGORY_PREDICATES[cat] = (tags, name, poiType) => {
+                        try { if (localPred(tags, name, poiType)) return true; } catch (e) {}
+                        try { return !!serverPred(tags, name, poiType); } catch (e) { return false; }
+                    };
+                } else {
+                    PoiMapManager.CATEGORY_PREDICATES[cat] = serverPred;
+                }
+            }
+            console.info('poi-entry: applied server POI_FILTERS (merged with local predicates)');
         }
     } catch (e) {
         console.warn('poi-entry: failed to apply server POI_FILTERS', e);
@@ -51,10 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Always auto-load the user's MySQL POIs when logged in (checkbox removed)
+        // Do not force `hasLoadedOnce` or trigger an immediate fetch here —
+        // the map's `moveend` handler will trigger `fetchAndPlot` with the
+        // correct bbox after initialisation, preventing duplicate requests.
         try {
             if (window.CURRENT_USER_ID) {
-                __pv_poi_manager.hasLoadedOnce = true;
-                __pv_poi_manager.fetchAndPlot({ force: true });
                 __pv_poi_manager.fetchAndRenderFullPoiList();
             }
         } catch (e) {}
