@@ -41,6 +41,7 @@ try {
         'fitness' => 'Fitness',
         'attractions' => 'Attractions',
         'tobacco_vape' => 'Tobacco / Vape',
+        'tobacco' => 'Tobacco / Vape',
         'cannabis' => 'Cannabis'
     ];
 

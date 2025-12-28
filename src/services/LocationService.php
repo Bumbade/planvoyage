@@ -190,7 +190,8 @@ class LocationService
             } elseif ($amenity === 'pharmacy' || $shop === 'pharmacy') {
                 $mapType = 'pharmacy';
             } elseif ($shop && in_array($shop, ['tobacco','e-cigarette','vape'])) {
-                $mapType = 'tobacco_vape';
+                // normalize tobacco/vape shops to 'tobacco' category
+                $mapType = 'tobacco';
             } elseif ($shop && in_array($shop, ['cannabis'])) {
                 $mapType = 'cannabis';
             } elseif ($amenity === 'parking' || ($tLower['parking'] ?? '') === 'yes') {
@@ -217,6 +218,7 @@ class LocationService
                 'tourist_info' => 'TouristInfo.png',
                 'shopping' => 'shopping.png',
                 'tobacco_vape' => 'TabacoVape.png',
+                'tobacco' => 'TabacoVape.png',
                 'parking' => 'Parking.png',
                 'pharmacy' => 'Pharmacy.png',
                 'dump_station' => 'dump_station.png',

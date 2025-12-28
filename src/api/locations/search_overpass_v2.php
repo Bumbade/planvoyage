@@ -58,6 +58,8 @@ $maps = [
 	'attractions' => [['k'=>'tourism','v'=>'museum'],['k'=>'tourism','v'=>'theme_park'],['k'=>'natural','v'=>'waterfall'],['k'=>'waterway','v'=>'waterfall'],['k'=>'tourism','v'=>'attraction'],['k'=>'tourism','v'=>'viewpoint'],['k'=>'tourism','v'=>'zoo'],['k'=>'leisure','v'=>'nature_reserve'],['k'=>'tourism','v'=>'museum']],
 	'nightlife' => [['k'=>'amenity','v'=>'bar'],['k'=>'amenity','v'=>'pub'],['k'=>'amenity','v'=>'nightclub']],
 	'tobacco_vape' => [['k'=>'shop','v'=>'tobacco'],['k'=>'shop','v'=>'e-cigarette']],
+	// alias key to support modern frontend key `tobacco`
+	'tobacco' => [['k'=>'shop','v'=>'tobacco'],['k'=>'shop','v'=>'e-cigarette']],
 	'cannabis' => [['k'=>'shop','v'=>'cannabis']]
 ];
 

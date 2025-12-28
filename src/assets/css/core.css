@@ -175,6 +175,7 @@ input[type="submit"]:hover {
 .poi-filter-btn .poi-count-parking { background: var(--cat-parking, #95a5a6); }
 .poi-filter-btn .poi-count-pharmacy { background: var(--cat-pharmacy, #d35400); }
 .poi-filter-btn .poi-count-tobacco_vape { background: var(--cat-tobacco-vape, #34495e); }
+.poi-filter-btn .poi-count-tobacco { background: var(--cat-tobacco, #34495e); }
 .poi-filter-btn .poi-count-tourist_info { background: var(--cat-tourist-info, #9b59b6); }
 .poi-filter-btn .poi-count-transportation { background: var(--cat-transportation, #1abc9c); }
 .poi-filter-btn .poi-count-supermarket { background: var(--cat-supermarket, #f1c40f); color: #333; }

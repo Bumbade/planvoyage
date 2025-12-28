@@ -62,6 +62,7 @@ $poiCategories = [
     'attractions' => ['label' => t('attractions', 'Attractions'), 'tags' => ['tourism=museum','tourism=theme_park','natural=waterfall','waterway=waterfall','tourism=attraction','tourism=viewpoint','tourism=zoo','leisure=nature_reserve']],
     'nightlife' => ['label' => t('nightlife', 'Nightlife'), 'tags' => ['amenity=bar','amenity=pub','amenity=nightclub']],
     'tobacco_vape' => ['label' => t('tobacco_vape', 'Tobacco / Vape'), 'tags' => ['shop=tobacco','shop=e-cigarette']],
+    'tobacco' => ['label' => t('tobacco_vape', 'Tobacco / Vape'), 'tags' => ['shop=tobacco','shop=e-cigarette']],
     'cannabis' => ['label' => t('cannabis', 'Cannabis'), 'tags' => ['shop=cannabis']]
 ];
 
