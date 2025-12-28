@@ -74,29 +74,7 @@ require_once __DIR__ . '/../includes/header.php';
 
 <main>
     <h1><?php echo t('pois', 'POIs'); ?></h1>
-    <style>
-    /* POI map layout: place filters to the right of the map and limit map width */
-    .pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
-    .pois-layout .pois-side{flex:0 0 800px;max-width:800px}
-    #pois-map{flex:1 1 700px;max-width:1400px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px}
-    /* Ensure Leaflet controls remain visible above rounded corner */
-    #pois-map .leaflet-control{z-index:650}
-    /* Cluster styling moved to assets/css/poi-clusters.css (best-practice external stylesheet) */
-    /* Filter item compact spacing (no inline styles) */
-    #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}
-    #poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}
-    #poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}
-    #poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}
-    #poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex;}
-    /* tighten control buttons spacing */
-    #poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px;}
-    /* Responsive: stack on narrow screens */
-    @media (max-width: 900px){
-        .pois-layout{flex-direction:column}
-        .pois-layout .pois-side{width: 450px;max-width: 600px;}
-        #pois-map{width:100%;max-width:none}
-    }
-    </style>
+    <!-- Styles moved to src/assets/css/features.css -->
 
     <div id="pois-controls">
         <p><?php echo t('pois_map_instructions', 'Pan/zoom the map to load POIs in the visible area.'); ?></p>
