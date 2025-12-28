@@ -15,28 +15,42 @@
     background-color: var(--bg-lighter);
     border-radius: 8px;
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-}\r\n\r\n.auth-header {
+}
+
+.auth-header {
     text-align: center;
     margin-bottom: var(--spacing-xl, 2rem);
-}\r\n\r\n.auth-header h1 {
+}
+
+.auth-header h1 {
     color: var(--primary-color, #0044ff);
-}\r\n\r\n.auth-header p {
+}
+
+.auth-header p {
     color: var(--text-light, #b0b0b0);
     font-size: var(--font-size-base, 1rem);
-}\r\n\r\n/* Form Styling */
+}
+
+/* Form Styling */
 .auth-form {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-md, 1rem);
-}\r\n\r\n.form-group {
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-}\r\n\r\n.form-group label {
+}
+
+.form-group label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     margin-bottom: var(--spacing-sm, 0.5rem);
     font-size: var(--font-size-sm, 0.875rem);
-}\r\n\r\n.form-group input,
+}
+
+.form-group input,
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
@@ -45,46 +59,66 @@
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
     font-family: inherit;
-}\r\n\r\n.form-group input:focus,
+}
+
+.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color, #0044ff);
     box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
-}\r\n\r\n.form-group input::placeholder {
+}
+
+.form-group input::placeholder {
     color: var(--text-lighter, #808080);
-}\r\n\r\n.form-group.error input,
+}
+
+.form-group.error input,
 .form-group.error select,
 .form-group.error textarea {
     border-color: #e74c3c;
-}\r\n\r\n.form-group.error .error-message {
+}
+
+.form-group.error .error-message {
     color: #e74c3c;
     font-size: var(--font-size-sm, 0.875rem);
     margin-top: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.form-group.success input,
+}
+
+.form-group.success input,
 .form-group.success select {
     border-color: #27ae60;
-}\r\n\r\n/* Checkboxes and Radios */
+}
+
+/* Checkboxes and Radios */
 .form-check {
     display: flex;
     align-items: center;
     gap: var(--spacing-md, 1rem);
     margin: var(--spacing-md, 1rem) 0;
-}\r\n\r\n.form-check input[type="checkbox"],
+}
+
+.form-check input[type="checkbox"],
 .form-check input[type="radio"] {
     width: 18px;
     height: 18px;
     cursor: pointer;
-}\r\n\r\n.form-check label {
+}
+
+.form-check label {
     margin-bottom: 0;
     cursor: pointer;
     font-weight: normal;
-}\r\n\r\n/* Form Buttons */
+}
+
+/* Form Buttons */
 .form-actions {
     display: flex;
     gap: var(--spacing-md, 1rem);
     margin-top: var(--spacing-xl, 2rem);
-}\r\n\r\n.form-actions button,
+}
+
+.form-actions button,
 .form-actions .btn {
     flex: 1;
     padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
@@ -94,64 +128,94 @@
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition-fast, all 0.15s ease);
-}\r\n\r\n.form-actions .btn-primary {
+}
+
+.form-actions .btn-primary {
     background-color: var(--primary-color, #0044ff);
     color: white;
-}\r\n\r\n.form-actions .btn-primary:hover {
+}
+
+.form-actions .btn-primary:hover {
     background-color: #0033cc;
     box-shadow: 0 4px 12px rgba(0, 68, 255, 0.3);
-}\r\n\r\n.form-actions .btn-secondary {
+}
+
+.form-actions .btn-secondary {
     background-color: var(--bg-lighter, #2d2d2d);
     color: var(--text-dark, #e0e0e0);
     border: 1px solid var(--border-color, #404040);
-}\r\n\r\n.form-actions .btn-secondary:hover {
+}
+
+.form-actions .btn-secondary:hover {
     background-color: var(--bg-light, #1a1a1a);
-}\r\n\r\n/* Auth Links */
+}
+
+/* Auth Links */
 .auth-links {
     text-align: center;
     margin-top: var(--spacing-lg, 1.5rem);
     padding-top: var(--spacing-lg, 1.5rem);
     border-top: 1px solid var(--bg-lighter, #2d2d2d);
-}\r\n\r\n.auth-links p {
+}
+
+.auth-links p {
     color: var(--text-light, #b0b0b0);
     font-size: var(--font-size-sm, 0.875rem);
-}\r\n\r\n.auth-links a {
+}
+
+.auth-links a {
     color: var(--primary-color, #0044ff);
     text-decoration: none;
     font-weight: 600;
-}\r\n\r\n.auth-links a:hover {
+}
+
+.auth-links a:hover {
     text-decoration: underline;
-}\r\n\r\n/* Profile Section */
+}
+
+/* Profile Section */
 .profile-section {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.profile-section h2 {
+}
+
+.profile-section h2 {
     color: var(--primary-color, #0044ff);
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
     margin-top: 0;
-}\r\n\r\n.profile-info {
+}
+
+.profile-info {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-md, 1rem);
     margin-top: var(--spacing-md, 1rem);
-}\r\n\r\n.profile-info-item {
+}
+
+.profile-info-item {
     padding: var(--spacing-md, 1rem);
     background-color: var(--bg-light, #1a1a1a);
     border-radius: 4px;
-}\r\n\r\n.profile-info-item .label {
+}
+
+.profile-info-item .label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     font-size: var(--font-size-sm, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.profile-info-item .value {
+}
+
+.profile-info-item .value {
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n/* Alerts */
+}
+
+/* Alerts */
 .alert {
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 4px;
@@ -159,40 +223,71 @@
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-md, 1rem);
-}\r\n\r\n.alert.alert-success {
+}
+
+.alert.alert-success {
     background-color: rgba(39, 174, 96, 0.2);
     border: 1px solid var(--success-color, #27ae60);
     color: var(--success-color, #27ae60);
-}\r\n\r\n.alert.alert-error {
+}
+
+.alert.alert-error {
     background-color: rgba(231, 76, 60, 0.2);
     border: 1px solid var(--error-color, #e74c3c);
     color: var(--error-color, #e74c3c);
-}\r\n\r\n.alert.alert-info {
+}
+
+.alert.alert-info {
     background-color: rgba(52, 152, 219, 0.2);
     border: 1px solid var(--info-color, #3498db);
     color: var(--info-color, #3498db);
-}\r\n\r\n.alert.alert-warning {
+}
+
+.alert.alert-warning {
     background-color: rgba(243, 156, 18, 0.2);
     border: 1px solid var(--warning-color, #f39c12);
     color: var(--warning-color, #f39c12);
-}\r\n\r\n/* Responsive Auth */
+}
+
+/* Responsive Auth */
 @media (max-width: 768px) {
     .auth-container {
         margin: var(--spacing-lg, 1.5rem) var(--spacing-md, 1rem);
         padding: var(--spacing-md, 1rem);
-    }\r\n\r\n.form-actions {
+    }
+    
+    .form-actions {
         flex-direction: column;
-    }\r\n\r\n/* PV custom cluster (used by PoiMapManager) */
-.pv-cluster{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); background:var(--pv-bg,#888); }\r\n\r\n.pv-cluster--sm{ width:28px; height:28px; border-radius:50%; }\r\n\r\n.pv-cluster--md{ width:36px; height:36px; border-radius:50%; }\r\n\r\n.pv-cluster--lg{ width:52px; height:52px; border-radius:50%; }\r\n\r\n.pv-cluster-count{ display:inline-block; line-height:1; font-size:0.95rem; }\r\n\r\n.pv-cluster-label{ display:block; font-size:0.7rem; opacity:0.95; margin-top:2px; }\r\n\r\n/* Ensure the Leaflet icon container used for our cluster divIcon doesn't show the
+    }
+    
+
+/* PV custom cluster (used by PoiMapManager) */
+.pv-cluster{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); background:var(--pv-bg,#888); }
+.pv-cluster--sm{ width:28px; height:28px; border-radius:50%; }
+.pv-cluster--md{ width:36px; height:36px; border-radius:50%; }
+.pv-cluster--lg{ width:52px; height:52px; border-radius:50%; }
+.pv-cluster-count{ display:inline-block; line-height:1; font-size:0.95rem; }
+.pv-cluster-label{ display:block; font-size:0.7rem; opacity:0.95; margin-top:2px; }
+
+/* Ensure the Leaflet icon container used for our cluster divIcon doesn't show the
     default marker background-image (we still use CDN pins for normal markers). */
-.pv-cluster-icon{ background-image: none; background-color: transparent; border: none; display:flex; align-items:center; justify-content:center; }\r\n\r\n/* Stronger selectors to override Leaflet's default marker/div-icon backgrounds */
+.pv-cluster-icon{ background-image: none; background-color: transparent; border: none; display:flex; align-items:center; justify-content:center; }
+
+/* Stronger selectors to override Leaflet's default marker/div-icon backgrounds */
 .pv-cluster-icon.leaflet-div-icon, .pv-cluster-icon.leaflet-marker-icon {
     background-image: none;
     background: transparent;
     width: auto;
     height: auto;
-}\r\n\r\n.pv-cluster-icon img { display: none; }\r\n\r\n/* Simplified cluster visuals */
-.pv-cluster-simple{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; background:var(--pv-bg,#888); border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); width:36px; height:36px; }\r\n\r\n.pv-cluster-simple .pv-cluster-count{ font-size:1rem; line-height:1; }\r\n\r\n.pv-cluster-icon.pv-cluster-simple{ background-image:none; }\r\n\r\n/* Strongest possible overrides for cluster containers to prevent Leaflet default pin */
+}
+.pv-cluster-icon img { display: none; }
+
+/* Simplified cluster visuals */
+.pv-cluster-simple{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; background:var(--pv-bg,#888); border:3px solid rgba(255,255,255,0.85); box-shadow:0 1px 3px rgba(0,0,0,0.35); width:36px; height:36px; }
+.pv-cluster-simple .pv-cluster-count{ font-size:1rem; line-height:1; }
+.pv-cluster-icon.pv-cluster-simple{ background-image:none; }
+
+/* Strongest possible overrides for cluster containers to prevent Leaflet default pin */
 .leaflet-marker-icon.pv-cluster-icon, .leaflet-div-icon.pv-cluster-icon, .pv-cluster-icon.leaflet-marker-icon, .pv-cluster-icon.leaflet-div-icon {
     background-image: none;
     background: transparent;
@@ -202,7 +297,11 @@
     width: 36px;
     height: 36px;
     padding: 0;
-}\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { display: none; width:0; height:0; }\r\n\r\n.pv-cluster-icon img, .pv-cluster-icon svg { background-image:none; background:none; }\r\n\r\n/* Map-scoped overrides with higher specificity to prevent vendor/late rules from showing
+}
+.pv-cluster-icon img, .pv-cluster-icon svg { display: none; width:0; height:0; }
+.pv-cluster-icon img, .pv-cluster-icon svg { background-image:none; background:none; }
+
+/* Map-scoped overrides with higher specificity to prevent vendor/late rules from showing
    Leaflet default marker background on cluster divIcons. Kept without !important. */
 #pois-map .leaflet-marker-icon.pv-cluster-icon,
 #pois-map .leaflet-div-icon.pv-cluster-icon,
@@ -219,23 +318,30 @@
     display:flex;
     align-items:center;
     justify-content:center;
-}\r\n\r\n#pois-map .pv-cluster-icon img, #pois-map .pv-cluster-icon svg { display:none; width:0; height:0; }\r\n\r\n/* Ensure non-cluster Leaflet markers render their <img> icons inside the POI map. */
+}
+#pois-map .pv-cluster-icon img, #pois-map .pv-cluster-icon svg { display:none; width:0; height:0; }
+
+/* Ensure non-cluster Leaflet markers render their <img> icons inside the POI map. */
 #pois-map .leaflet-marker-icon:not(.pv-cluster-icon) {
     background-image: none; /* prefer the IMG src over background images */
     background: transparent;
-}\r\n\r\n#pois-map .leaflet-marker-icon:not(.pv-cluster-icon) img {
+}
+#pois-map .leaflet-marker-icon:not(.pv-cluster-icon) img {
     display: block;
     width: auto;
     height: auto;
     max-width: 36px;
     max-height: 36px;
     object-fit: contain;
-}\r\n\r\n/* Force cluster visual appearance inside the POI map: ensure the
+}
+
+/* Force cluster visual appearance inside the POI map: ensure the
    cluster 'div' (the circular badge) has a visible background and
    full opacity even if vendor styles use semi-transparent values. */
 #pois-map .marker-cluster, #pois-map .marker-cluster div {
     opacity: 1;
-}\r\n\r\n#pois-map .marker-cluster div {
+}
+#pois-map .marker-cluster div {
     background-color: var(--pv-bg, rgba(68,68,68,0.95));
     color: #fff;
     border-radius: 50%;
@@ -246,7 +352,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}\r\n\r\n#pois-map .marker-cluster span { color: #fff; font-weight:700; line-height:1; }\r\n\r\n/* Higher-specificity map-scoped rule to override any transparent vendor rules
+}
+#pois-map .marker-cluster span { color: #fff; font-weight:700; line-height:1; }
+
+/* Higher-specificity map-scoped rule to override any transparent vendor rules
    and ensure the cluster badge is visibly filled. This targets the marker
    cluster container and the inner badge element we render (`.pv-cluster-simple`). */
 #pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon > .pv-cluster-simple,
@@ -256,19 +365,42 @@
     background-color: var(--pv-bg, #4a4a4a);
     opacity: 1;
     color: #fff;
-}\r\n\r\n#pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon > .pv-cluster-simple {
+}
+#pois-map .leaflet-marker-icon.marker-cluster.pv-cluster-icon > .pv-cluster-simple {
     border-radius: 50%;
     width: 36px;
     height: 36px;
     display:flex;
     align-items:center;
     justify-content:center;
-}\r\n\r\n@media (max-width:600px){
-    .pv-cluster--sm{ width:24px; height:24px; }\r\n\r\n.pv-cluster--md{ width:28px; height:28px; }\r\n\r\n.pv-cluster--lg{ width:40px; height:40px; }\r\n\r\n.pv-cluster-count{ font-size:0.85rem; }\r\n\r\n.pv-cluster-label{ font-size:0.6rem; }\r\n\r\n}\r\n\r\n.profile-info {
+}
+
+@media (max-width:600px){
+    .pv-cluster--sm{ width:24px; height:24px; }
+    .pv-cluster--md{ width:28px; height:28px; }
+    .pv-cluster--lg{ width:40px; height:40px; }
+    .pv-cluster-count{ font-size:0.85rem; }
+    .pv-cluster-label{ font-size:0.6rem; }
+}
+    .profile-info {
         grid-template-columns: 1fr;
-    }\r\n\r\n}\r\n\r\n/* PV custom marker (used by PoiMapManager) */
-    .pv-marker{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,0.4); background:var(--pv-marker-bg,#5b8e23); width:var(--pv-marker-size,20px); height:var(--pv-marker-size,20px); font-size:var(--pv-marker-font,10px); }\r\n\r\n.pv-marker--sm{ --pv-marker-size:20px; --pv-marker-font:10px; }\r\n\r\n.pv-marker--md{ --pv-marker-size:28px; --pv-marker-font:13px; }\r\n\r\n.pv-marker--lg{ --pv-marker-size:36px; --pv-marker-font:16px; }\r\n\r\n.pv-div-icon{ background:transparent; border:0; box-shadow:none; }\r\n\r\n/* extra marker size and state variants */
-    .pv-marker--xs{ --pv-marker-size:14px; --pv-marker-font:9px; }\r\n\r\n.pv-marker-overpass{ box-shadow:0 0 0 3px rgba(0,0,0,0.12); border:2px solid #fff; }\r\n\r\n.pv-marker-fallback{ border:2px solid #fff; }\r\n\r\n/* Dark Mode Auth Container - Premium Orange & Blue Theme */
+    }
+}
+
+    /* PV custom marker (used by PoiMapManager) */
+    .pv-marker{ display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 2px rgba(0,0,0,0.4); background:var(--pv-marker-bg,#5b8e23); width:var(--pv-marker-size,20px); height:var(--pv-marker-size,20px); font-size:var(--pv-marker-font,10px); }
+    .pv-marker--sm{ --pv-marker-size:20px; --pv-marker-font:10px; }
+    .pv-marker--md{ --pv-marker-size:28px; --pv-marker-font:13px; }
+    .pv-marker--lg{ --pv-marker-size:36px; --pv-marker-font:16px; }
+
+    .pv-div-icon{ background:transparent; border:0; box-shadow:none; }
+
+    /* extra marker size and state variants */
+    .pv-marker--xs{ --pv-marker-size:14px; --pv-marker-font:9px; }
+    .pv-marker-overpass{ box-shadow:0 0 0 3px rgba(0,0,0,0.12); border:2px solid #fff; }
+    .pv-marker-fallback{ border:2px solid #fff; }
+
+/* Dark Mode Auth Container - Premium Orange & Blue Theme */
 @media (prefers-color-scheme: dark) {
     .auth-container {
         max-width: 400px;
@@ -278,7 +410,9 @@
         border-radius: 8px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: none;
-    }\r\n\r\n.auth-container h1 {
+    }
+    
+    .auth-container h1 {
         text-align: center;
         font-size: 2.2rem;
         font-weight: 700;
@@ -286,17 +420,23 @@
         margin-bottom: 2rem;
         font-family: 'Poppins', 'Segoe UI', sans-serif;
         letter-spacing: -0.5px;
-    }\r\n\r\n.auth-container form {
+    }
+    
+    .auth-container form {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-    }\r\n\r\n.auth-container label {
+    }
+    
+    .auth-container label {
         color: var(--text-dark);
         font-weight: 500;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-    }\r\n\r\n.auth-container input {
+    }
+    
+    .auth-container input {
         padding: 12px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: 6px;
@@ -304,14 +444,20 @@
         color: #fff;
         font-size: 1rem;
         transition: all 0.3s ease;
-    }\r\n\r\n.auth-container input::placeholder {
+    }
+    
+    .auth-container input::placeholder {
         color: rgba(255, 255, 255, 0.5);
-    }\r\n\r\n.auth-container input:focus {
+    }
+    
+    .auth-container input:focus {
         outline: none;
         border-color: #ff8c00;
         background: rgba(255, 255, 255, 0.15);
         box-shadow: 0 0 8px rgba(255, 140, 0, 0.2);
-    }\r\n\r\n.auth-container button {
+    }
+    
+    .auth-container button {
         padding: 12px;
         background: linear-gradient(135deg, #0044ff, #0066ff);
         color: white;
@@ -322,24 +468,33 @@
         cursor: pointer;
         transition: all 0.3s ease;
         margin-top: 0.5rem;
-    }\r\n\r\n.auth-container button:hover {
+    }
+    
+    .auth-container button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 68, 255, 0.3);
-    }\r\n\r\n.auth-container .error {
+    }
+    
+    .auth-container .error {
         background: rgba(231, 76, 60, 0.2);
         color: #ff6b6b;
         padding: 12px;
         border-radius: 6px;
         margin-bottom: 1rem;
         border-left: 4px solid #e74c3c;
-    }\r\n\r\n.auth-container .flash-success {
+    }
+    
+    .auth-container .flash-success {
         background: rgba(39, 174, 96, 0.2);
         color: #51cf66;
         padding: 12px;
         border-radius: 6px;
         margin-bottom: 1rem;
         border-left: 4px solid #27ae60;
-    }\r\n\r\n}\r\n\r\n/* Light Mode Auth Container */
+    }
+}
+
+/* Light Mode Auth Container */
 @media (prefers-color-scheme: light) {
     .auth-container {
         max-width: 400px;
@@ -348,7 +503,9 @@
         background: rgba(0, 0, 0, 0.03);
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-    }\r\n\r\n.auth-container h1 {
+    }
+    
+    .auth-container h1 {
         text-align: center;
         font-size: 2.2rem;
         font-weight: 700;
@@ -356,17 +513,23 @@
         margin-bottom: 2rem;
         font-family: 'Poppins', 'Segoe UI', sans-serif;
         letter-spacing: -0.5px;
-    }\r\n\r\n.auth-container form {
+    }
+    
+    .auth-container form {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-    }\r\n\r\n.auth-container label {
+    }
+    
+    .auth-container label {
         color: var(--text-dark);
         font-weight: 500;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-    }\r\n\r\n.auth-container input {
+    }
+    
+    .auth-container input {
         padding: 12px;
         border: 1px solid rgba(0, 0, 0, 0.15);
         border-radius: 6px;
@@ -374,14 +537,23 @@
         color: #2c3e50;
         font-size: 1rem;
         transition: all 0.3s ease;
-    }\r\n\r\n.auth-container input::placeholder {
+    }
+    
+    .auth-container input::placeholder {
         color: rgba(0, 0, 0, 0.4);
-    }\r\n\r\n.auth-container input:focus {
+    }
+    
+    .auth-container input:focus {
         outline: none;
         border-color: #ff8c00;
         background: rgba(255, 255, 255, 1);
         box-shadow: 0 0 8px rgba(255, 140, 0, 0.15);
-    }\r\n\r\n}\r\n\r\n/* ==== DOCUMENTS ====
+    }
+}
+
+
+
+/* ==== DOCUMENTS ====
 /* =============================================================================
    DOCUMENTS PAGE STYLES (Search, Create, View, Edit)
    
@@ -394,51 +566,73 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg, 1.5rem);
-}\r\n\r\n/* Documents List */
+}
+
+/* Documents List */
 .documents-list {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     overflow: hidden;
-}\r\n\r\n.documents-list-header {
+}
+
+.documents-list-header {
     padding: var(--spacing-lg, 1.5rem);
     background-color: var(--primary-color, #0044ff);
     color: white;
-}\r\n\r\n.documents-list-header h2 {
+}
+
+.documents-list-header h2 {
     margin-top: 0;
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.documents-search {
+}
+
+.documents-search {
     display: flex;
     gap: var(--spacing-md, 1rem);
     flex-wrap: wrap;
     align-items: flex-end;
-}\r\n\r\n.documents-search .form-group {
+}
+
+.documents-search .form-group {
     flex: 1;
     min-width: 250px;
     margin-bottom: 0;
-}\r\n\r\n.documents-search .form-group label {
+}
+
+.documents-search .form-group label {
     margin-bottom: var(--spacing-xs, 0.25rem);
     font-size: var(--font-size-sm, 0.875rem);
-}\r\n\r\n.documents-search .form-group input {
+}
+
+.documents-search .form-group input {
     padding: var(--spacing-md, 1rem);
     border: 1px solid rgba(255, 255, 255, 0.3);
-}\r\n\r\n/* Search Input - Inline Style Replacement */
+}
+
+/* Search Input - Inline Style Replacement */
 #doc-search {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     margin-bottom: 1rem;
-}\r\n\r\n#doc-q {
+}
+
+#doc-q {
     width: 60%;
     padding: 0.5rem;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     font-size: 0.95rem;
-}\r\n\r\n#doc-q:focus {
+}
+
+#doc-q:focus {
     outline: none;
     border-color: var(--primary-color, #0044ff);
     box-shadow: 0 0 0 2px rgba(0, 68, 255, 0.1);
-}\r\n\r\n#doc-search-btn {
+}
+
+#doc-search-btn {
     padding: 0.5rem 1rem;
     background-color: var(--primary-color, #0044ff);
     color: white;
@@ -447,27 +641,41 @@
     cursor: pointer;
     font-weight: 500;
     transition: background-color 0.2s ease;
-}\r\n\r\n#doc-search-btn:hover {
+}
+
+#doc-search-btn:hover {
     background-color: #0033cc;
-}\r\n\r\n#doc-results {
+}
+
+#doc-results {
     margin-top: 1rem;
-}\r\n\r\n#doc-results ul {
+}
+
+#doc-results ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}\r\n\r\n#doc-results li {
+}
+
+#doc-results li {
     padding: 0.75rem;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.95rem;
-}\r\n\r\n#doc-results li:hover {
+}
+
+#doc-results li:hover {
     background-color: var(--bg-light);
-}\r\n\r\n#doc-pager {
+}
+
+#doc-pager {
     margin-top: 1rem;
     display: flex;
     gap: 0.5rem;
     align-items: center;
     justify-content: center;
-}\r\n\r\n#doc-pager button {
+}
+
+#doc-pager button {
     padding: 0.5rem 1rem;
     background-color: var(--primary-color, #0044ff);
     color: white;
@@ -475,9 +683,13 @@
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
-}\r\n\r\n#doc-pager button:hover {
+}
+
+#doc-pager button:hover {
     background-color: #0033cc;
-}\r\n\r\n/* Error and Loading Messages */
+}
+
+/* Error and Loading Messages */
 .doc-error {
     color: var(--error-color);
     background-color: rgba(231, 76, 60, 0.15);
@@ -485,13 +697,20 @@
     border-radius: 4px;
     margin: 0.5rem 0;
     border-left: 4px solid var(--error-color);
-}\r\n\r\n.documents-search .form-group input::placeholder {
+}
+
+
+.documents-search .form-group input::placeholder {
     color: rgba(255, 255, 255, 0.7);
-}\r\n\r\n.documents-search .form-group input:focus {
+}
+
+.documents-search .form-group input:focus {
     outline: none;
     background-color: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
-}\r\n\r\n.documents-search-btn {
+}
+
+.documents-search-btn {
     padding: var(--spacing-md, 1rem) var(--spacing-lg, 1.5rem);
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
@@ -500,10 +719,14 @@
     cursor: pointer;
     font-weight: 600;
     transition: var(--transition-fast, all 0.15s ease);
-}\r\n\r\n.documents-search-btn:hover {
+}
+
+.documents-search-btn:hover {
     background-color: rgba(255, 255, 255, 0.3);
     border-color: rgba(255, 255, 255, 0.5);
-}\r\n\r\n.documents-list-item {
+}
+
+.documents-list-item {
     padding: var(--spacing-lg, 1.5rem);
     border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
     cursor: pointer;
@@ -512,38 +735,56 @@
     grid-template-columns: 1fr auto;
     gap: var(--spacing-lg, 1.5rem);
     align-items: center;
-}\r\n\r\n.documents-list-item:hover {
+}
+
+.documents-list-item:hover {
     background-color: var(--bg-light, #1a1a1a);
-}\r\n\r\n.documents-list-item:last-child {
+}
+
+.documents-list-item:last-child {
     border-bottom: none;
-}\r\n\r\n.document-info {
+}
+
+.document-info {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm, 0.5rem);
-}\r\n\r\n.document-info h3 {
+}
+
+.document-info h3 {
     margin: 0;
     color: var(--primary-color, #0044ff);
-}\r\n\r\n.document-info .meta {
+}
+
+.document-info .meta {
     display: flex;
     gap: var(--spacing-lg, 1.5rem);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--text-light, #b0b0b0);
     flex-wrap: wrap;
-}\r\n\r\n.document-info .meta span {
+}
+
+.document-info .meta span {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.document-badge {
+}
+
+.document-badge {
     display: inline-block;
     padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
     background-color: var(--bg-lighter, #2d2d2d);
     border-radius: 12px;
     font-size: var(--font-size-xs, 0.75rem);
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.document-actions {
+}
+
+.document-actions {
     display: flex;
     gap: var(--spacing-sm, 0.5rem);
-}\r\n\r\n.document-actions .btn {
+}
+
+.document-actions .btn {
     padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
     border: none;
     border-radius: 4px;
@@ -554,65 +795,99 @@
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.document-actions .btn-edit {
+}
+
+.document-actions .btn-edit {
     background-color: #3498db;
     color: white;
-}\r\n\r\n.document-actions .btn-edit:hover {
+}
+
+.document-actions .btn-edit:hover {
     background-color: #2980b9;
-}\r\n\r\n.document-actions .btn-delete {
+}
+
+.document-actions .btn-delete {
     background-color: #e74c3c;
     color: white;
-}\r\n\r\n.document-actions .btn-delete:hover {
+}
+
+.document-actions .btn-delete:hover {
     background-color: #c0392b;
-}\r\n\r\n.document-actions .btn-view {
+}
+
+.document-actions .btn-view {
     background-color: #27ae60;
     color: white;
-}\r\n\r\n.document-actions .btn-view:hover {
+}
+
+.document-actions .btn-view:hover {
     background-color: #229954;
-}\r\n\r\n.document-actions .btn-download {
+}
+
+.document-actions .btn-download {
     background-color: #f39c12;
     color: white;
-}\r\n\r\n.document-actions .btn-download:hover {
+}
+
+.document-actions .btn-download:hover {
     background-color: #e67e22;
-}\r\n\r\n/* Document Form */
+}
+
+/* Document Form */
 .document-form {
     background-color: white;
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.document-form h2 {
+}
+
+.document-form h2 {
     color: var(--primary-color, #0044ff);
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
     margin-top: 0;
-}\r\n\r\n.form-section {
+}
+
+.form-section {
     margin-bottom: var(--spacing-xl, 2rem);
     padding-bottom: var(--spacing-xl, 2rem);
     border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
-}\r\n\r\n.form-section:last-child {
+}
+
+.form-section:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
-}\r\n\r\n.form-section h3 {
+}
+
+.form-section h3 {
     color: var(--text-dark, #e0e0e0);
     font-size: var(--font-size-lg, 1.125rem);
     margin-top: 0;
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.form-row {
+}
+
+.form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-md, 1rem);
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.form-group {
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-}\r\n\r\n.form-group label {
+}
+
+.form-group label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     margin-bottom: var(--spacing-xs, 0.25rem);
     font-size: var(--font-size-sm, 0.875rem);
-}\r\n\r\n.form-group input,
+}
+
+.form-group input,
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
@@ -621,27 +896,39 @@
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
     font-family: inherit;
-}\r\n\r\n.form-group textarea {
+}
+
+.form-group textarea {
     min-height: 120px;
     resize: vertical;
-}\r\n\r\n.form-group input:focus,
+}
+
+.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color, #0044ff);
     box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
-}\r\n\r\n.form-group .help-text {
+}
+
+.form-group .help-text {
     font-size: var(--font-size-xs, 0.75rem);
     color: var(--text-lighter, #808080);
     margin-top: var(--spacing-xs, 0.25rem);
-}\r\n\r\n/* File Upload */
+}
+
+/* File Upload */
 .file-upload {
     position: relative;
     display: inline-block;
     width: 100%;
-}\r\n\r\n.file-upload input[type="file"] {
+}
+
+.file-upload input[type="file"] {
     display: none;
-}\r\n\r\n.file-upload-label {
+}
+
+.file-upload-label {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -651,15 +938,23 @@
     background-color: var(--bg-light, #1a1a1a);
     cursor: pointer;
     transition: var(--transition-fast, all 0.15s ease);
-}\r\n\r\n.file-upload-label:hover {
+}
+
+.file-upload-label:hover {
     border-color: var(--primary-color, #0044ff);
     background-color: rgba(0, 68, 255, 0.1);
-}\r\n\r\n.file-upload.dragover .file-upload-label {
+}
+
+.file-upload.dragover .file-upload-label {
     border-color: var(--primary-color, #0044ff);
     background-color: rgba(0, 68, 255, 0.1);
-}\r\n\r\n.file-list {
+}
+
+.file-list {
     margin-top: var(--spacing-md, 1rem);
-}\r\n\r\n.file-item {
+}
+
+.file-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -667,90 +962,140 @@
     background-color: var(--bg-light, #1a1a1a);
     border-radius: 4px;
     margin-bottom: var(--spacing-sm, 0.5rem);
-}\r\n\r\n.file-item-name {
+}
+
+.file-item-name {
     font-weight: 500;
     color: var(--text-dark, #e0e0e0);
-}\r\n\r\n.file-item-size {
+}
+
+.file-item-size {
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.file-item-remove {
+}
+
+.file-item-remove {
     background: none;
     border: none;
     color: #e74c3c;
     cursor: pointer;
     font-size: 1.2rem;
     padding: 0;
-}\r\n\r\n.file-item-remove:hover {
+}
+
+.file-item-remove:hover {
     color: #c0392b;
-}\r\n\r\n/* Document View */
+}
+
+/* Document View */
 .document-view {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-}\r\n\r\n.document-header {
+}
+
+.document-header {
     display: flex;
     justify-content: space-between;
     align-items: start;
     margin-bottom: var(--spacing-lg, 1.5rem);
     padding-bottom: var(--spacing-lg, 1.5rem);
     border-bottom: 2px solid var(--bg-lighter, #2d2d2d);
-}\r\n\r\n.document-title {
+}
+
+.document-title {
     flex: 1;
-}\r\n\r\n.document-title h1 {
+}
+
+.document-title h1 {
     color: var(--primary-color, #0044ff);
     margin: 0;
-}\r\n\r\n.document-meta {
+}
+
+.document-meta {
     display: flex;
     gap: var(--spacing-md, 1rem);
     margin-top: var(--spacing-md, 1rem);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.document-content {
+}
+
+.document-content {
     color: var(--text-dark, #e0e0e0);
     line-height: 1.6;
-}\r\n\r\n.document-content h2,
+}
+
+.document-content h2,
 .document-content h3 {
     color: var(--primary-color, #0044ff);
     margin-top: var(--spacing-lg, 1.5rem);
-}\r\n\r\n/* Responsive Documents */
+}
+
+/* Responsive Documents */
 @media (max-width: 768px) {
     .documents-list-item {
         grid-template-columns: 1fr;
         gap: var(--spacing-md, 1rem);
-    }\r\n\r\n.document-actions {
+    }
+    
+    .document-actions {
         width: 100%;
         flex-wrap: wrap;
-    }\r\n\r\n.document-actions .btn {
+    }
+    
+    .document-actions .btn {
         flex: 1;
         min-width: 100px;
-    }\r\n\r\n.documents-search {
+    }
+    
+    .documents-search {
         flex-direction: column;
-    }\r\n\r\n.documents-search .form-group {
+    }
+    
+    
+    .documents-search .form-group {
         min-width: 100%;
-    }\r\n\r\n.form-row {
+    }
+    
+    .form-row {
         grid-template-columns: 1fr;
-    }\r\n\r\n.document-header {
+    }
+    
+    .document-header {
         flex-direction: column;
         gap: var(--spacing-md, 1rem);
-    }\r\n\r\n}\r\n\r\n/* ====== DOCUMENT SEARCH EMBEDDED STYLES (CONSOLIDATION) ====== */
+    }
+}
+
+/* ====== DOCUMENT SEARCH EMBEDDED STYLES (CONSOLIDATION) ====== */
 
 /* Document Search Input */
 #doc-q {
     width: 60%;
     padding: 8px;
     margin-right: 8px;
-}\r\n\r\n/* Document Results Container */
+}
+
+/* Document Results Container */
 #doc-results {
     margin-top: 16px;
-}\r\n\r\n/* Document Pager Container */
+}
+
+/* Document Pager Container */
 #doc-pager {
     margin-top: 12px;
-}\r\n\r\n/* Error Messages in Document Search */
+}
+
+/* Error Messages in Document Search */
 #doc-results .error-message,
 #doc-pager .error-message {
     color: darkred;
-}\r\n\r\n/* ==== LOCATIONS ====
+}
+
+
+
+/* ==== LOCATIONS ====
 /* =============================================================================
    LOCATIONS/POI PAGE STYLES
    
@@ -764,7 +1109,9 @@
     grid-template-columns: 1fr 2fr;
     gap: var(--spacing-lg, 1.5rem);
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.locations-sidebar {
+}
+
+.locations-sidebar {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
@@ -772,25 +1119,35 @@
     height: fit-content;
     position: sticky;
     top: 100px;
-}\r\n\r\n.locations-sidebar h2 {
+}
+
+.locations-sidebar h2 {
     margin-top: 0;
     font-size: var(--font-size-lg, 1.125rem);
     color: var(--primary-color, #0044ff);
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.locations-sidebar .filter-group {
+}
+
+.locations-sidebar .filter-group {
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.locations-sidebar .filter-group label {
+}
+
+.locations-sidebar .filter-group label {
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-sm, 0.5rem);
     cursor: pointer;
     font-weight: normal;
-}\r\n\r\n.locations-sidebar .filter-group input[type="checkbox"],
+}
+
+.locations-sidebar .filter-group input[type="checkbox"],
 .locations-sidebar .filter-group input[type="radio"] {
     margin-right: var(--spacing-md, 1rem);
     cursor: pointer;
-}\r\n\r\n/* Map Container */
+}
+
+/* Map Container */
 .map-container {
     background-color: var(--bg-lighter);
     border-radius: 8px;
@@ -798,10 +1155,14 @@
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     height: 600px;
     position: relative;
-}\r\n\r\n.map-container #map {
+}
+
+.map-container #map {
     width: 100%;
     height: 100%;
-}\r\n\r\n.map-container .map-controls {
+}
+
+.map-container .map-controls {
     position: absolute;
     top: var(--spacing-md, 1rem);
     right: var(--spacing-md, 1rem);
@@ -809,7 +1170,9 @@
     flex-direction: column;
     gap: var(--spacing-sm, 0.5rem);
     z-index: 100;
-}\r\n\r\n.map-container .map-controls button {
+}
+
+.map-container .map-controls button {
     width: 40px;
     height: 40px;
     border-radius: 4px;
@@ -819,41 +1182,57 @@
     cursor: pointer;
     transition: var(--transition-fast, all 0.15s ease);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-}\r\n\r\n.map-container .map-controls button:hover {
+}
+
+.map-container .map-controls button:hover {
     background-color: var(--primary-color, #0044ff);
     color: white;
-}\r\n\r\n/* POI Info Box */
+}
+
+/* POI Info Box */
 .poi-info {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     margin-top: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.poi-info h3 {
+}
+
+.poi-info h3 {
     color: var(--primary-color, #0044ff);
     margin-top: 0;
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.poi-info-grid {
+}
+
+.poi-info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-md, 1rem);
     margin-top: var(--spacing-md, 1rem);
-}\r\n\r\n.poi-info-item {
+}
+
+.poi-info-item {
     padding: var(--spacing-md, 1rem);
     background-color: var(--bg-light, #1a1a1a);
     border-radius: 4px;
     border-left: 3px solid var(--primary-color, #0044ff);
-}\r\n\r\n.poi-info-item .label {
+}
+
+.poi-info-item .label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     font-size: var(--font-size-sm, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.poi-info-item .value {
+}
+
+.poi-info-item .value {
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n/* POI list/card/grid styles are canonicalized in
+}
+
+/* POI list/card/grid styles are canonicalized in
    src/assets/css/poi_list.css. Remove duplicates here to avoid
    conflicting rules. */
 
@@ -861,21 +1240,37 @@
 @media (max-width: 1024px) {
     .locations-view {
         grid-template-columns: 1fr;
-    }\r\n\r\n.locations-sidebar {
+    }
+    
+    .locations-sidebar {
         position: static;
-    }\r\n\r\n.map-container {
+    }
+    
+    .map-container {
         height: 400px;
-    }\r\n\r\n}\r\n\r\n@media (max-width: 768px) {
+    }
+}
+
+@media (max-width: 768px) {
     .locations-view {
         grid-template-columns: 1fr;
         gap: var(--spacing-md, 1rem);
-    }\r\n\r\n.map-container {
+    }
+    
+    .map-container {
         height: 300px;
-    }\r\n\r\n.poi-info-grid {
+    }
+    
+    .poi-info-grid {
         grid-template-columns: 1fr;
-    }\r\n\r\n}\r\n\r\n/* POI filter and list styles moved to src/assets/css/poi_list.css to avoid
+    }
+}
+
+/* POI filter and list styles moved to src/assets/css/poi_list.css to avoid
    duplicate selectors across files. See that file for all authoritative
    POI list, card, grid and filter-related rules. */
+
+
 
 /* ==== FORMS-ADMIN ====
 /* POI Form and Admin styles */
@@ -883,87 +1278,143 @@
 /* Hidden template row for tag editor */
 #tag-row-template {
     display: none;
-}\r\n\r\n/* Admin pages - general debug and layout styles */
+}
+
+/* Admin pages - general debug and layout styles */
 main[style*="padding"] {
     padding: 18px;
-}\r\n\r\n.debug-section {
+}
+
+.debug-section {
     padding: 10px;
     border: 1px solid #ddd;
     background: #fff8f0;
     margin-bottom: 12px;
-}\r\n\r\n.debug-list {
+}
+
+.debug-list {
     margin: 6px 0;
     padding-left: 18px;
-}\r\n\r\n.debug-warning {
+}
+
+.debug-warning {
     margin-top: 6px;
     color: #700;
-}\r\n\r\n.debug-success {
+}
+
+.debug-success {
     margin-top: 6px;
     color: #070;
-}\r\n\r\n.debug-message {
+}
+
+.debug-message {
     font-size: 0.9em;
     color: #700;
-}\r\n\r\n/* Table styles for import and status displays */
+}
+
+/* Table styles for import and status displays */
 .data-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 10px;
-}\r\n\r\n.data-table thead {
+}
+
+.data-table thead {
     background: #f5f5f5;
-}\r\n\r\n.data-table th,
+}
+
+.data-table th,
 .data-table td {
     padding: 6px;
     text-align: left;
     border-top: 1px solid #eee;
-}\r\n\r\n.data-table th {
+}
+
+.data-table th {
     text-align: left;
     font-weight: bold;
-}\r\n\r\n.data-table tr {
+}
+
+.data-table tr {
     border-top: 1px solid #eee;
-}\r\n\r\n.data-table-summary {
+}
+
+.data-table-summary {
     margin-top: 8px;
-}\r\n\r\n.disk-space-info {
+}
+
+.disk-space-info {
     margin-bottom: 8px;
-}\r\n\r\n/* ==== POI-CONTROLS ====
+}
+
+
+
+/* ==== POI-CONTROLS ====
 /* POI Controls and UI styles */
 
 #poi-load-controls {
     margin-top: 0.5rem;
-}\r\n\r\n#reset-poi-filters {
+}
+
+#reset-poi-filters {
     margin-left: 0.5rem;
-}\r\n\r\n#poi-autoload,
+}
+
+#poi-autoload,
 #poi-only-mine {
     margin-right: 0.35rem;
-}\r\n\r\nlabel.poi-control-label {
+}
+
+label.poi-control-label {
     margin-left: 0.75rem;
     font-size: 0.95em;
-}\r\n\r\n/* Center the load/reset buttons when placed in the side controls column */
+}
+
+/* Center the load/reset buttons when placed in the side controls column */
 .pois-side #poi-load-controls {
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     margin-top: 1rem;
-}\r\n\r\n/* When load controls are children of the #poi-filter grid, make them span all columns and center */
+}
+
+/* When load controls are children of the #poi-filter grid, make them span all columns and center */
 #poi-filter > #poi-load-controls {
     grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     gap: 0.5rem;
     margin-top: 0.5rem;
-}\r\n\r\n/* Center the page heading and map instruction paragraph */
-main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls { text-align: center; margin-bottom: 1rem; }\r\n\r\n/* Center the search block when it's inside the side column */
-.pois-side .margin-top-small { text-align: center; }\r\n\r\n.pois-side .flex-row { display:flex; justify-content:center; align-items:center; }\r\n\r\n.pois-side .form-input-flex { max-width: 220px; width: 100%; }\r\n\r\n.pois-side #poi-filter-heading { text-align: center; margin-top: 0.75rem; }\r\n\r\n#poi-filter {
+}
+
+/* Center the page heading and map instruction paragraph */
+main > h1 { text-align: center; margin-bottom: 0.25rem; }
+#pois-controls { text-align: center; margin-bottom: 1rem; }
+
+/* Center the search block when it's inside the side column */
+.pois-side .margin-top-small { text-align: center; }
+.pois-side .flex-row { display:flex; justify-content:center; align-items:center; }
+.pois-side .form-input-flex { max-width: 220px; width: 100%; }
+.pois-side #poi-filter-heading { text-align: center; margin-top: 0.75rem; }
+
+#poi-filter {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 0.75rem;
     border: none;
     margin: 1.5rem 0;
     padding: 0;
-}\r\n\r\n.poi-filter-item {
+}
+
+.poi-filter-item {
     display: block;
-}\r\n\r\n.poi-filter-item input[type="checkbox"] {
+}
+
+.poi-filter-item input[type="checkbox"] {
     display: none;
-}\r\n\r\n.poi-filter-item input[type="checkbox"]:checked + .poi-filter-label {
+}
+
+.poi-filter-item input[type="checkbox"]:checked + .poi-filter-label {
     /* Do not fill the background when active; emphasize with a thicker blue border */
     background-color: transparent;
     color: var(--primary-color, #0044ff);
@@ -971,7 +1422,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     border-width: 3px;
     border-style: solid;
     box-shadow: 0 0 0 4px rgba(0, 68, 255, 0.03);
-}\r\n\r\n.poi-filter-label {
+}
+
+.poi-filter-label {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -989,11 +1442,15 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}\r\n\r\n.poi-filter-label:hover {
+}
+
+.poi-filter-label:hover {
     background-color: var(--bg-lighter, #333);
     border-color: var(--primary-color, #0044ff);
     transform: translateY(-1px);
-}\r\n\r\n/* Grouping styles for POI filter categories */
+}
+
+/* Grouping styles for POI filter categories */
 .poi-filter-group {
     margin-bottom: 1rem;
     padding: 0.25rem 0.25rem 0.75rem 0.25rem;
@@ -1005,40 +1462,56 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     /* Allow grid children to stretch so all groups have equal height */
     align-self: stretch;
     box-sizing: border-box;
-}\r\n\r\n.poi-filter-group-heading {
+}
+.poi-filter-group-heading {
     margin: 0 0 0.5rem 0;
     font-size: 0.95rem;
     color: var(--text-light, #b0b0b0);
     font-weight: 700;
-}\r\n\r\n.poi-filter-group .poi-filter-item { margin-right: 0.5rem; margin-bottom: 0.5rem; display: block; width: auto; }\r\n\r\n/* Make the overall filter container a 3-column grid (responsive breakpoints follow) */
+}
+.poi-filter-group .poi-filter-item { margin-right: 0.5rem; margin-bottom: 0.5rem; display: block; width: auto; }
+
+/* Make the overall filter container a 3-column grid (responsive breakpoints follow) */
 #poi-filter {
     display: grid;
     grid-template-columns: repeat(3, minmax(140px, 1fr));
     gap: 0.75rem 1rem;
     align-items: start;
     width: 100%;
-}\r\n\r\n/* Ensure each filter label fills the grid cell and lays out its content */
+}
+
+/* Ensure each filter label fills the grid cell and lays out its content */
 #poi-filter > .poi-filter-item {
     display: block;
     width: 100%;
     box-sizing: border-box;
-}\r\n\r\n#poi-filter .poi-filter-label {
+}
+#poi-filter .poi-filter-label {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 0.5rem;
     width: 100%;
     padding: 0.5rem 0.75rem;
-}\r\n\r\n/* Responsive: 2 columns on medium screens, 1 column on narrow screens */
+}
+
+/* Responsive: 2 columns on medium screens, 1 column on narrow screens */
 @media (max-width: 900px) {
-    #poi-filter { grid-template-columns: repeat(2, minmax(140px, 1fr)); }\r\n\r\n}\r\n\r\n@media (max-width: 600px) {
-    #poi-filter { grid-template-columns: 1fr; }\r\n\r\n}\r\n\r\n/* Heading alignment */
+    #poi-filter { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+}
+@media (max-width: 600px) {
+    #poi-filter { grid-template-columns: 1fr; }
+}
+
+/* Heading alignment */
 .poi-filter-group-heading {
     width: 100%;
     text-align: center;
     margin-top: 0;
     margin-bottom: 0.75rem;
-}\r\n\r\n/* Normalize filter label/button sizes */
+}
+
+/* Normalize filter label/button sizes */
 .poi-filter-label {
     min-height: 44px;
     padding: 0.5rem 1rem;
@@ -1049,8 +1522,12 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     gap: 0.5rem;
     width: auto;
     max-width: 100%;
-}\r\n\r\n/* Make each .poi-filter-item shrink to content so labels can be horizontally centered */
-.poi-filter-group .poi-filter-item .poi-filter-label { margin: 0; }\r\n\r\n/* Wrapper for group items: center buttons vertically within the group's column */
+}
+
+/* Make each .poi-filter-item shrink to content so labels can be horizontally centered */
+.poi-filter-group .poi-filter-item .poi-filter-label { margin: 0; }
+
+/* Wrapper for group items: center buttons vertically within the group's column */
 .poi-filter-items {
     display: flex;
     flex-direction: column;
@@ -1061,32 +1538,44 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     box-sizing: border-box;
     /* Allow the items wrapper to grow so grid columns align to the tallest group */
     flex: 1 1 auto;
-}\r\n\r\n.poi-count {
+}
+
+.poi-count {
     display: inline-block;
     min-width: 1.5rem;
     text-align: center;
     font-size: 0.75rem;
     opacity: 0.7;
-}\r\n\r\n#poi-filter-buttons {
+}
+
+#poi-filter-buttons {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 1.5rem;
     padding: 1rem 0;
-}\r\n\r\n#poi-filter-buttons .btn {
+}
+
+#poi-filter-buttons .btn {
     padding: 0.65rem 1.25rem;
     font-weight: 500;
     font-size: 0.95rem;
     transition: all 0.2s ease-in-out;
     border-radius: 0.375rem;
-}\r\n\r\n#poi-filter-buttons .btn:hover:not(:disabled) {
+}
+
+#poi-filter-buttons .btn:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}\r\n\r\n#poi-filter-buttons .btn:disabled {
+}
+
+#poi-filter-buttons .btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}\r\n\r\n.warning-notice {
+}
+
+.warning-notice {
     margin-top: 1.5rem;
     padding: 1rem;
     background-color: var(--bg-secondary, #2a2a2a);
@@ -1095,7 +1584,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     text-align: center;
     color: #ffffff; /* force white text for login/register notice */
     font-size: 0.95rem;
-}\r\n\r\n/* POI controls container: limit width and center within page */
+}
+
+/* POI controls container: limit width and center within page */
 #pois-controls-side {
     max-width: 1400px;
     width: 100%;
@@ -1103,75 +1594,187 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     margin-left: auto;
     margin-right: auto;
     padding: 0 0.5rem;
-}\r\n\r\n/* Filter icon: normalize appearance and override any inline sizing */
+}
+
+/* Filter icon: normalize appearance and override any inline sizing */
 .filter-icon {
     width: 20px;
     height: 20px;
     margin-right: 6px;
     vertical-align: middle;
     display: inline-block;
-}\r\n\r\n/* Ensure labels wrap nicely when space is constrained */
+}
+
+/* Ensure labels wrap nicely when space is constrained */
 .poi-filter-label {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%;
-}\r\n\r\n.warning-notice strong {
+}
+
+.warning-notice strong {
     display: block;
     margin-bottom: 0.5rem;
     color: var(--warning-color, #ff9800);
-}\r\n\r\n.warning-notice a {
+}
+
+.warning-notice a {
     color: #ffffff; /* links in the notice should be white */
     text-decoration: underline;
     font-weight: 600;
-}\r\n\r\n.warning-notice a:hover {
+}
+
+.warning-notice a:hover {
     opacity: 0.9;
-}\r\n\r\n#poi-empty-hint {
+}
+
+#poi-empty-hint {
     margin-top: 1rem;
     display: none;
-}\r\n\r\n.poi-hint-item {
+}
+
+.poi-hint-item {
     margin-top: 0.75rem;
     display: flex;
     justify-content: center;
-}\r\n\r\n#poi-filter-heading {
+}
+
+#poi-filter-heading {
     text-align: center;
     margin-bottom: 1rem;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-primary, #e0e0e0);
-}\r\n\r\n#poi-filter-section {
+}
+
+#poi-filter-section {
     border: 1px solid var(--color-border, #444);
     border-radius: 0.5rem;
     padding: 1.5rem;
     margin-top: 1.5rem;
     background-color: var(--bg-surface, #1a1a1a);
-}\r\n\r\n/* ==== POI-FORM ====
+}
+
+
+
+/* ==== POI-FORM ====
 /* POI form and detail styles (keeps layout out of templates) */
 :root{
   --gap:12px;
   --muted: var(--text-lighter, #808080);
   --panel-bg: var(--color-surface);
   --border: var(--color-border);
-}\r\n\r\n.poi-container{
+}
+.poi-container{
   display:flex;
   gap:16px;
   align-items:flex-start;
-}\r\n\r\n.poi-main{flex:1;width:1200px}\r\n\r\n.poi-side{width:1000px}\r\n\r\n.poi-img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 2px 6px var(--shadow-08)}\r\n\r\n.poi-header{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}\r\n\r\n.poi-header-logo{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)}\r\n\r\n.poi-title{margin:0;font-size:1.6rem}\r\n\r\n.poi-header-logo-block{display:flex;flex-direction:column;align-items:center;justify-content:center}\r\n\r\n.poi-header-type{margin-top:6px;font-size:0.95rem;color:var(--color-text);text-align:center}\r\n\r\n.poi-section{margin-top:.8rem;margin-bottom:.35rem;font-size:1rem;font-weight:600}\r\n\r\n.poi-row{display:flex;gap:var(--gap);margin-bottom:10px}\r\n\r\n.poi-field{flex:1;min-width:120px}\r\n\r\n.poi-field-full{width:100%}\r\n\r\n.poi-logo-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}\r\n\r\n.poi-logo-large{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}\r\n\r\n.logo-display{display:flex;gap:8px;align-items:center}\r\n\r\n.notice{padding:.6rem;background:var(--color-warning-bg);border:1px solid var(--color-warning-border);border-radius:4px;margin-bottom:12px}\r\n\r\n.muted{color:var(--muted)}\r\n\r\n.details-section{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:var(--panel-bg)}\r\n\r\n.details-summary{font-weight:600;cursor:pointer;margin-bottom:8px}\r\n\r\n.details-grid{display:flex;flex-wrap:wrap;gap:12px;padding-top:8px}\r\n\r\n.details-grid > div{flex:1 1 48%;min-width:200px}\r\n\r\n.form-actions{text-align:right}\r\n\r\n.poi-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}\r\n\r\n.poi-textarea{width:100%;min-height:120px}\r\n\r\n.btn{background:var(--color-primary);color:var(--color-text-on-primary);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block;border:none;cursor:pointer}\r\n\r\n.btn:hover{background:var(--color-primary-dark)}\r\n\r\n.btn-cancel{margin-left:8px;background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block}\r\n\r\n.btn-cancel:hover{background:var(--overlay-04)}\r\n\r\n/* responsive tweaks */
+}
+.poi-main{flex:1;width:1200px}
+.poi-side{width:1000px}
+.poi-img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 2px 6px var(--shadow-08)}
+.poi-header{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}
+.poi-header-logo{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--color-border)}
+.poi-title{margin:0;font-size:1.6rem}
+.poi-header-logo-block{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.poi-header-type{margin-top:6px;font-size:0.95rem;color:var(--color-text);text-align:center}
+.poi-section{margin-top:.8rem;margin-bottom:.35rem;font-size:1rem;font-weight:600}
+.poi-row{display:flex;gap:var(--gap);margin-bottom:10px}
+.poi-field{flex:1;min-width:120px}
+.poi-field-full{width:100%}
+.poi-logo-thumb{width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}
+.poi-logo-large{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--color-border)}
+.logo-display{display:flex;gap:8px;align-items:center}
+.notice{padding:.6rem;background:var(--color-warning-bg);border:1px solid var(--color-warning-border);border-radius:4px;margin-bottom:12px}
+.muted{color:var(--muted)}
+.details-section{margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:6px;background:var(--panel-bg)}
+.details-summary{font-weight:600;cursor:pointer;margin-bottom:8px}
+.details-grid{display:flex;flex-wrap:wrap;gap:12px;padding-top:8px}
+.details-grid > div{flex:1 1 48%;min-width:200px}
+.form-actions{text-align:right}
+.poi-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.poi-textarea{width:100%;min-height:120px}
+.btn{background:var(--color-primary);color:var(--color-text-on-primary);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block;border:none;cursor:pointer}
+.btn:hover{background:var(--color-primary-dark)}
+.btn-cancel{margin-left:8px;background:var(--color-surface);color:var(--color-on-surface);text-decoration:none;padding:6px 10px;border-radius:4px;display:inline-block}
+.btn-cancel:hover{background:var(--overlay-04)}
+/* responsive tweaks */
 @media (max-width:900px){
-  .poi-container{flex-direction:column}\r\n\r\n.poi-side{width:100%}\r\n\r\n}\r\n\r\n#poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}\r\n\r\n/* view and edit map share styling */
-#poi-map, #poi-map-view, .poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}\r\n\r\n.poi-map-wrap{margin-bottom:12px}\r\n\r\n.view-groups{display:flex;flex-wrap:wrap;gap:16px}\r\n\r\n.group-box{flex:1 1 48%;min-width:260px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--color-surface)}\r\n\r\n.group-box.group-location{flex-basis:100%}\r\n\r\n.group-box h4{margin-top:0}\r\n\r\n/* Tags editor styling */
-#tags-editor{margin-top:8px}\r\n\r\n#tags-editor .tag-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}\r\n\r\n#tags-editor .tag-row .tag-key{flex:0 0 35%;padding:6px;border:1px solid var(--border);border-radius:4px}\r\n\r\n#tags-editor .tag-row .tag-val{flex:1;padding:6px;border:1px solid var(--border);border-radius:4px}\r\n\r\n#tags-editor .tag-actions{margin-top:8px}\r\n\r\n.btn-small{padding:4px 8px;font-size:0.85rem}\r\n\r\n/* remove button style */
-.btn-remove-tag{background:#e74c3c;color:#fff;border-radius:4px;padding:4px 8px;border:none;cursor:pointer}\r\n\r\n.btn-remove-tag:hover{background:#c43a2a}\r\n\r\n.tag-row .btn-remove-tag{flex:0 0 auto}\r\n\r\n/* ==== POI_LIST ====
+  .poi-container{flex-direction:column}
+  .poi-side{width:100%}
+}
+#poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}
+/* view and edit map share styling */
+#poi-map, #poi-map-view, .poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}
+.poi-map-wrap{margin-bottom:12px}
+.view-groups{display:flex;flex-wrap:wrap;gap:16px}
+.group-box{flex:1 1 48%;min-width:260px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--color-surface)}
+.group-box.group-location{flex-basis:100%}
+.group-box h4{margin-top:0}
+
+/* Tags editor styling */
+#tags-editor{margin-top:8px}
+#tags-editor .tag-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+#tags-editor .tag-row .tag-key{flex:0 0 35%;padding:6px;border:1px solid var(--border);border-radius:4px}
+#tags-editor .tag-row .tag-val{flex:1;padding:6px;border:1px solid var(--border);border-radius:4px}
+#tags-editor .tag-actions{margin-top:8px}
+.btn-small{padding:4px 8px;font-size:0.85rem}
+/* remove button style */
+.btn-remove-tag{background:#e74c3c;color:#fff;border-radius:4px;padding:4px 8px;border:none;cursor:pointer}
+.btn-remove-tag:hover{background:#c43a2a}
+.tag-row .btn-remove-tag{flex:0 0 auto}
+
+
+
+/* ==== POI_LIST ====
 /* POI list styles extracted from runtime injection in pois.js
    Created to avoid CSP/inline-style issues and to provide a static stylesheet
 */
-#poi-list{ margin-top:12px; }\r\n\r\n.poi-group{ margin:18px 0; padding-bottom:8px; border-bottom:1px solid #eee; }\r\n\r\n.poi-group h3{ margin:8px 0 12px; font-size:1.1em; }\r\n\r\n.poi-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; align-items:start; }\r\n\r\n.poi-card{ background:#fff; border:1px solid #eee; border-radius:6px; padding:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04); display:flex; flex-direction:column; min-height:120px; }\r\n\r\n.poi-logo{ width:64px; height:64px; object-fit:cover; border-radius:50%; margin-bottom:8px; align-self:center; }\r\n\r\n.poi-name{ font-weight:600; margin-bottom:6px; text-align:center; }\r\n\r\n.poi-meta{ font-size:0.9em; color:#666; text-align:center; margin-bottom:6px; }\r\n\r\n.poi-card a{ color:#2b8af3; }\r\n\r\n.poi-group-header{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }\r\n\r\n.poi-group-header .poi-group-title{ display:flex; align-items:center; gap:12px; margin:0; }\r\n\r\n.poi-group-toggle{ font-size:14px; }\r\n\r\n.poi-country-group{ margin-top:12px; margin-bottom:12px; border-left:4px solid #2b8af3; padding-left:12px; }\r\n\r\n.poi-country-header{ display:flex; align-items:center; cursor:pointer; user-select:none; padding-top:4px; padding-bottom:4px; }\r\n\r\n.poi-country-content{ display:none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px; padding-top:8px; margin-bottom:8px; }\r\n\r\n.poi-country-content.collapsed{ display:none; }\r\n\r\n.poi-country-content:not(.collapsed){ display:grid; }\r\n\r\n.poi-group-header.collapsed + .poi-countries-container{ display:none; }\r\n\r\n.poi-group-header:not(.collapsed) + .poi-countries-container{ display:flex; flex-direction:column; }\r\n\r\n/* small helpers */
-.notice{ padding:12px; background:#fff; border:1px solid #eee; border-radius:6px; }\r\n\r\n/* make sure popup images don't overflow */
-.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:6px; }\r\n\r\n/* marker selected state fallback (also injected by JS) */
-.leaflet-marker-icon.poi-selected{ box-shadow: 0 0 8px 3px rgba(0,150,0,0.6); transform: scale(1.08); }\r\n\r\n.flash-poi{ animation: flash 1s ease; }\r\n\r\n@keyframes flash{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}\r\n\r\n/* Spinner rotation used by the loading indicator (was injected by JS before) */
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}\r\n\r\n/* Spinner box and text used by the POI loading overlay */
-#pois-loading-spinner{ position: absolute; left: 50%; top: 10px; transform: translateX(-50%); z-index: 9999; display: none; }\r\n\r\n#pois-loading-spinner .poi-spinner-box{ background: rgba(255,255,255,0.95); padding:6px 10px; border-radius:6px; border:1px solid #ddd; box-shadow:0 2px 6px rgba(0,0,0,0.08); }\r\n\r\n#pois-loading-spinner .spinner{ display:inline-block; width:18px; height:18px; border:3px solid #ccc; border-top-color:#2b8af3; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle }\r\n\r\n#pois-loading-spinner .spinner-text{ vertical-align:middle }\r\n\r\n/* icon styling for category divIcons */
-.poi-div-icon .poi-icon{ display:inline-block; width:18px; height:18px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.35); border:2px solid #fff; }\r\n\r\n.poi-icon-large{ width:24px; height:24px; display:inline-block; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.4); }\r\n\r\n/* ==== CLUSTER MARKER STYLES ====
+#poi-list{ margin-top:12px; }
+.poi-group{ margin:18px 0; padding-bottom:8px; border-bottom:1px solid #eee; }
+.poi-group h3{ margin:8px 0 12px; font-size:1.1em; }
+.poi-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:12px; align-items:start; }
+.poi-card{ background:#fff; border:1px solid #eee; border-radius:6px; padding:10px; box-shadow:0 1px 3px rgba(0,0,0,0.04); display:flex; flex-direction:column; min-height:120px; }
+.poi-logo{ width:64px; height:64px; object-fit:cover; border-radius:50%; margin-bottom:8px; align-self:center; }
+.poi-name{ font-weight:600; margin-bottom:6px; text-align:center; }
+.poi-meta{ font-size:0.9em; color:#666; text-align:center; margin-bottom:6px; }
+.poi-card a{ color:#2b8af3; }
+.poi-group-header{ display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+.poi-group-header .poi-group-title{ display:flex; align-items:center; gap:12px; margin:0; }
+.poi-group-toggle{ font-size:14px; }
+.poi-country-group{ margin-top:12px; margin-bottom:12px; border-left:4px solid #2b8af3; padding-left:12px; }
+.poi-country-header{ display:flex; align-items:center; cursor:pointer; user-select:none; padding-top:4px; padding-bottom:4px; }
+.poi-country-content{ display:none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:12px; padding-top:8px; margin-bottom:8px; }
+.poi-country-content.collapsed{ display:none; }
+.poi-country-content:not(.collapsed){ display:grid; }
+.poi-group-header.collapsed + .poi-countries-container{ display:none; }
+.poi-group-header:not(.collapsed) + .poi-countries-container{ display:flex; flex-direction:column; }
+
+/* small helpers */
+.notice{ padding:12px; background:#fff; border:1px solid #eee; border-radius:6px; }
+
+/* make sure popup images don't overflow */
+.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:6px; }
+
+/* marker selected state fallback (also injected by JS) */
+.leaflet-marker-icon.poi-selected{ box-shadow: 0 0 8px 3px rgba(0,150,0,0.6); transform: scale(1.08); }
+.flash-poi{ animation: flash 1s ease; }
+@keyframes flash{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+/* Spinner rotation used by the loading indicator (was injected by JS before) */
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* Spinner box and text used by the POI loading overlay */
+#pois-loading-spinner{ position: absolute; left: 50%; top: 10px; transform: translateX(-50%); z-index: 9999; display: none; }
+#pois-loading-spinner .poi-spinner-box{ background: rgba(255,255,255,0.95); padding:6px 10px; border-radius:6px; border:1px solid #ddd; box-shadow:0 2px 6px rgba(0,0,0,0.08); }
+#pois-loading-spinner .spinner{ display:inline-block; width:18px; height:18px; border:3px solid #ccc; border-top-color:#2b8af3; border-radius:50%; animation:spin 1s linear infinite; margin-right:8px; vertical-align:middle }
+#pois-loading-spinner .spinner-text{ vertical-align:middle }
+
+/* icon styling for category divIcons */
+.poi-div-icon .poi-icon{ display:inline-block; width:18px; height:18px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.35); border:2px solid #fff; }
+.poi-icon-large{ width:24px; height:24px; display:inline-block; border-radius:50%; border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.4); }
+
+/* ==== CLUSTER MARKER STYLES ====
      Centralized cluster marker rules (merged from poi-clusters.css)
      Provide clear, high-contrast cluster counts and accessible touch targets.
 */
@@ -1190,9 +1793,15 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     justify-content: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.35);
     border: 2px solid rgba(255,255,255,0.65);
-}\r\n\r\n.marker-cluster {
+}
+
+.marker-cluster {
     border-radius: 1px;
-}\r\n\r\n.marker-cluster span { line-height: 1; }\r\n\r\n@media (max-width: 600px) {
+}
+
+.marker-cluster span { line-height: 1; }
+
+@media (max-width: 600px) {
     .marker-cluster div {
         width: 28px;
         height: 28px;
@@ -1200,22 +1809,63 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
         font-size: 12px;
         font-weight: 600;
         box-shadow: 0 1px 4px rgba(0,0,0,0.32);
-    }\r\n\r\n}\r\n\r\n/* Map-scoped cluster color and size rules. These prefer the CSS variable
+    }
+}
+
+/* Map-scoped cluster color and size rules. These prefer the CSS variable
    `--pv-bg` provided by the cluster HTML and provide solid fallbacks without
    using `!important`. Size classes are added by the iconCreateFunction. */
 #pois-map .marker-cluster div.pv-cluster-simple {
     background-color: var(--pv-bg, #4a4a4a);
     opacity: 1;
-}\r\n\r\n#pois-map .marker-cluster.marker-cluster-small div.pv-cluster-simple { background-color: var(--pv-bg, #6ecc39); }\r\n\r\n#pois-map .marker-cluster.marker-cluster-medium div.pv-cluster-simple { background-color: var(--pv-bg, #f0c20c); }\r\n\r\n#pois-map .marker-cluster.marker-cluster-large div.pv-cluster-simple { background-color: var(--pv-bg, #f17817); }\r\n\r\n/* Popup classes replacing inline styles */
-.poi-popup{ min-width:180px }\r\n\r\n.poi-popup-title{ margin:0 0 .25rem 0 }\r\n\r\n.poi-nearby-count{ font-size:0.9em; color:#444; margin-bottom:6px }\r\n\r\n.poi-small{ margin:6px 0; padding:6px; background:#fafafa; border:1px solid #eee; border-radius:4px; overflow:auto }\r\n\r\n.poi-hours{ font-size:0.9em; color:#444 }\r\n\r\n.poi-actions{ margin-top:6px }\r\n\r\n.poi-detail-link{ margin-left:8px; color:#2b8af3 }\r\n\r\n/* Category color classes (used instead of inline background styles) */
-.poi-color-campgrounds{ background:#2b8f2b }\r\n\r\n.poi-color-provincial_parks{ background:#2b8af3 }\r\n\r\n.poi-color-shopping{ background:#2980b9 }\r\n\r\n.poi-color-banks{ background:#27ae60 }\r\n\r\n.poi-color-cannabis{ background:#228b22 }\r\n\r\n.poi-color-hotels{ background:#8a2bcb }\r\n\r\n.poi-color-food{ background:#d35400 }\r\n\r\n.poi-color-restaurants{ background:#e67e22 }\r\n\r\n.poi-color-gas_stations{ background:#e74c3c }\r\n\r\n.poi-color-dump_station{ background:#7f8c8d }\r\n\r\n.poi-color-attractions{ background:#f39c12 }\r\n\r\n.poi-color-fitness{ background:#e74c3c }\r\n\r\n.poi-color-laundry{ background:#16a085 }\r\n\r\n.poi-color-parking{ background:#95a5a6 }\r\n\r\n.poi-color-pharmacy{ background:#e67e22 }\r\n\r\n.poi-color-tobacco_vape{ background:#34495e }\r\n\r\n.poi-color-tobacco{ background:#34495e }\r\n\r\n.poi-color-tourist_info{ background:#9b59b6 }\r\n\r\n.poi-color-transportation{ background:#1abc9c }\r\n\r\n.poi-color-supermarket{ background:#f1c40f }\r\n\r\n.poi-color-default{ background:#ff6600 }\r\n\r\n/* Improved readability: card contrast, spacing and typography */
+}
+#pois-map .marker-cluster.marker-cluster-small div.pv-cluster-simple { background-color: var(--pv-bg, #6ecc39); }
+#pois-map .marker-cluster.marker-cluster-medium div.pv-cluster-simple { background-color: var(--pv-bg, #f0c20c); }
+#pois-map .marker-cluster.marker-cluster-large div.pv-cluster-simple { background-color: var(--pv-bg, #f17817); }
+
+
+/* Popup classes replacing inline styles */
+.poi-popup{ min-width:180px }
+.poi-popup-title{ margin:0 0 .25rem 0 }
+.poi-nearby-count{ font-size:0.9em; color:#444; margin-bottom:6px }
+.poi-small{ margin:6px 0; padding:6px; background:#fafafa; border:1px solid #eee; border-radius:4px; overflow:auto }
+.poi-hours{ font-size:0.9em; color:#444 }
+.poi-actions{ margin-top:6px }
+.poi-detail-link{ margin-left:8px; color:#2b8af3 }
+
+/* Category color classes (used instead of inline background styles) */
+.poi-color-campgrounds{ background:#2b8f2b }
+.poi-color-provincial_parks{ background:#2b8af3 }
+.poi-color-shopping{ background:#2980b9 }
+.poi-color-banks{ background:#27ae60 }
+.poi-color-cannabis{ background:#228b22 }
+.poi-color-hotels{ background:#8a2bcb }
+.poi-color-food{ background:#d35400 }
+.poi-color-restaurants{ background:#e67e22 }
+.poi-color-gas_stations{ background:#e74c3c }
+.poi-color-dump_station{ background:#7f8c8d }
+.poi-color-attractions{ background:#f39c12 }
+.poi-color-fitness{ background:#e74c3c }
+.poi-color-laundry{ background:#16a085 }
+.poi-color-parking{ background:#95a5a6 }
+.poi-color-pharmacy{ background:#e67e22 }
+.poi-color-tobacco_vape{ background:#34495e }
+.poi-color-tobacco{ background:#34495e }
+.poi-color-tourist_info{ background:#9b59b6 }
+.poi-color-transportation{ background:#1abc9c }
+.poi-color-supermarket{ background:#f1c40f }
+.poi-color-default{ background:#ff6600 }
+
+/* Improved readability: card contrast, spacing and typography */
 :root{
    --poi-card-bg:#ffffff;
    --poi-card-border:#e6e6e6;
    --poi-text:#ffffff;
    --poi-subtext:#6b6b6b;
    --poi-accent:#2b8af3;
-}\r\n\r\n.poi-card{
+}
+
+.poi-card{
    background:var(--poi-card-bg);
    color:var(--poi-text);
    border:1px solid var(--poi-card-border);
@@ -1227,20 +1877,58 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
    align-items:center;
    justify-content:flex-start;
    min-height:140px;
-}\r\n\r\n.poi-grid{ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:16px; }\r\n\r\n.poi-logo{ width:56px; height:56px; border-radius:50%; object-fit:cover; margin-bottom:10px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }\r\n\r\n.poi-name{ font-weight:700; margin-bottom:6px; font-size:14px; color:var(--poi-text); text-align:center; }\r\n\r\n.poi-meta{ font-size:13px; color:var(--poi-subtext); text-align:center; line-height:1.25; }\r\n\r\n.poi-card a{ color:var(--poi-accent); text-decoration:none }\r\n\r\n.poi-card a:hover{ text-decoration:underline }\r\n\r\n/* Ensure popup images and small blocks are readable */
-.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:8px; }\r\n\r\n.poi-small{ width:100%; }\r\n\r\n/* Actions and details */
-.poi-actions{ margin-top:8px; display:flex; gap:8px; justify-content:center }\r\n\r\n.poi-actions a{ padding:4px 6px; border-radius:4px; background:transparent; border:1px solid transparent }\r\n\r\n.poi-actions a.import-poi{ background:rgba(43,138,243,0.06); border-color:rgba(43,138,243,0.12); color:var(--poi-accent) }\r\n\r\n.poi-detail-link{ margin-left:8px; color:var(--poi-accent) }\r\n\r\n/* Improve country group visuals */
-.poi-country-content{ padding-top:8px; }\r\n\r\n/* POI map layout moved from inline viewPOIs.php */
-.pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}\r\n\r\n.pois-layout .pois-side{flex:0 0 900px;max-width:1000px}\r\n\r\n#pois-map{flex:1 1 800px;max-width:1200px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:900px}\r\n\r\n/* Ensure Leaflet controls remain visible above rounded corner */
-#pois-map .leaflet-control{z-index:650}\r\n\r\n/* Filter item compact spacing (moved from inline styles) */
-#poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}\r\n\r\n#poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}\r\n\r\n#poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}\r\n\r\n#poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}\r\n\r\n#poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex}\r\n\r\n/* tighten control buttons spacing */
-#poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px}\r\n\r\n/* Responsive: stack on narrow screens */
+}
+
+.poi-grid{ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:16px; }
+.poi-logo{ width:56px; height:56px; border-radius:50%; object-fit:cover; margin-bottom:10px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+.poi-name{ font-weight:700; margin-bottom:6px; font-size:14px; color:var(--poi-text); text-align:center; }
+.poi-meta{ font-size:13px; color:var(--poi-subtext); text-align:center; line-height:1.25; }
+.poi-card a{ color:var(--poi-accent); text-decoration:none }
+.poi-card a:hover{ text-decoration:underline }
+
+/* Ensure popup images and small blocks are readable */
+.poi-popup-img{ max-width:200px; max-height:200px; display:block; margin-bottom:8px; }
+.poi-small{ width:100%; }
+
+/* Actions and details */
+.poi-actions{ margin-top:8px; display:flex; gap:8px; justify-content:center }
+.poi-actions a{ padding:4px 6px; border-radius:4px; background:transparent; border:1px solid transparent }
+.poi-actions a.import-poi{ background:rgba(43,138,243,0.06); border-color:rgba(43,138,243,0.12); color:var(--poi-accent) }
+.poi-detail-link{ margin-left:8px; color:var(--poi-accent) }
+
+/* Improve country group visuals */
+.poi-country-content{ padding-top:8px; }
+
+/* POI map layout moved from inline viewPOIs.php */
+.pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.pois-layout .pois-side{flex:0 0 800px;max-width:800px}
+#pois-map{flex:1 1 700px;max-width:1000px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px}
+/* Ensure Leaflet controls remain visible above rounded corner */
+#pois-map .leaflet-control{z-index:650}
+/* Filter item compact spacing (moved from inline styles) */
+#poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}
+#poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}
+#poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}
+#poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}
+#poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex}
+/* tighten control buttons spacing */
+#poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px}
+/* Responsive: stack on narrow screens */
 @media (max-width: 900px){
-    .pois-layout{flex-direction:column}\r\n\r\n.pois-layout .pois-side{width: 450px;max-width: 600px}\r\n\r\n#pois-map{width:100%;max-width:none}\r\n\r\n}\r\n\r\n/* Keep icons consistent */
-.poi-div-icon .poi-icon, .poi-icon, .poi-icon-large{ display:inline-block; vertical-align:middle }\r\n\r\n/* ==== POI POPUPS ==== */
+    .pois-layout{flex-direction:column}
+    .pois-layout .pois-side{width: 450px;max-width: 600px}
+    #pois-map{width:100%;max-width:none}
+}
+
+/* Keep icons consistent */
+.poi-div-icon .poi-icon, .poi-icon, .poi-icon-large{ display:inline-block; vertical-align:middle }
+
+
+
+/* ==== POI-POPUPS ====
 /**
  * POI Popup Styles
- * Styles for POI popups and UI elements
+ * Styles for secure POI popups and UI elements
  */
 
 /* Popup Container */
@@ -1249,74 +1937,104 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-size: 14px;
     line-height: 1.5;
     color: #333;
-}\r\n\r\n/* Popup Header */
+}
+
+/* Popup Header */
 .poi-popup-header {
     margin-bottom: 8px;
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 6px;
-}\r\n\r\n.poi-popup-header b {
+}
+
+.poi-popup-header b {
     display: block;
     font-weight: 600;
     font-size: 15px;
     color: #1a1a1a;
     margin-bottom: 2px;
     word-wrap: break-word;
-    padding-right: 36px;
-}\r\n\r\n.poi-popup-header small {
+}
+
+.poi-popup-header small {
     font-size: 12px;
     color: #666;
     word-break: break-all;
-}\r\n\r\n/* Popup Body */
+}
+
+/* Popup Body */
 .poi-popup-body {
     margin-bottom: 8px;
     padding: 6px 0;
-}\r\n\r\n.poi-popup-link {
+}
+
+.poi-popup-link {
     display: inline-block;
     color: #0056b3;
     text-decoration: none;
     word-break: break-all;
-}\r\n\r\n.poi-popup-link:hover {
+}
+
+.poi-popup-link:hover {
     color: #004085;
     text-decoration: underline;
-}\r\n\r\n/* Popup Footer */
+}
+
+/* Popup Footer */
 .poi-popup-footer {
     display: flex;
     gap: 6px;
-}\r\n\r\n/* Import Button */
+}
+
+/* Import Button */
 .poi-import-btn {
     flex: 1;
     padding: 6px 12px;
     background-color: #007bff;
-    color: #ffffff;
+    color: white;
     border: 1px solid #0056b3;
     border-radius: 4px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-}\r\n\r\n.poi-import-btn:hover {
+}
+
+.poi-import-btn:hover {
     background-color: #0056b3;
     border-color: #003d82;
-}\r\n\r\n.poi-import-btn:active {
+}
+
+.poi-import-btn:active {
     background-color: #004085;
     border-color: #003d82;
-}\r\n\r\n.poi-import-btn:disabled {
-    background-color: #cccccc;
-    border-color: #999999;
+}
+
+.poi-import-btn:disabled {
+    background-color: #ccc;
+    border-color: #999;
     cursor: not-allowed;
     opacity: 0.6;
-}\r\n\r\n/* Leaflet Popup Customization */
+}
+
+/* Leaflet Popup Customization */
 .leaflet-popup-content {
     margin: 0;
-}\r\n\r\n.leaflet-popup-content-wrapper {
+}
+
+.leaflet-popup-content-wrapper {
     border-radius: 6px;
     box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
-    position: relative;
-}\r\n\r\n/* Ensure the close button sits above popup content and remains visible
+}
+
+/* Ensure the close button sits above popup content and remains visible
    even when the title is long. Also reserve space on the title's right side. */
+.leaflet-popup-content-wrapper {
+    position: relative;
+}
+
 .leaflet-popup-close-button {
-    z-index: 9999;
-    right: 8px;
+    z-index: 9999; /* bring above popup content */
+    right: 8px; /* keep a small gap from the edge */
     top: 8px;
     background: rgba(255,255,255,0.95);
     border-radius: 50%;
@@ -1326,25 +2044,57 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     line-height: 26px;
     text-align: center;
     padding: 0;
-}\r\n\r\n/* Reserve space on the popup title to avoid being covered by the close button */
+}
+
+/* Reserve space on the popup title to avoid being covered by the close button */
 .poi-popup-header b {
     padding-right: 36px;
-}\r\n\r\n.leaflet-popup-tip {
-    background: #ffffff;
-}\r\n\r\n/* POI List Styles */
+}
+
+.leaflet-popup-tip {
+    background: white;
+}
+
+/* POI List Styles */
 .poi-list-item-link {
     color: #0056b3;
     text-decoration: none;
     word-break: break-word;
-}\r\n\r\n.poi-list-item-link:hover {
+}
+
+.poi-list-item-link:hover {
     color: #004085;
     text-decoration: underline;
+}
+
+.list-group-item .poi-list-item-link {
+    font-weight: 500;
+}
+
+/* Text Utilities */
+.text-muted {
+    color: #6c757d;
+}
+
+.d-block {
+    display: block;
+}
+
+/* Alert Styles */
+.alert {
+    padding: 12px;
+    margin-bottom: 0;
+    border: 1px solid #ddd;
     border-radius: 4px;
-}\r\n\r\n.alert-danger {
+}
+
+.alert-danger {
     color: #721c24;
     background-color: #f8d7da;
     border-color: #f5c6cb;
-}\r\n\r\n/* Loading Spinner */
+}
+
+/* Loading Spinner */
 .poi-spinner-box {
     display: flex;
     align-items: center;
@@ -1353,7 +2103,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     background: white;
     border-radius: 4px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}\r\n\r\n.poi-spinner-box .spinner {
+}
+
+.poi-spinner-box .spinner {
     display: inline-block;
     width: 16px;
     height: 16px;
@@ -1361,21 +2113,36 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     border-top: 2px solid #007bff;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-}\r\n\r\n.poi-spinner-box .spinner-text {
+}
+
+.poi-spinner-box .spinner-text {
     font-size: 13px;
     color: #666;
     font-weight: 500;
-}\r\n\r\n@keyframes spin {
-    0% { transform: rotate(0deg); }\r\n\r\n100% { transform: rotate(360deg); }\r\n\r\n}\r\n\r\n/* Responsive Design */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
 @media (max-width: 600px) {
     .poi-popup-container {
         font-size: 13px;
-    }\r\n\r\n.poi-import-btn {
+    }
+
+    .poi-import-btn {
         padding: 5px 10px;
         font-size: 12px;
-    }\r\n\r\n.leaflet-popup-content-wrapper {
+    }
+
+    .leaflet-popup-content-wrapper {
         max-width: 90vw;
-    }\r\n\r\n}\r\n\r\n/* POI Popup fields layout (labels and values) - no hardcoded colors */
+    }
+}
+
+/* POI Popup fields layout (labels and values) - no hardcoded colors */
 .poi-popup-fields {
     --poi-popup-label-width: 120px; /* can be overridden by themes */
     display: grid;
@@ -1385,22 +2152,32 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     align-items: start;
     margin-top: 6px;
     font-size: 13px;
-}\r\n\r\n.poi-popup-fields dt {
+}
+.poi-popup-fields dt {
     margin: 0;
     padding: 0;
     font-weight: 600;
     font-size: 12px;
     line-height: 1.2;
     opacity: 0.9;
-}\r\n\r\n.poi-popup-fields dd {
+}
+.poi-popup-fields dd {
     margin: 0;
     padding: 0;
     line-height: 1.3;
     word-break: break-word;
-}\r\n\r\n@media (max-width: 480px) {
+}
+
+@media (max-width: 480px) {
     .poi-popup-fields {
         grid-template-columns: 1fr;
-    }\r\n\r\n.poi-popup-fields dt { margin-top: 6px; }\r\n\r\n}\r\n\r\n/* ==== POI-TILES ====
+    }
+    .poi-popup-fields dt { margin-top: 6px; }
+}
+
+
+
+/* ==== POI-TILES ====
 /* POI tile card styles - no hardcoded colors; uses CSS variables from theme */
 :root{
     --poi-tile-gap: 12px;
@@ -1412,32 +2189,77 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     --poi-tile-shadow: 0 1px 2px rgba(0,0,0,0.04);
     --poi-tile-title-size: 1rem;
     --poi-tile-sub-size: 0.9rem;
-}\r\n\r\n.poi-tiles-wrap{margin-top:18px}\r\n\r\n.poi-type-group{margin-bottom:28px}\r\n\r\n.poi-type-title{font-weight:600;margin:0 0 8px 0;display:flex;align-items:center;gap:12px}\r\n\r\n.poi-type-title .count-badge{background:transparent;border:1px solid var(--poi-tile-border);padding:2px 6px;border-radius:999px;font-size:0.85rem}\r\n\r\n.poi-country-group{margin:8px 0}\r\n\r\n.poi-country-title{font-size:0.95rem;margin:6px 0;color:var(--muted-color,#666)}\r\n\r\n.poi-tiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--poi-tile-gap)}\r\n\r\n.poi-tiles-list{max-height:calc((var(--poi-tile-item-height) * 5) + (var(--poi-tile-gap) * 4));overflow:auto;padding-right:6px}\r\n\r\n.poi-tile{background:var(--poi-tile-bg);border:1px solid var(--poi-tile-border);border-radius:var(--poi-tile-radius);padding:var(--poi-tile-padding);box-shadow:var(--poi-tile-shadow);display:flex;flex-direction:column;gap:8px}\r\n\r\n.poi-tile .poi-tile-header{display:flex;align-items:center;gap:8px}\r\n\r\n.poi-tile .poi-tile-title{font-size:var(--poi-tile-title-size);font-weight:600;color:var(--poi-tile-contrast-text,#000)}\r\n\r\n.poi-tile .poi-tile-meta{font-size:var(--poi-tile-sub-size);color:var(--muted-color,#666)}\r\n\r\n.poi-tile .poi-tile-actions{margin-top:auto;display:flex;gap:8px;justify-content:flex-end}\r\n\r\n.poi-tile .btn-small{padding:4px 8px;font-size:0.85rem}\r\n\r\n/* responsive tweaks */
+}
+
+.poi-tiles-wrap{margin-top:18px}
+.poi-type-group{margin-bottom:28px}
+.poi-type-title{font-weight:600;margin:0 0 8px 0;display:flex;align-items:center;gap:12px}
+.poi-type-title .count-badge{background:transparent;border:1px solid var(--poi-tile-border);padding:2px 6px;border-radius:999px;font-size:0.85rem}
+.poi-country-group{margin:8px 0}
+.poi-country-title{font-size:0.95rem;margin:6px 0;color:var(--muted-color,#666)}
+.poi-tiles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--poi-tile-gap)}
+.poi-tiles-list{max-height:calc((var(--poi-tile-item-height) * 5) + (var(--poi-tile-gap) * 4));overflow:auto;padding-right:6px}
+.poi-tile{background:var(--poi-tile-bg);border:1px solid var(--poi-tile-border);border-radius:var(--poi-tile-radius);padding:var(--poi-tile-padding);box-shadow:var(--poi-tile-shadow);display:flex;flex-direction:column;gap:8px}
+.poi-tile .poi-tile-header{display:flex;align-items:center;gap:8px}
+.poi-tile .poi-tile-title{font-size:var(--poi-tile-title-size);font-weight:600;color:var(--poi-tile-contrast-text,#000)}
+.poi-tile .poi-tile-meta{font-size:var(--poi-tile-sub-size);color:var(--muted-color,#666)}
+.poi-tile .poi-tile-actions{margin-top:auto;display:flex;gap:8px;justify-content:flex-end}
+.poi-tile .btn-small{padding:4px 8px;font-size:0.85rem}
+
+/* responsive tweaks */
 @media (max-width:600px){
-    .poi-tiles-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}\r\n\r\n}\r\n\r\n/* Collapsible country-first grouping styles (accessible, no JS inline styles) */
-.poi-country-section{border:1px solid var(--poi-tile-border);border-radius:8px;margin-bottom:12px;overflow:hidden}\r\n\r\n.poi-country-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--poi-tile-bg);}\r\n\r\n.poi-country-section summary::-webkit-details-marker{display:none}\r\n\r\n.poi-country-section .country-summary-left{display:flex;align-items:center;gap:12px}\r\n\r\n.poi-country-section .country-summary-title{font-weight:700}\r\n\r\n.poi-country-section .country-summary-count{font-size:0.9rem;color:var(--muted-color,#666);border:1px solid var(--poi-tile-border);padding:2px 8px;border-radius:999px}\r\n\r\n.poi-country-content{padding:8px 12px 16px;background:transparent}\r\n\r\n/* Ensure country and type summary titles remain high-contrast (black fallback) */
+    .poi-tiles-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+}
+
+/* Collapsible country-first grouping styles (accessible, no JS inline styles) */
+.poi-country-section{border:1px solid var(--poi-tile-border);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.poi-country-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--poi-tile-bg);}
+.poi-country-section summary::-webkit-details-marker{display:none}
+.poi-country-section .country-summary-left{display:flex;align-items:center;gap:12px}
+.poi-country-section .country-summary-title{font-weight:700}
+.poi-country-section .country-summary-count{font-size:0.9rem;color:var(--muted-color,#666);border:1px solid var(--poi-tile-border);padding:2px 8px;border-radius:999px}
+.poi-country-content{padding:8px 12px 16px;background:transparent}
+
+/* Ensure country and type summary titles remain high-contrast (black fallback) */
 .country-summary-title,
 .poi-type-summary-title{
     color: var(--poi-tile-contrast-text,#000);
-}\r\n\r\n/* small zoom info control shown on the map */
-.poi-zoom-control{padding:6px 8px;background:var(--poi-tile-bg);color:var(--poi-tile-contrast-text,#000);border:1px solid var(--poi-tile-border);border-radius:4px;font-size:0.9rem}\r\n\r\n/* Ensure edit links in popups are readable (white text on primary background) */
+}
+
+/* small zoom info control shown on the map */
+.poi-zoom-control{padding:6px 8px;background:var(--poi-tile-bg);color:var(--poi-tile-contrast-text,#000);border:1px solid var(--poi-tile-border);border-radius:4px;font-size:0.9rem}
+
+/* Ensure edit links in popups are readable (white text on primary background) */
 .poi-popup-container .poi-edit-link,
 .poi-edit-link{
     color: var(--poi-badge-color,#fff);
     background-color: var(--poi-badge-bg,#0044ff);
     border-color: var(--poi-badge-bg,#0044ff);
     text-decoration: none;
-}\r\n\r\n/* Type groups within country: collapsed details too */
-.poi-type-section{margin-bottom:10px;border-top:1px dashed rgba(0,0,0,0.04)}\r\n\r\n.poi-type-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:8px 0}\r\n\r\n.poi-type-section summary::-webkit-details-marker{display:none}\r\n\r\n.poi-type-section .poi-type-summary-title{font-weight:600}\r\n\r\n.poi-type-section .poi-type-summary-count{font-size:0.85rem;color:var(--muted-color,#666)}\r\n\r\n/* Small visual affordance for collapsed content */
+}
+
+/* Type groups within country: collapsed details too */
+.poi-type-section{margin-bottom:10px;border-top:1px dashed rgba(0,0,0,0.04)}
+.poi-type-section summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.poi-type-section summary::-webkit-details-marker{display:none}
+.poi-type-section .poi-type-summary-title{font-weight:600}
+.poi-type-section .poi-type-summary-count{font-size:0.85rem;color:var(--muted-color,#666)}
+
+/* Small visual affordance for collapsed content */
 .poi-country-section[open] > summary .country-summary-title::after,
 .poi-type-section[open] > summary .poi-type-summary-title::after{
     content: '▾';
     margin-left:8px;color:var(--muted-color,#666);
-}\r\n\r\n.poi-country-section:not([open]) > summary .country-summary-title::after,
+}
+.poi-country-section:not([open]) > summary .country-summary-title::after,
 .poi-type-section:not([open]) > summary .poi-type-summary-title::after{
     content: '▸';
     margin-left:8px;color:var(--muted-color,#666);
-}\r\n\r\n/* ==== ROUTES ====
+}
+
+
+
+/* ==== ROUTES ====
 /* =============================================================================
    ROUTES PAGE STYLES (Create, View, Edit, List)
    
@@ -1450,24 +2272,34 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg, 1.5rem);
-}\r\n\r\n/* Route List */
+}
+
+/* Route List */
 .routes-list {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     overflow: hidden;
-}\r\n\r\n.routes-list-header {
+}
+
+.routes-list-header {
     padding: var(--spacing-lg, 1.5rem);
     background-color: var(--primary-color, #0044ff);
     color: white;
-}\r\n\r\n.routes-list-header h2 {
+}
+
+.routes-list-header h2 {
     margin-top: 0;
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.routes-list-actions {
+}
+
+.routes-list-actions {
     display: flex;
     gap: var(--spacing-md, 1rem);
     flex-wrap: wrap;
-}\r\n\r\n.routes-list-item {
+}
+
+.routes-list-item {
     padding: var(--spacing-lg, 1.5rem);
     border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
     cursor: pointer;
@@ -1476,30 +2308,46 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     grid-template-columns: 1fr auto;
     gap: var(--spacing-lg, 1.5rem);
     align-items: center;
-}\r\n\r\n.routes-list-item:hover {
+}
+
+.routes-list-item:hover {
     background-color: var(--bg-light, #1a1a1a);
-}\r\n\r\n.routes-list-item:last-child {
+}
+
+.routes-list-item:last-child {
     border-bottom: none;
-}\r\n\r\n.route-info {
+}
+
+.route-info {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm, 0.5rem);
-}\r\n\r\n.route-info h3 {
+}
+
+.route-info h3 {
     margin: 0;
     color: var(--primary-color, #0044ff);
-}\r\n\r\n.route-info .meta {
+}
+
+.route-info .meta {
     display: flex;
     gap: var(--spacing-lg, 1.5rem);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.route-info .meta span {
+}
+
+.route-info .meta span {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.route-actions {
+}
+
+.route-actions {
     display: flex;
     gap: var(--spacing-sm, 0.5rem);
-}\r\n\r\n.route-actions .btn {
+}
+
+.route-actions .btn {
     padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
     border: none;
     border-radius: 4px;
@@ -1510,59 +2358,89 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.route-actions .btn-edit {
+}
+
+.route-actions .btn-edit {
     background-color: #3498db;
     color: white;
-}\r\n\r\n.route-actions .btn-edit:hover {
+}
+
+.route-actions .btn-edit:hover {
     background-color: #2980b9;
-}\r\n\r\n.route-actions .btn-delete {
+}
+
+.route-actions .btn-delete {
     background-color: #e74c3c;
     color: white;
-}\r\n\r\n.route-actions .btn-delete:hover {
+}
+
+.route-actions .btn-delete:hover {
     background-color: #c0392b;
-}\r\n\r\n.route-actions .btn-view {
+}
+
+.route-actions .btn-view {
     background-color: #27ae60;
     color: white;
-}\r\n\r\n.route-actions .btn-view:hover {
+}
+
+.route-actions .btn-view:hover {
     background-color: #229954;
-}\r\n\r\n/* Route Form */
+}
+
+/* Route Form */
 .route-form {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
-}\r\n\r\n.route-form h2 {
+}
+
+.route-form h2 {
     color: var(--primary-color, #0044ff);
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
     margin-top: 0;
-}\r\n\r\n.form-section {
+}
+
+.form-section {
     margin-bottom: var(--spacing-xl, 2rem);
     padding-bottom: var(--spacing-xl, 2rem);
     border-bottom: 1px solid var(--bg-lighter, #2d2d2d);
-}\r\n\r\n.form-section:last-child {
+}
+
+.form-section:last-child {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
-}\r\n\r\n.form-section h3 {
+}
+
+.form-section h3 {
     color: var(--text-dark, #e0e0e0);
     font-size: var(--font-size-lg, 1.125rem);
     margin-top: 0;
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.form-row {
+}
+
+.form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--spacing-md, 1rem);
     margin-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.form-group {
+}
+
+.form-group {
     display: flex;
     flex-direction: column;
-}\r\n\r\n.form-group label {
+}
+
+.form-group label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     margin-bottom: var(--spacing-xs, 0.25rem);
     font-size: var(--font-size-sm, 0.875rem);
-}\r\n\r\n.form-group input,
+}
+
+.form-group input,
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
@@ -1571,32 +2449,44 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
     font-family: inherit;
-}\r\n\r\n.form-group textarea {
+}
+
+.form-group textarea {
     min-height: 120px;
     resize: vertical;
-}\r\n\r\n.form-group input:focus,
+}
+
+.form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color, #0044ff);
     box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
-}\r\n\r\n/* Route Editor Map */
+}
+
+/* Route Editor Map */
 .route-editor {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: var(--spacing-lg, 1.5rem);
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.route-map-container {
+}
+
+.route-map-container {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.1));
     height: 500px;
     position: relative;
-}\r\n\r\n.route-map-container #routeMap {
+}
+
+.route-map-container #routeMap {
     width: 100%;
     height: 100%;
-}\r\n\r\n.route-sidebar {
+}
+
+.route-sidebar {
     background-color: var(--bg-lighter);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
@@ -1604,12 +2494,16 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     height: fit-content;
     max-height: 500px;
     overflow-y: auto;
-}\r\n\r\n.route-sidebar h3 {
+}
+
+.route-sidebar h3 {
     color: var(--primary-color, #0044ff);
     margin-top: 0;
     border-bottom: 2px solid var(--primary-color, #0044ff);
     padding-bottom: var(--spacing-md, 1rem);
-}\r\n\r\n.route-waypoint {
+}
+
+.route-waypoint {
     padding: var(--spacing-md, 1rem);
     background-color: var(--bg-light, #1a1a1a);
     border-left: 3px solid var(--primary-color, #0044ff);
@@ -1618,85 +2512,129 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     display: flex;
     justify-content: space-between;
     align-items: center;
-}\r\n\r\n.route-waypoint.active {
+}
+
+.route-waypoint.active {
     background-color: var(--primary-light, rgba(77, 148, 255, 0.1));
     border-left-color: var(--primary-color, #0044ff);
-}\r\n\r\n.route-waypoint-info {
+}
+
+.route-waypoint-info {
     flex: 1;
-}\r\n\r\n.route-waypoint-name {
+}
+
+.route-waypoint-name {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     margin-bottom: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.route-waypoint-remove {
+}
+
+.route-waypoint-remove {
     background: none;
     border: none;
     color: #e74c3c;
     cursor: pointer;
     font-size: 1.2rem;
     padding: 0;
-}\r\n\r\n.route-waypoint-remove:hover {
+}
+
+.route-waypoint-remove:hover {
     color: #c0392b;
-}\r\n\r\n/* Route Summary */
+}
+
+/* Route Summary */
 .route-summary {
     background-color: var(--bg-light, #1a1a1a);
     border-radius: 8px;
     padding: var(--spacing-lg, 1.5rem);
     margin-bottom: var(--spacing-lg, 1.5rem);
-}\r\n\r\n.route-summary-grid {
+}
+
+.route-summary-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-md, 1rem);
-}\r\n\r\n.route-summary-item {
+}
+
+.route-summary-item {
     padding: var(--spacing-md, 1rem);
     background-color: white;
     border-radius: 4px;
     border-left: 3px solid var(--primary-color, #0044ff);
-}\r\n\r\n.route-summary-item .label {
+}
+
+.route-summary-item .label {
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
     font-size: var(--font-size-sm, 0.875rem);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: var(--spacing-xs, 0.25rem);
-}\r\n\r\n.route-summary-item .value {
+}
+
+.route-summary-item .value {
     color: var(--primary-color, #0044ff);
     font-size: var(--font-size-lg, 1.125rem);
     font-weight: 600;
-}\r\n\r\n/* Responsive Routes */
+}
+
+/* Responsive Routes */
 @media (max-width: 1024px) {
     .route-editor {
         grid-template-columns: 1fr;
-    }\r\n\r\n.route-sidebar {
+    }
+    
+    .route-sidebar {
         max-height: 300px;
-    }\r\n\r\n}\r\n\r\n@media (max-width: 768px) {
+    }
+}
+
+@media (max-width: 768px) {
     .routes-list-item {
         grid-template-columns: 1fr;
         gap: var(--spacing-md, 1rem);
-    }\r\n\r\n.route-actions {
+    }
+    
+    .route-actions {
         width: 100%;
-    }\r\n\r\n.route-map-container {
+    }
+    
+    .route-map-container {
         height: 300px;
-    }\r\n\r\n.form-row {
+    }
+    
+    .form-row {
         grid-template-columns: 1fr;
-    }\r\n\r\n}\r\n\r\n/* Quick Map Planner Section */
+    }
+}
+
+/* Quick Map Planner Section */
 #quick-planner {
     margin-top: 1rem;
     border: 1px solid var(--border-color, #404040);
     padding: 15px;
     background: var(--bg-light, #1a1a1a);
     border-radius: 6px;
-}\r\n\r\n#quick-planner h3 {
+}
+
+#quick-planner h3 {
     margin-top: 0;
-}\r\n\r\n#quick-planner > p {
+}
+
+#quick-planner > p {
     color: var(--text-light, #b0b0b0);
     margin: 0.5rem 0 1rem 0;
-}\r\n\r\n/* Planner Grid Layout */
+}
+
+/* Planner Grid Layout */
 #quick-planner > div {
     display: grid;
     grid-template-columns: 250px 1fr;
     gap: 1.5rem;
     margin-top: 1rem;
-}\r\n\r\n/* Controls Panel */
+}
+
+/* Controls Panel */
 .planner-controls {
     background: var(--bg-lighter, #2d2d2d);
     padding: 12px;
@@ -1705,20 +2643,28 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     height: fit-content;
     position: sticky;
     top: 10px;
-}\r\n\r\n.planner-controls > div {
+}
+
+.planner-controls > div {
     margin-bottom: 12px;
-}\r\n\r\n.planner-controls label {
+}
+
+.planner-controls label {
     display: block;
     margin-bottom: 6px;
     font-weight: 600;
     color: var(--text-dark, #e0e0e0);
-}\r\n\r\n.planner-controls select {
+}
+
+.planner-controls select {
     width: 100%;
     padding: 8px;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     font-size: 14px;
-}\r\n\r\n#planner-calc,
+}
+
+#planner-calc,
 #planner-export {
     width: 100%;
     padding: 10px;
@@ -1730,50 +2676,76 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-weight: 600;
     font-size: 14px;
     transition: background 0.3s;
-}\r\n\r\n#planner-calc {
+}
+
+#planner-calc {
     background: var(--primary-color, #0044ff);
-}\r\n\r\n#planner-calc:hover {
+}
+
+#planner-calc:hover {
     background: #003366;
-}\r\n\r\n#planner-export {
+}
+
+#planner-export {
     background: #27ae60;
-}\r\n\r\n#planner-export:hover {
+}
+
+#planner-export:hover {
     background: #229954;
-}\r\n\r\n.planner-stats {
+}
+
+.planner-stats {
     margin-top: 12px;
     padding-top: 12px;
     border-top: 1px solid var(--border-color, #404040);
     font-size: 12px;
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.planner-stats > div {
+}
+
+.planner-stats > div {
     margin-bottom: 4px;
-}\r\n\r\n/* Summary Panel */
+}
+
+/* Summary Panel */
 .planner-summary-container {
     background: var(--bg-lighter, #2d2d2d);
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     overflow: hidden;
-}\r\n\r\n.planner-summary-header {
+}
+
+.planner-summary-header {
     padding: 12px;
     border-bottom: 1px solid var(--border-color, #404040);
     background: var(--bg-light, #1a1a1a);
     font-weight: bold;
     font-size: 16px;
-}\r\n\r\n#planner-summary {
+}
+
+#planner-summary {
     padding: 12px;
     max-height: 500px;
     overflow-y: auto;
-}\r\n\r\n#planner-distance {
+}
+
+#planner-distance {
     margin-bottom: 8px;
     font-weight: 600;
     color: var(--primary-color, #0044ff);
-}\r\n\r\n#planner-duration {
+}
+
+#planner-duration {
     margin-bottom: 12px;
     font-weight: 600;
     color: #27ae60;
-}\r\n\r\n#planner-legs {
+}
+
+#planner-legs {
     margin-top: 8px;
     font-size: 13px;
-}\r\n\r\n/* Planner Leg Styling */
+}
+
+/* Planner Leg Styling */
 .planner-leg {
     background: var(--bg-lighter, #2d2d2d);
     border-left: 4px solid var(--primary-color, #0044ff);
@@ -1781,18 +2753,24 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     margin-bottom: 8px;
     border-radius: 4px;
     font-size: 12px;
-}\r\n\r\n.planner-leg strong {
+}
+
+.planner-leg strong {
     color: var(--text-dark, #e0e0e0);
     display: block;
     margin-bottom: 4px;
-}\r\n\r\n.leg-swatch {
+}
+
+.leg-swatch {
     display: inline-block;
     width: 12px;
     height: 12px;
     border-radius: 2px;
     margin-right: 6px;
     vertical-align: middle;
-}\r\n\r\n.planner-leg button {
+}
+
+.planner-leg button {
     padding: 4px 8px;
     font-size: 11px;
     background: var(--primary-color, #0044ff);
@@ -1800,14 +2778,20 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     border: none;
     border-radius: 3px;
     cursor: pointer;
-}\r\n\r\n.planner-leg button:hover {
+}
+
+.planner-leg button:hover {
     background: #003366;
-}\r\n\r\n/* Readonly Date Fields */
+}
+
+/* Readonly Date Fields */
 .readonly-date-field {
     background-color: var(--bg-lighter);
     cursor: not-allowed;
     opacity: 0.9;
-}\r\n\r\n/* ====== ROUTE/PLANNER EMBEDDED STYLES (CONSOLIDATION) ====== */
+}
+
+/* ====== ROUTE/PLANNER EMBEDDED STYLES (CONSOLIDATION) ====== */
 
 /* Planner Markers */
 .planner-marker {
@@ -1817,12 +2801,16 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-}\r\n\r\n.planner-marker img {
+}
+
+.planner-marker img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-}\r\n\r\n.planner-num {
+}
+
+.planner-num {
     position: absolute;
     right: -6px;
     bottom: -6px;
@@ -1833,18 +2821,28 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-size: 12px;
     font-weight: 700;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
-}\r\n\r\n.planner-item-dragging {
+}
+
+.planner-item-dragging {
     opacity: 0.5;
-}\r\n\r\n#planner-waypoints li {
+}
+
+#planner-waypoints li {
     cursor: grab;
-}\r\n\r\n/* Drag & Drop Visual Indicators */
+}
+
+/* Drag & Drop Visual Indicators */
 #route-items li {
     position: relative;
     padding: 10px 6px;
     transition: background-color 120ms;
-}\r\n\r\n#route-items li.over {
+}
+
+#route-items li.over {
     background: var(--primary-light, rgba(77, 148, 255, 0.1));
-}\r\n\r\n#route-items li.over-top::before,
+}
+
+#route-items li.over-top::before,
 #route-items li.over-bottom::after {
     content: '';
     position: absolute;
@@ -1854,11 +2852,17 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     background: #0077cc;
     border-radius: 3px;
     box-shadow: 0 0 4px rgba(0, 119, 204, 0.3);
-}\r\n\r\n#route-items li.over-top::before {
+}
+
+#route-items li.over-top::before {
     top: 4px;
-}\r\n\r\n#route-items li.over-bottom::after {
+}
+
+#route-items li.over-bottom::after {
     bottom: 4px;
-}\r\n\r\n/* Animated Placeholder Gap */
+}
+
+/* Animated Placeholder Gap */
 .route-placeholder {
     list-style: none;
     display: block;
@@ -1871,23 +2875,31 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     transition: height 160ms ease, margin 160ms ease;
     background: rgba(0, 119, 204, 0.04);
     border: 1px dashed rgba(0, 119, 204, 0.12);
-}\r\n\r\n.route-placeholder.active {
+}
+
+.route-placeholder.active {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
-}\r\n\r\n/* Saving Indicator */
+}
+
+/* Saving Indicator */
 .saving-indicator {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     font-size: 13px;
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.saving-indicator .spinner {
+}
+
+.saving-indicator .spinner {
     width: 14px;
     height: 14px;
     border: 2px solid rgba(0, 0, 0, 0.12);
     border-top-color: #0077cc;
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
-}\r\n\r\n/* Drag Ghost Preview */
+}
+
+/* Drag Ghost Preview */
 .drag-ghost {
     position: fixed;
     pointer-events: none;
@@ -1903,17 +2915,25 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     align-items: center;
     gap: 8px;
     font-size: 13px;
-}\r\n\r\n.drag-ghost img {
+}
+
+.drag-ghost img {
     width: 28px;
     height: 28px;
     object-fit: cover;
     border-radius: 4px;
-}\r\n\r\n@keyframes spin {
+}
+
+@keyframes spin {
     from {
         transform: rotate(0deg);
-    }\r\n\r\nto {
+    }
+    to {
         transform: rotate(360deg);
-    }\r\n\r\n}\r\n\r\n/* Select POIs Modal Card Styles */
+    }
+}
+
+/* Select POIs Modal Card Styles */
 .poi-select-card {
     background: var(--bg-lighter, #2d2d2d);
     border: 2px solid var(--border-color, #404040);
@@ -1924,95 +2944,143 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     display: flex;
     flex-direction: column;
     gap: 8px;
-}\r\n\r\n.poi-select-card:hover {
+}
+
+.poi-select-card:hover {
     border-color: #0077cc;
     box-shadow: 0 4px 12px rgba(0, 119, 204, 0.15);
-}\r\n\r\n.poi-select-card.selected {
+}
+
+.poi-select-card.selected {
     background: rgba(52, 152, 219, 0.2);
     border-color: var(--info-color, #3498db);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}\r\n\r\n.poi-select-card input[type="checkbox"] {
+}
+
+.poi-select-card input[type="checkbox"] {
     margin-right: 0.35rem;
     cursor: pointer;
-}\r\n\r\n.poi-select-logo {
+}
+
+.poi-select-logo {
     width: 100%;
     height: 80px;
     object-fit: contain;
     border-radius: 3px;
-}\r\n\r\n.poi-select-name {
+}
+
+.poi-select-name {
     font-weight: 700;
     color: #222;
     font-size: 0.95rem;
-}\r\n\r\n.poi-select-meta {
+}
+
+.poi-select-meta {
     font-size: 0.8rem;
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.poi-select-checkbox-wrapper {
+}
+
+.poi-select-checkbox-wrapper {
     display: flex;
     align-items: center;
     margin-top: 8px;
-}\r\n\r\n/* ====== SELECT POIS VIEW STYLES ====== */
+}
+
+/* ====== SELECT POIS VIEW STYLES ====== */
 
 .trip-header {
     margin-bottom: 1rem;
     padding: 10px;
     background: var(--bg-lighter, #2d2d2d);
     border: 1px solid var(--border-color, #404040);
-}\r\n\r\n.trip-header h2 {
+}
+
+.trip-header h2 {
     margin: 0 0 6px 0;
-}\r\n\r\n.trip-header p {
+}
+
+.trip-header p {
     color: var(--text-light, #b0b0b0);
     margin: 0;
-}\r\n\r\n.filter-section {
+}
+
+.filter-section {
     margin-bottom: 1.5rem;
     padding: 15px;
     background: var(--bg-light, #1a1a1a);
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
-}\r\n\r\n.filter-section h3 {
+}
+
+.filter-section h3 {
     margin-top: 0;
-}\r\n\r\n.filter-grid {
+}
+
+.filter-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
-}\r\n\r\n.filter-group-select {
+}
+
+.filter-group-select {
     display: block;
-}\r\n\r\n.filter-group-select label {
+}
+
+.filter-group-select label {
     display: block;
     font-weight: bold;
     margin-bottom: 0.35rem;
-}\r\n\r\n.filter-group-select select {
+}
+
+.filter-group-select select {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     font-size: 1rem;
-}\r\n\r\n.button-group {
+}
+
+.button-group {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-}\r\n\r\n.button-group button {
+}
+
+.button-group button {
     padding: 0.5rem 1.5rem;
     font-size: 1rem;
-}\r\n\r\n.pois-status {
+}
+
+.pois-status {
     margin-left: 1rem;
     color: #666;
     line-height: 2.5;
-}\r\n\r\n.map-container-modal {
+}
+
+.map-container-modal {
     margin-bottom: 1.5rem;
-}\r\n\r\n#pois-map-select {
+}
+
+#pois-map-select {
     height: 500px;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
-}\r\n\r\n.selected-pois-section {
+}
+
+.selected-pois-section {
     margin-bottom: 1.5rem;
     padding: 15px;
     background: rgba(52, 152, 219, 0.15);
     border: 1px solid var(--info-color, #3498db);
     border-radius: 4px;
-}\r\n\r\n.selected-pois-section h3 {
+}
+
+.selected-pois-section h3 {
     margin-top: 0;
-}\r\n\r\n.selected-count-badge {
+}
+
+.selected-count-badge {
     background: var(--info-color, #3498db);
     color: #fff;
     padding: 2px 8px;
@@ -2020,76 +3088,116 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-size: 0.85rem;
     margin-left: 0.5rem;
     display: none;
-}\r\n\r\n.selected-count-badge.active {
+}
+
+.selected-count-badge.active {
     display: inline-block;
-}\r\n\r\n#selected-pois-list {
+}
+
+#selected-pois-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 1rem;
-}\r\n\r\n.selected-actions {
+}
+
+.selected-actions {
     display: flex;
     gap: 0.5rem;
     margin-top: 1rem;
-}\r\n\r\n#add-selected-to-route {
+}
+
+#add-selected-to-route {
     padding: 0.5rem 1.5rem;
     font-size: 1rem;
-}\r\n\r\n#add-selected-to-route:disabled {
+}
+
+#add-selected-to-route:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-}\r\n\r\n.back-link {
+}
+
+.back-link {
     margin-bottom: 2rem;
-}\r\n\r\n/* ====== ROUTE VIEW PAGE STYLES ====== */
+}
+
+/* ====== ROUTE VIEW PAGE STYLES ====== */
 
 .trip-header {
     margin-bottom: 1rem;
     padding: 10px;
     background: var(--bg-lighter, #2d2d2d);
     border: 1px solid var(--border-color, #404040);
-}\r\n\r\n.trip-metadata {
+}
+
+
+
+.trip-metadata {
     font-size: 90%;
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.trip-metadata .meta-row {
+}
+
+.trip-metadata .meta-row {
     margin-top: 6px;
-}\r\n\r\n.route-map {
+}
+
+.route-map {
     height: 600px;
     margin-top: 1rem;
     border: 1px solid var(--border-color, #404040);
-}\r\n\r\n.route-controls {
+}
+
+.route-controls {
     display: flex;
     gap: 1rem;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem;
-}\r\n\r\n.route-form-section {
+}
+
+.route-form-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
-}\r\n\r\n.form-group-half {
+}
+
+.form-group-half {
     display: flex;
     flex-direction: column;
-}\r\n\r\n.form-group-half label {
+}
+
+.form-group-half label {
     font-weight: bold;
     margin-bottom: 0.5rem;
-}\r\n\r\n.form-group-half input,
+}
+
+.form-group-half input,
 .form-group-half select {
     padding: 0.5rem;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     font-size: 1rem;
-}\r\n\r\n.map-selector-panel {
+}
+
+.map-selector-panel {
     display: none;
     border: 1px solid var(--border-color, #404040);
     border-radius: 4px;
     overflow: hidden;
     background: var(--bg-lighter, #2d2d2d);
-}\r\n\r\n.map-selector-panel.show {
+}
+
+.map-selector-panel.show {
     display: block;
-}\r\n\r\n.map-selector-container {
+}
+
+.map-selector-container {
     height: 300px;
     border-top: 1px solid var(--border-color, #404040);
-}\r\n\r\n.map-selected-info {
+}
+
+.map-selected-info {
     padding: 0.75rem;
     background: rgba(52, 152, 219, 0.2);
     border-top: 1px solid var(--border-color, #404040);
@@ -2097,16 +3205,24 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     text-align: center;
     color: var(--info-color, #3498db);
     display: none;
-}\r\n\r\n.map-selected-info.show {
+}
+
+.map-selected-info.show {
     display: block;
-}\r\n\r\n.route-popup-image {
+}
+
+.route-popup-image {
     max-width: 80px;
     display: block;
     margin-top: 6px;
-}\r\n\r\n.route-items-list {
+}
+
+.route-items-list {
     list-style: none;
     padding: 0;
-}\r\n\r\n.route-items-list li {
+}
+
+.route-items-list li {
     padding: 8px;
     border: 1px solid var(--border-color, #404040);
     margin-bottom: 6px;
@@ -2114,28 +3230,42 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     display: flex;
     gap: 12px;
     align-items: center;
-}\r\n\r\n.route-item-col-fixed {
+}
+
+.route-item-col-fixed {
     width: 110px;
     flex: 0 0 110px;
-}\r\n\r\n.route-item-col-dates {
+}
+
+.route-item-col-dates {
     width: 160px;
     flex: 0 0 160px;
-}\r\n\r\n.route-item-info {
+}
+
+.route-item-info {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-}\r\n\r\n.route-item-poi-info {
+}
+
+.route-item-poi-info {
     flex: 1;
-}\r\n\r\n.route-item-poi-type {
+}
+
+.route-item-poi-type {
     font-size: 90%;
     color: var(--text-light, #b0b0b0);
-}\r\n\r\n.route-item-controls {
+}
+
+.route-item-controls {
     display: flex;
     gap: 6px;
     flex: 0 0 auto;
-}\r\n\r\n/* Control Buttons for Route Items */
+}
+
+/* Control Buttons for Route Items */
 .move-up,
 .move-down,
 .remove-item {
@@ -2147,16 +3277,22 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.2s ease;
-}\r\n\r\n.move-up:hover,
+}
+
+.move-up:hover,
 .move-down:hover {
     background-color: var(--primary-color, #0044ff);
     color: white;
     border-color: var(--primary-color, #0044ff);
-}\r\n\r\n.remove-item:hover {
+}
+
+.remove-item:hover {
     background-color: var(--error-color, #e74c3c);
     color: white;
     border-color: var(--error-color, #e74c3c);
-}\r\n\r\n/* Map Selector POI Button */
+}
+
+/* Map Selector POI Button */
 .map-select-poi-btn {
     padding: 6px 12px;
     margin-top: 6px;
@@ -2168,38 +3304,64 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     font-size: 0.9rem;
     transition: all 0.2s ease;
     display: inline-block;
-}\r\n\r\n.map-select-poi-btn:hover {
+}
+
+.map-select-poi-btn:hover {
     background-color: var(--primary-dark, #003366);
-}\r\n\r\n/* ==== ROUTES-VIEW ====
+}
+
+
+
+/* ==== ROUTES-VIEW ====
 /* Route Views Styles */
 
 #date-error {
     display: none;
     margin-top: 6px;
-}\r\n\r\n#date-error.visible {
+}
+
+#date-error.visible {
     display: block;
-}\r\n\r\n/* Map marker popup images */
+}
+
+/* Map marker popup images */
 .marker-popup-image {
     max-width: 80px;
     display: block;
     margin-top: 6px;
-}\r\n\r\n/* Location dropdown selector */
+}
+
+/* Location dropdown selector */
 .select-min-width {
     min-width: 220px;
-}\r\n\r\n/* Toggle map selector button */
+}
+
+/* Toggle map selector button */
 #toggle-map-selector {
     padding: 0.5rem;
     margin-bottom: 0.75rem;
     display: none;
     width: 100%;
-}\r\n\r\n#toggle-map-selector.visible {
+}
+
+#toggle-map-selector.visible {
     display: block;
-}\r\n\r\n/* Back button with bottom margin */
+}
+
+/* Back button with bottom margin */
 .btn-back-routes {
     display: inline-block;
     margin-bottom: 1rem;
-}\r\n\r\n/* POI legend: ensure label text is black while preserving circle initials */
-#pv-poi-legend { color: #000; }\r\n\r\n#pv-poi-legend .pv-legend div > div + div { color: #000; }\r\n\r\n/* Navigation buttons to match site style */
+}
+
+
+
+
+/* POI legend: ensure label text is black while preserving circle initials */
+#pv-poi-legend { color: #000; }
+#pv-poi-legend .pv-legend div > div + div { color: #000; }
+
+/* Navigation buttons to match site style */
 .nav-btn {
     display: inline-flex;
     align-items: center;
@@ -2211,13 +3373,19 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }\r\n\r\n#pois-controls 
     color: var(--text-dark, #222);
     text-decoration: none;
     font-weight: 600;
-}\r\n\r\n.nav-btn:hover, .nav-btn:focus {
+}
+.nav-btn:hover, .nav-btn:focus {
     transform: translateY(-1px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}\r\n\r\n/* Dark theme override for nav buttons */
+}
+
+/* Dark theme override for nav buttons */
 .theme-dark .nav-btn {
     background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
     border-color: rgba(255,255,255,0.04);
     color: var(--color-on-surface, #e0e0e0);
-}\r\n\r\n
+}
+
+
+
 
