@@ -802,7 +802,20 @@ export default class PoiMapManager {
     }
 
     initMap() {
-        this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
+        // Initialize view from URL params if present (lat,lng,z), otherwise use defaults
+        try {
+            const url = new URL(window.location.href);
+            const latP = url.searchParams.get('lat');
+            const lngP = url.searchParams.get('lng');
+            const zP = url.searchParams.get('z');
+            if (latP && lngP && zP && !Number.isNaN(parseFloat(latP)) && !Number.isNaN(parseFloat(lngP)) && !Number.isNaN(parseInt(zP))) {
+                this.map = L.map(this.options.mapId).setView([parseFloat(latP), parseFloat(lngP)], parseInt(zP, 10));
+            } else {
+                this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
+            }
+        } catch (e) {
+            this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
+        }
         // Prevent map-level clicks from closing popups globally for this map.
         try { this.map.options.closePopupOnClick = false; } catch (e) {}
         // Ensure Leaflet default marker icons resolve even if local image files are missing.
@@ -906,11 +919,35 @@ export default class PoiMapManager {
         this.map.on('moveend', () => {
             clearTimeout(this.debounceTimeout);
             this.debounceTimeout = setTimeout(() => {
+                // update URL with current center/zoom
+                try {
+                    if (window && window.history && window.location) {
+                        const c = this.map.getCenter();
+                        const z = this.map.getZoom();
+                        const u = new URL(window.location.href);
+                        u.searchParams.set('lat', c.lat.toFixed(5));
+                        u.searchParams.set('lng', c.lng.toFixed(5));
+                        u.searchParams.set('z', String(z));
+                        window.history.replaceState(null, '', u.toString());
+                    }
+                } catch (e) {}
                 // If a popup is currently open, skip the automatic refresh to avoid
                 // clearing/recreating markers which closes popups and can hide icons.
                 if (this._popupOpenFlag) return;
                 if (this.hasLoadedOnce) this.fetchAndPlot();
             }, 300);
+        });
+        // Also update URL when zoom changes (separate event) to ensure z is always current
+        this.map.on('zoomend', () => {
+            try {
+                const c = this.map.getCenter();
+                const z = this.map.getZoom();
+                const u = new URL(window.location.href);
+                u.searchParams.set('lat', c.lat.toFixed(5));
+                u.searchParams.set('lng', c.lng.toFixed(5));
+                u.searchParams.set('z', String(z));
+                window.history.replaceState(null, '', u.toString());
+            } catch (e) {}
         });
     }
 
