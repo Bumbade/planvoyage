@@ -2445,7 +2445,9 @@ export default class PoiMapManager {
             // Use custom logos/icons for application POIs (MySQL/internal) and a colored div for others.
             if (!isAppPoi) {
                 // Overpass / external POIs: compact colored dot. Visual sizing and box-shadow live in CSS.
-                const html = `<div class="pv-marker pv-marker-overpass pv-marker--sm" style="--pv-marker-bg:${color}"></div>`;
+                // Wrap the marker in an outer element and set the CSS variable
+                // on the root so it's easy to query and CSS can reference it.
+                const html = `<div class="pv-div-icon-overpass-root" style="--pv-marker-bg:${color}"><div class="pv-marker pv-marker-overpass pv-marker--sm" style="--pv-marker-bg:${color}"></div></div>`;
                 return L.divIcon({ className: 'pv-div-icon pv-div-icon-overpass', html, iconSize: [20, 20], iconAnchor: [10, 10], popupAnchor: [0, -10] });
             }
             // If the POI has a custom logo provided (MySQL/app POI), try to use it as an icon.
