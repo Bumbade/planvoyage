@@ -71,8 +71,17 @@ if ($flash): ?>
             </label>
             <label>
                 <span><?php echo htmlspecialchars(t('password_label', 'Password:')); ?></span>
-                 <input id="password" name="password" type="password" autocomplete="new-password" required pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="<?php echo t('password_requirements_title','Mindestens 8 Zeichen, ein Großbuchstabe, ein Kleinbuchstabe, eine Zahl und ein Sonderzeichen'); ?>">
+                <input id="password" name="password" type="password" autocomplete="new-password" required pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}" title="<?php echo t('password_requirements_title','Mindestens 8 Zeichen, ein Großbuchstabe, ein Kleinbuchstabe, eine Zahl und ein Sonderzeichen'); ?>">
             </label>
+            <label>
+                <span><?php echo htmlspecialchars(t('password_confirm_label', 'Confirm Password:')); ?></span>
+                <input id="password_confirm" name="password_confirm" type="password" autocomplete="new-password" required>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+                <input id="show_password" type="checkbox" aria-controls="password password_confirm">
+                <span><?php echo htmlspecialchars(t('show_password', 'Show password')); ?></span>
+            </label>
+            <div id="pw-match" style="color:#b00;margin-top:6px;display:none;"><?php echo htmlspecialchars(t('pw_mismatch','Passwörter stimmen nicht überein')); ?></div>
             <div id="pw-rules" class="pw-rules" aria-live="polite">
                 <ul>
                     <li id="rule-length" class="invalid"><?php echo htmlspecialchars(t('pw_rule_length','Mindestens 8 Zeichen')); ?></li>
@@ -97,6 +106,7 @@ if ($flash): ?>
 <script>
 (function(){
     var pw = document.getElementById('password');
+    var pwc = document.getElementById('password_confirm');
     if(!pw) return;
     var rules = {
         length: document.getElementById('rule-length'),
@@ -105,6 +115,8 @@ if ($flash): ?>
         digit: document.getElementById('rule-digit'),
         special: document.getElementById('rule-special')
     };
+    var pwMatchEl = document.getElementById('pw-match');
+    var showBox = document.getElementById('show_password');
     function set(el, ok){ if(!el) return; el.className = ok ? 'valid' : 'invalid'; }
     function validate(val){
         set(rules.length, val.length >= 8);
@@ -113,8 +125,23 @@ if ($flash): ?>
         set(rules.digit, /[0-9]/.test(val));
         set(rules.special, /[^A-Za-z0-9]/.test(val));
     }
-    pw.addEventListener('input', function(e){ validate(e.target.value); });
+    pw.addEventListener('input', function(e){ validate(e.target.value); checkMatch(); });
+    if(pwc) pwc.addEventListener('input', checkMatch);
+    if(showBox){ showBox.addEventListener('change', function(){ var t = this.checked ? 'text' : 'password'; try{ pw.type = t; if(pwc) pwc.type = t; }catch(e){} }); }
+
+    function checkMatch(){
+        if(!pwc) return;
+        if(pw.value === '' && pwc.value === ''){ pwMatchEl.style.display = 'none'; return; }
+        if(pw.value === pwc.value){ pwMatchEl.style.display = 'none'; return true; }
+        pwMatchEl.style.display = 'block'; return false;
+    }
+
+    // Prevent submit if passwords don't match
+    var form = document.querySelector('form');
+    if(form){ form.addEventListener('submit', function(e){ if(!checkMatch()){ e.preventDefault(); pw.focus(); } }); }
+
     // run once to initialize
     validate(pw.value || '');
+    checkMatch();
 })();
 </script>
