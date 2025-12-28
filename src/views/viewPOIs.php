@@ -76,24 +76,24 @@ require_once __DIR__ . '/../includes/header.php';
     <h1><?php echo t('pois', 'POIs'); ?></h1>
     <style>
     /* POI map layout: place filters to the right of the map and limit map width */
-    .pois-layout{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
-    .pois-layout .pois-side{flex:0 0 300px;max-width:320px}
-    #pois-map{flex:1 1 700px;max-width:1400px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:480px}
+    .pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+    .pois-layout .pois-side{flex:0 0 800px;max-width:800px}
+    #pois-map{flex:1 1 700px;max-width:1400px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px}
     /* Ensure Leaflet controls remain visible above rounded corner */
     #pois-map .leaflet-control{z-index:650}
     /* Cluster styling moved to assets/css/poi-clusters.css (best-practice external stylesheet) */
     /* Filter item compact spacing (no inline styles) */
-    #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
-    #poi-filter .poi-filter-item{margin:0;padding:4px 6px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:6px}
+    #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}
+    #poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}
     #poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}
-    #poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:6px}
-    #poi-filter .filter-icon{width:16px;height:16px;object-fit:contain}
+    #poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}
+    #poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex;}
     /* tighten control buttons spacing */
-    #poi-filter-buttons .btn{margin:4px 6px 4px 0;padding:6px 8px}
+    #poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px;}
     /* Responsive: stack on narrow screens */
     @media (max-width: 900px){
         .pois-layout{flex-direction:column}
-        .pois-layout .pois-side{width:100%;max-width:none}
+        .pois-layout .pois-side{width: 450px;max-width: 600px;}
         #pois-map{width:100%;max-width:none}
     }
     </style>
@@ -113,6 +113,10 @@ require_once __DIR__ . '/../includes/header.php';
             <div class="flex-row gap-small">
                 <input id="poi-search" type="search" placeholder="<?php echo t('pois_search_placeholder','Search by name (press Enter)'); ?>" class="form-input-flex" />
                 <button id="poi-search-btn" class="btn"><?php echo t('pois_search','Search'); ?></button>
+                <!-- Country preselection: centers map on chosen country and triggers POI load -->
+                <select id="poi-country-select" class="form-input" style="min-width:200px;margin-left:6px">
+                    <option value=""><?php echo htmlspecialchars(t('select_country','Select country')); ?></option>
+                </select>
             </div>
         </div>
         <h3 id="poi-filter-heading"><?php echo t('pois_filter','Filter POIs'); ?></h3>
@@ -275,6 +279,57 @@ foreach ($allKeys as $k) {
     ?>
     window.API_BASE = <?php echo json_encode($apiBase); ?>;
     if (window.DEBUG) console.log('DEBUG: window.API_BASE set to: ' + window.API_BASE);
+</script>
+
+<script>
+    // Country preselection: populate from restcountries and center map on select
+    (function(){
+        function populateCountries(sel, list){
+            try{
+                list.sort((a,b)=>a.name.common.localeCompare(b.name.common));
+                for(const c of list){
+                    const o = document.createElement('option');
+                    o.value = c.cca2 || c.cca3 || (c.name && c.name.common) || '';
+                    o.textContent = (c.name && c.name.common) ? c.name.common : o.value;
+                    if (Array.isArray(c.latlng) && c.latlng.length>=2) {
+                        o.dataset.lat = String(c.latlng[0]);
+                        o.dataset.lng = String(c.latlng[1]);
+                    }
+                    sel.appendChild(o);
+                }
+            }catch(e){ console.warn('populateCountries failed', e); }
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{
+            const sel = document.getElementById('poi-country-select');
+            if(!sel) return;
+            // Load country list (lightweight fields)
+            fetch('https://restcountries.com/v3.1/all?fields=name,cca2,cca3,latlng')
+                .then(r=>r.ok? r.json() : Promise.reject(r.status))
+                .then(js=> populateCountries(sel, js || []))
+                .catch(e=>{ console.warn('Could not load country list', e); });
+
+            sel.addEventListener('change', async ()=>{
+                const opt = sel.selectedOptions && sel.selectedOptions[0];
+                if(!opt) return;
+                const lat = opt.dataset.lat, lng = opt.dataset.lng;
+                if(!lat || !lng) return;
+                try{
+                    // prefer the running manager instance exposed by poi-entry.js
+                    if(window.PV_POI_MANAGER && window.PV_POI_MANAGER.map){
+                        const z = 5;
+                        window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], z, {animate:true});
+                        try{ window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){ if(window.DEBUG) console.warn('fetchAndPlot failed after country select', e); }
+                    } else {
+                        // if manager not ready yet, wait for it
+                        document.addEventListener('PV_POI_MANAGER_READY', ()=>{
+                            try{ window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], 5, {animate:true}); window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){}
+                        }, {once:true});
+                    }
+                }catch(e){ console.warn('Country select handler failed', e); }
+            });
+        });
+    })();
 </script>
 
 <script>
