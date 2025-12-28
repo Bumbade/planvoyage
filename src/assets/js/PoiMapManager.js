@@ -2430,7 +2430,15 @@ export default class PoiMapManager {
             const isAppPoi = (this._isAppPoi(poi) || (poi && String(poi.source) === 'mysql'));
             let color;
             if (!isAppPoi) {
-                color = PoiMapManager._colorForOsm(poi && poi.osm_id ? poi.osm_id : (poi && poi.id ? poi.id : '0'));
+                // For Overpass/external POIs prefer a legend category color when
+                // the category predicate matches (so hotels/supermarket/etc use
+                // the same colors as the legend). Fall back to hashed color.
+                const detectedCat = this._getCategoryForPoi(poi);
+                if (detectedCat && PoiMapManager.CATEGORY_COLORS[detectedCat]) {
+                    color = PoiMapManager.CATEGORY_COLORS[detectedCat];
+                } else {
+                    color = PoiMapManager._colorForOsm(poi && poi.osm_id ? poi.osm_id : (poi && poi.id ? poi.id : '0'));
+                }
             } else {
                 color = PoiMapManager.CATEGORY_COLORS[cat] || '#888';
             }
