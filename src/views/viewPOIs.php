@@ -291,10 +291,13 @@ foreach ($allKeys as $k) {
                     const o = document.createElement('option');
                     o.value = c.cca2 || c.cca3 || (c.name && c.name.common) || '';
                     o.textContent = (c.name && c.name.common) ? c.name.common : o.value;
-                    if (Array.isArray(c.latlng) && c.latlng.length>=2) {
-                        o.dataset.lat = String(c.latlng[0]);
-                        o.dataset.lng = String(c.latlng[1]);
-                    }
+                            if (Array.isArray(c.latlng) && c.latlng.length>=2) {
+                                o.dataset.lat = String(c.latlng[0]);
+                                o.dataset.lng = String(c.latlng[1]);
+                            }
+                            if (c.area !== undefined && c.area !== null) {
+                                o.dataset.area = String(c.area);
+                            }
                     sel.appendChild(o);
                 }
             }catch(e){ console.warn('populateCountries failed', e); }
@@ -303,8 +306,8 @@ foreach ($allKeys as $k) {
         document.addEventListener('DOMContentLoaded', ()=>{
             const sel = document.getElementById('poi-country-select');
             if(!sel) return;
-            // Load country list (lightweight fields)
-            fetch('https://restcountries.com/v3.1/all?fields=name,cca2,cca3,latlng')
+            // Load country list (lightweight fields, include area for zoom heuristics)
+            fetch('https://restcountries.com/v3.1/all?fields=name,cca2,cca3,latlng,area')
                 .then(r=>r.ok? r.json() : Promise.reject(r.status))
                 .then(js=> populateCountries(sel, js || []))
                 .catch(e=>{ console.warn('Could not load country list', e); });
@@ -315,15 +318,29 @@ foreach ($allKeys as $k) {
                 const lat = opt.dataset.lat, lng = opt.dataset.lng;
                 if(!lat || !lng) return;
                 try{
+                    // estimate zoom from country area (km^2) when available
+                    const area = opt.dataset && opt.dataset.area ? parseFloat(opt.dataset.area) : null;
+                    let z = 5;
+                    if (area && !Number.isNaN(area)){
+                        if (area > 3000000) z = 3;
+                        else if (area > 1000000) z = 4;
+                        else if (area > 300000) z = 5;
+                        else if (area > 100000) z = 6;
+                        else if (area > 20000) z = 7;
+                        else if (area > 5000) z = 8;
+                        else z = 9;
+                    } else {
+                        z = 5;
+                    }
+
                     // prefer the running manager instance exposed by poi-entry.js
                     if(window.PV_POI_MANAGER && window.PV_POI_MANAGER.map){
-                        const z = 5;
                         window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], z, {animate:true});
                         try{ window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){ if(window.DEBUG) console.warn('fetchAndPlot failed after country select', e); }
                     } else {
                         // if manager not ready yet, wait for it
                         document.addEventListener('PV_POI_MANAGER_READY', ()=>{
-                            try{ window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], 5, {animate:true}); window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){}
+                            try{ window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], z, {animate:true}); window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){}
                         }, {once:true});
                     }
                 }catch(e){ console.warn('Country select handler failed', e); }
