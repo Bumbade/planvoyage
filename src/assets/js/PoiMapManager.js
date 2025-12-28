@@ -136,7 +136,10 @@ export default class PoiMapManager {
         tobacco: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                if (tags && tags.shop && tags.shop === 'tobacco') return true;
+                if (tags && tags.shop) {
+                    const s = String(tags.shop).toLowerCase();
+                    if (s === 'tobacco' || s === 'e-cigarette' || s === 'ecigarette' || s === 'e_cigarette') return true;
+                }
             } catch (e) {}
             return false;
         },
@@ -1350,7 +1353,7 @@ export default class PoiMapManager {
                 fitness: 'fitness',
                 laundry: 'laundry',
                 supermarket: 'supermarket',
-                tobacco: 'tobacco_vape',
+                tobacco: 'tobacco',
                 cannabis: 'cannabis',
                 transport: 'transport',
                 dump_station: 'dump_station',
