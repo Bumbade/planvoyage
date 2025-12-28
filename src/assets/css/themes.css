@@ -1,0 +1,140 @@
+
+/* ==== THEME-DARK ====
+/* Dark theme variables - NOW MAPPED TO CENTRALIZED THEME MANAGER */
+/* All variables now reference the theme system defined in global.css */
+.theme-dark {
+    --color-primary: var(--primary-color, #0044ff);
+    --color-secondary: var(--secondary-color, #2c3e50);
+    --color-bg: var(--bg-light, #1a1a1a);
+    --color-text: var(--text-dark, #e0e0e0);
+    --color-text-on-primary: #ffffff;
+}
+
+.theme-dark a { color: var(--color-primary); }
+
+/* Dark theme surface/link specifics - mapped to theme system */
+.theme-dark {
+    --color-surface: var(--bg-lighter, #2d2d2d);
+    --color-on-surface: var(--text-dark, #e0e0e0);
+    --color-link: var(--primary-light, #4d94ff);
+    --color-primary-dark: var(--primary-dark, #003366);
+    --color-border: var(--border-color, #404040);
+    /* Alpha tokens for dark theme */
+    --surface-95: rgba(26, 26, 26, 0.95);
+    --overlay-04: rgba(255, 255, 255, 0.04);
+    --overlay-06: rgba(255, 255, 255, 0.06);
+    --shadow-06: rgba(0, 0, 0, 0.35);
+    --shadow-08: rgba(0, 0, 0, 0.4);
+    --shadow-12: rgba(0, 0, 0, 0.6);
+    --primary-08: rgba(0, 68, 255, 0.08);
+    --primary-60: rgba(0, 68, 255, 0.6);
+    --surface-60: rgba(26, 26, 26, 0.6);
+    --nav-overlay-05: rgba(255, 255, 255, 0.03);
+}
+
+
+
+/* ==== THEME-LIGHT ====
+/* Light theme overrides - NOW MAPPED TO CENTRALIZED THEME MANAGER */
+/* Note: The application now uses Dark Mode as default. This is kept for reference. */
+.theme-light {
+    --color-primary: var(--primary-color, #0044ff);
+    --color-secondary: var(--secondary-color, #2c3e50);
+    --color-bg: var(--bg-light, #1a1a1a);
+    --color-text: var(--text-dark, #e0e0e0);
+    --color-text-on-primary: #ffffff;
+}
+
+.theme-light a { color: var(--color-primary); }
+
+/* Light theme surface/link specifics */
+.theme-light {
+    --color-surface: var(--bg-lighter, #2d2d2d);
+    --color-on-surface: var(--text-dark, #e0e0e0);
+    --color-link: var(--primary-color, #0044ff);
+    --color-primary-dark: var(--primary-dark, #003366);
+    /* Alpha tokens for light theme */
+    --surface-95: rgba(26, 26, 26, 0.95);
+    --overlay-04: rgba(255, 255, 255, 0.04);
+    --overlay-06: rgba(255, 255, 255, 0.06);
+    --shadow-06: rgba(0, 0, 0, 0.35);
+    --shadow-08: rgba(0, 0, 0, 0.4);
+    --shadow-12: rgba(0, 0, 0, 0.6);
+    --primary-08: rgba(0, 68, 255, 0.08);
+    --primary-60: rgba(0, 68, 255, 0.6);
+    --surface-60: rgba(26, 26, 26, 0.6);
+    --nav-overlay-05: rgba(255, 255, 255, 0.03);
+}
+
+
+
+
+
+/* Dark-mode adaptations for Bootstrap navbar/navigation */
+@media (prefers-color-scheme: dark) {
+    .navbar, .bg-light {
+        background-color: var(--color-surface, #2d2d2d) !important;
+        color: var(--color-on-surface, #e0e0e0) !important;
+        border-color: var(--color-border, #404040) !important;
+    }
+}
+
+/* Also support explicit .theme-dark container */
+.theme-dark .navbar,
+.theme-dark .bg-light {
+    background-color: var(--color-surface, #2d2d2d) !important;
+    color: var(--color-on-surface, #e0e0e0) !important;
+    border-color: var(--color-border, #404040) !important;
+}
+
+/* Ensure the nav inside a theme-dark container uses dark colors */
+.theme-dark .navbar,
+.theme-dark .navbar .container-fluid {
+    background-color: var(--color-surface, #2d2d2d) !important;
+}
+.theme-dark .navbar .navbar-brand,
+.theme-dark .navbar .nav-link,
+.theme-dark .navbar .navbar-text {
+    color: var(--color-on-surface, #e0e0e0) !important;
+}
+.theme-dark .navbar .nav-link:hover,
+.theme-dark .navbar .nav-link:focus {
+    color: var(--color-link, #4d94ff) !important;
+}
+.theme-dark .navbar-light .navbar-toggler {
+    border-color: rgba(255,255,255,0.12) !important;
+}
+.theme-dark .navbar-light .navbar-toggler-icon {
+    filter: invert(1) brightness(1.6) !important;
+}
+
+/* Dropdowns */
+.theme-dark .dropdown-menu {
+    background-color: var(--color-surface, #2d2d2d) !important;
+    color: var(--color-on-surface, #e0e0e0) !important;
+    border: 1px solid var(--color-border, #404040) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45) !important;
+}
+.theme-dark .dropdown-item {
+    color: var(--color-on-surface, #e0e0e0) !important;
+}
+.theme-dark .dropdown-item:hover,
+.theme-dark .dropdown-item:focus {
+    background-color: rgba(255,255,255,0.04) !important;
+    color: var(--color-link, #4d94ff) !important;
+}
+
+/* Ensure navbar links in dark theme are readable when using .bg-light/.navbar-light markup */
+.theme-dark .bg-light {
+    background-color: var(--color-surface, #2d2d2d) !important;
+}
+.theme-dark .navbar-light .nav-link,
+.theme-dark .navbar-light .navbar-brand {
+    color: var(--color-on-surface, #e0e0e0) !important;
+}
+
+/* Small screens: ensure toggler icon remains visible */
+.theme-dark .navbar-toggler { color: var(--color-on-surface, #e0e0e0) !important; }
+
+
+

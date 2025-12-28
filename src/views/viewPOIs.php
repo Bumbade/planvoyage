@@ -1,0 +1,355 @@
+<?php
+// viewPOIs.php - POI map page
+// Load env and i18n helpers, then include the global header (which emits the <head>)
+if (file_exists(__DIR__ . '/../config/env.php')) {
+    require_once __DIR__ . '/../config/env.php';
+}
+if (file_exists(__DIR__ . '/../helpers/url.php')) {
+    require_once __DIR__ . '/../helpers/url.php';
+}
+if (file_exists(__DIR__ . '/../helpers/i18n.php')) {
+    require_once __DIR__ . '/../helpers/i18n.php';
+}
+// POI helpers (category lists etc)
+if (file_exists(__DIR__ . '/../helpers/poi.php')) {
+    require_once __DIR__ . '/../helpers/poi.php';
+}
+// ensure session helpers available for CSRF token
+if (file_exists(__DIR__ . '/../helpers/session.php')) {
+    require_once __DIR__ . '/../helpers/session.php';
+    start_secure_session();
+}
+// ensure auth helpers available for admin checks
+if (file_exists(__DIR__ . '/../helpers/auth.php')) {
+    require_once __DIR__ . '/../helpers/auth.php';
+}
+
+// CRITICAL: Set global appBase BEFORE any includes
+// This ensures all subsequent includes and JavaScript see the correct value
+global $appBase;
+// Prefer environment APP_BASE if provided (can be a path or full URL)
+$envApp = getenv('APP_BASE') ?: null;
+if (!empty($envApp)) {
+    // If APP_BASE is a full URL (http://...), keep as-is; otherwise use path as provided
+    $appBase = $envApp;
+    $GLOBALS['appBase'] = $appBase;
+} elseif (isset($GLOBALS['appBase']) && !empty($GLOBALS['appBase'])) {
+    $appBase = $GLOBALS['appBase'];
+} else {
+    // Auto-detect from SCRIPT_NAME similar to header.php
+    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+    $base = rtrim(dirname($script), '/');
+    if (preg_match('#/src/(admin|views|api|controllers)/?$#', $base)) {
+        $base = dirname($base);
+    }
+    if (basename($base) === 'src') {
+        $base = dirname($base);
+    }
+    if ($base === '/' || $base === '.') {
+        $base = '';
+    }
+    $appBase = $base;
+    $GLOBALS['appBase'] = $appBase;
+}
+
+// Inject Leaflet CSS and MarkerCluster CSS into the head
+// Note: poi-popups.css and poi-controls.css are now consolidated in features.css
+$HEAD_EXTRA = '';
+$HEAD_EXTRA .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">';
+$HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.css') . '">';
+$HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.Default.css') . '">';
+require_once __DIR__ . '/../includes/header.php';
+// All POI CSS (popups, controls) now loaded via features.css
+// single PHP close tag below to avoid accidental whitespace/output
+?>
+<?php $flashOk = function_exists('flash_get') ? flash_get('success') : null; if ($flashOk): ?>
+    <div class="flash-success"><?php echo htmlspecialchars($flashOk); ?></div>
+<?php endif; ?>
+<?php $flashErr = function_exists('flash_get') ? flash_get('error') : null; if ($flashErr): ?>
+    <div class="error"><?php echo htmlspecialchars($flashErr); ?></div>
+<?php endif; ?>
+
+<main>
+    <h1><?php echo t('pois', 'POIs'); ?></h1>
+    <style>
+    /* POI map layout: place filters to the right of the map and limit map width */
+    .pois-layout{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+    .pois-layout .pois-side{flex:0 0 300px;max-width:320px}
+    #pois-map{flex:1 1 700px;max-width:1400px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:480px}
+    /* Ensure Leaflet controls remain visible above rounded corner */
+    #pois-map .leaflet-control{z-index:650}
+    /* Filter item compact spacing (no inline styles) */
+    #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
+    #poi-filter .poi-filter-item{margin:0;padding:4px 6px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:6px}
+    #poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}
+    #poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:6px}
+    #poi-filter .filter-icon{width:16px;height:16px;object-fit:contain}
+    /* tighten control buttons spacing */
+    #poi-filter-buttons .btn{margin:4px 6px 4px 0;padding:6px 8px}
+    /* Responsive: stack on narrow screens */
+    @media (max-width: 900px){
+        .pois-layout{flex-direction:column}
+        .pois-layout .pois-side{width:100%;max-width:none}
+        #pois-map{width:100%;max-width:none}
+    }
+    </style>
+
+    <div id="pois-controls">
+        <p><?php echo t('pois_map_instructions', 'Pan/zoom the map to load POIs in the visible area.'); ?></p>
+    </div>
+
+    <!-- load/reset buttons moved below the filter so they appear centered under the category grid -->
+
+    <!-- debug panel removed for production UX -->
+
+    <div class="pois-layout">
+    <div id="pois-controls-side" class="pois-side">
+        <div class="margin-top-small">
+            <label for="poi-search" class="form-label"><?php echo t('pois_search_label','Search POIs by name'); ?></label>
+            <div class="flex-row gap-small">
+                <input id="poi-search" type="search" placeholder="<?php echo t('pois_search_placeholder','Search by name (press Enter)'); ?>" class="form-input-flex" />
+                <button id="poi-search-btn" class="btn"><?php echo t('pois_search','Search'); ?></button>
+            </div>
+        </div>
+        <h3 id="poi-filter-heading"><?php echo t('pois_filter','Filter POIs'); ?></h3>
+        <fieldset id="poi-filter">
+<?php
+// Render filter buttons client-side. Server provides an allow-list of categories
+// the current user is permitted to see to avoid rendering protected options.
+$allowed = [];
+// Prefer a central provider function if available, otherwise fall back to local list.
+if (function_exists('get_poi_categories')) {
+    $allKeys = (array) get_poi_categories();
+} else {
+    $allKeys = [
+        'hotel','attraction','tourist_info','food','nightlife','fuel','parking',
+        'bank','healthcare','fitness','laundry','supermarket','tobacco','cannabis',
+        'transport','dump_station','campgrounds'
+    ];
+}
+foreach ($allKeys as $k) {
+    if (!function_exists('has_category_permission') || has_category_permission($k)) {
+        $allowed[] = $k;
+    }
+}
+?>
+<script>
+    // Expose minimal allow-list for the client-side renderer
+    window.POI_ALLOWED_CATEGORIES = <?php echo json_encode($allowed, JSON_UNESCAPED_UNICODE); ?>;
+</script>
+
+        <!-- POI filters loaded from server-generated API endpoint to avoid large inline scripts -->
+        <?php $ASSET_VERSION = defined('APP_VERSION') ? APP_VERSION : filemtime(__FILE__); ?>
+        <script src="<?php echo htmlspecialchars(app_url('src/api/poi-config.php')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
+        <!-- Filters are rendered by `src/assets/js/poi-filters.js` (imported in poi-entry.js) -->
+
+        <!-- POI Filter Container (populated by JavaScript) -->
+        <fieldset id="poi-filter-section">
+            <legend id="poi-filter-heading"><?php echo t('pois_filter_categories', 'Categories'); ?></legend>
+            <div id="poi-filter" role="group" aria-labelledby="poi-filter-heading">
+                <!-- Load / Reset buttons centered under the filter (placed inside the grid so they span all columns) -->
+                <div id="poi-load-controls">
+                    <button id="load-pois-btn" class="btn"><?php echo htmlspecialchars(t('load_pois', 'Load POIs')); ?></button>
+                    <button id="reset-poi-filters" class="btn"><?php echo htmlspecialchars(t('reset_filters', 'Reset filters')); ?></button>
+                </div>
+            </div>
+        </fieldset>
+        <!-- POI Control Buttons -->
+        <div id="poi-filter-buttons">
+            <button id="apply-poi-filter" class="btn btn-primary"><?php echo t('apply','Apply'); ?></button>
+            <?php if (!empty($_SESSION['user_id'])): ?>
+                <button id="import-selected-pois" class="btn btn-success"><?php echo htmlspecialchars(t('import_selected','Import Selected')); ?> (<span id="selected-count">0</span>)</button>
+            <?php else: ?>
+                <button class="btn" disabled title="<?php echo htmlspecialchars(t('please_login_to_import','Please log in to import POIs')); ?>"><?php echo htmlspecialchars(t('import_selected','Import Selected')); ?> (<span id="selected-count">0</span>)</button>
+            <?php endif; ?>
+        </div>
+
+        <?php if (empty($_SESSION['user_id'])): ?>
+            <div class="warning-notice">
+                <?php echo htmlspecialchars(t('please_login_to_edit_or_import_pois','Please log in to add or import POIs.')); ?>
+                    <a href="<?php echo htmlspecialchars(app_url('index.php/user/login')); ?>"><?php echo htmlspecialchars(t('login','Login')); ?></a>
+                    &nbsp;|&nbsp;
+                    <a href="<?php echo htmlspecialchars(app_url('index.php/user/register')); ?>"><?php echo htmlspecialchars(t('register','Register')); ?></a>
+            </div>
+        <?php endif; ?>
+            <div id="poi-empty-hint">
+                <div class="warning-notice">
+                    <strong><?php echo t('pois_none_found','No POIs found with the current filters.'); ?></strong>
+                    <div class="poi-hint-item">
+                        <button id="show-all-pois" class="btn btn-small"><?php echo t('pois_show_all','Show all POIs in view'); ?></button>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div id="pois-map" class="pois-map"></div>
+    </div><!-- .pois-layout -->
+
+    <div id="poi-list" class="poi-list" aria-live="polite"></div>
+
+    <!-- My POIs tile view (visible to logged-in users) -->
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <section id="my-pois" class="my-pois-section">
+                <h2><?php echo htmlspecialchars($I18N['pois']['my_pois'] ?? 'My POIs'); ?></h2>
+                <div id="my-pois-tiles" aria-live="polite">
+                    <p class="muted"><?php echo htmlspecialchars($I18N['general']['loading'] ?? 'Loading...'); ?></p>
+                </div>
+        </section>
+    <?php endif; ?>
+</main>
+
+<!-- Leaflet JS -->
+<script src="<?php echo asset_url('assets/vendor/leaflet/leaflet.js'); ?>" crossorigin=""></script>
+<!-- MarkerCluster JS -->
+<script src="<?php echo asset_url('assets/vendor/leaflet.markercluster/leaflet.markercluster.js'); ?>"></script>
+
+<!-- Ensure Leaflet uses CDN images if local images are missing -->
+<script>
+    (function(){
+        try {
+            if (typeof L === 'undefined' || !L || !L.Icon || !L.Icon.Default) return;
+            var cdnPath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
+            L.Icon.Default.mergeOptions({
+                iconUrl: cdnPath + 'marker-icon.png',
+                iconRetinaUrl: cdnPath + 'marker-icon-2x.png',
+                shadowUrl: cdnPath + 'marker-shadow.png'
+            });
+            if (window.DEBUG) console.log('Leaflet icons: using CDN images from', cdnPath);
+        } catch (e) {
+            if (window.DEBUG) console.warn('Could not set Leaflet default icon URLs', e);
+        }
+    })();
+</script>
+
+<script>
+    // Compute JS-visible base that points to the `src/` directory under the app base.
+    <?php
+    $norm = rtrim($GLOBALS['appBase'] ?? '', '/');
+    if ($norm === '') {
+        $jsBase = '/src';
+    } elseif (preg_match('#/src$#', $norm)) {
+        $jsBase = $norm;
+    } else {
+        $jsBase = $norm . '/src';
+    }
+    // expose asset version (computed above near poi-config)
+    $asset_ver = isset($ASSET_VERSION) ? $ASSET_VERSION : (defined('APP_VERSION') ? APP_VERSION : filemtime(__FILE__));
+    // DEBUG flag
+    $debugFlag = (bool) ((getenv('APP_DEBUG') !== false && getenv('APP_DEBUG') !== '') || (defined('DEBUG') && DEBUG));
+    ?>
+    window.APP_BASE = <?php echo json_encode($jsBase); ?>;
+    window.DEBUG = <?php echo json_encode($debugFlag); ?>;
+    if (window.DEBUG) console.log('DEBUG: window.APP_BASE set to: ' + window.APP_BASE);
+    // Expose a canonical icons base so frontend can resolve logo filenames reliably
+    try {
+        window.ICONS_BASE = (window.APP_BASE || '') + '/assets/icons/';
+        if (window.DEBUG) console.log('DEBUG: window.ICONS_BASE set to: ' + window.ICONS_BASE);
+    } catch (e) {
+        if (window.DEBUG) console.warn('Could not set ICONS_BASE', e);
+    }
+    // Enable POI-specific debug logging when app DEBUG is on
+    window.POI_DEBUG = !!window.DEBUG;
+    if (window.POI_DEBUG) console.log('POI_DEBUG enabled');
+    // Expose current logged-in user id (or null) for client-side logic
+    window.CURRENT_USER_ID = <?php echo json_encode($_SESSION['user_id'] ?? null); ?>;
+    if (window.DEBUG) console.log('DEBUG: window.CURRENT_USER_ID set to: ' + window.CURRENT_USER_ID);
+    // expose CSRF token for POST actions from the frontend
+    window.CSRF_TOKEN = <?php echo json_encode(function_exists('csrf_token') ? csrf_token() : ''); ?>;
+</script>
+
+<script>
+    // Expose canonical API base for client requests. Prefer configured api_url(),
+    // otherwise derive from APP_BASE by removing trailing '/src'.
+    <?php
+    $apiCandidate = rtrim(api_url(''), '/');
+    if (empty($apiCandidate) || $apiCandidate === '/') {
+        $derived = preg_replace('#/src$#', '', $jsBase);
+        if ($derived === '') $derived = '/';
+        $apiBase = $derived;
+    } else {
+        $apiBase = $apiCandidate;
+    }
+    ?>
+    window.API_BASE = <?php echo json_encode($apiBase); ?>;
+    if (window.DEBUG) console.log('DEBUG: window.API_BASE set to: ' + window.API_BASE);
+</script>
+
+<script>
+    // Expose localized filter group titles for client-side renderer
+    (function(){
+        try {
+            window.I18N = window.I18N || {};
+            window.I18N.filter_groups = {
+                'tourism': <?php echo json_encode(t('filter_group.tourism','Tourismus')); ?>,
+                'gastronomy': <?php echo json_encode(t('filter_group.gastronomy','Gastronomie')); ?>,
+                'mobility': <?php echo json_encode(t('filter_group.mobility','Infrastruktur')); ?>,
+                'services': <?php echo json_encode(t('filter_group.services','Dienstleistungen')); ?>,
+                'sport': <?php echo json_encode(t('filter_group.sport','Sport')); ?>,
+                'specialty': <?php echo json_encode(t('filter_group.specialty','Spezialhandel')); ?>
+            };
+        } catch (e) {
+            if (window.DEBUG) console.warn('Could not set filter group i18n', e);
+        }
+    })();
+</script>
+
+<!-- Asset diagnostic helper: checks key CSS/JS URLs and logs document.styleSheets -->
+<script>
+    (function(){
+        try {
+            if (!window.DEBUG) return; // asset diagnostics only in DEBUG
+            const urls = <?php
+                $assetChecks = [
+                    asset_url('assets/vendor/leaflet/leaflet.css'),
+                    asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.css'),
+                    asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.Default.css'),
+                    // poi-popups.css now in features.css
+                    asset_url('assets/vendor/leaflet/leaflet.js'),
+                    asset_url('assets/vendor/leaflet.markercluster/leaflet.markercluster.js'),
+                    asset_url('assets/js/PoiMapManager.js')
+                ];
+                echo json_encode($assetChecks, JSON_UNESCAPED_SLASHES);
+            ?>;
+
+            async function check(u){
+                try{
+                    const res = await fetch(u, {cache: 'no-store'});
+                    console.log('[ASSET CHECK]', u, res.status, res.ok ? 'OK' : 'NOT OK');
+                    return {url:u, status:res.status, ok:res.ok};
+                }catch(e){
+                    console.warn('[ASSET CHECK] fetch failed for', u, e && e.message ? e.message : e);
+                    return {url:u, error: String(e)};
+                }
+            }
+
+            Promise.all(urls.map(u => check(u))).then(results => {
+                console.group('Asset check results');
+                results.forEach(r => console.log(r));
+                try {
+                    console.group('Loaded styleSheets');
+                    for (const ss of document.styleSheets) {
+                        console.log(ss.href, ss.ownerNode && ss.ownerNode.tagName, ss.disabled ? 'disabled' : 'enabled');
+                    }
+                    console.groupEnd();
+                } catch (e) {
+                    if (window.DEBUG) console.warn('Could not enumerate document.styleSheets', e);
+                }
+                console.groupEnd();
+            }).catch(e => console.warn('Asset checks failed', e));
+        } catch (e) {
+            if (window.DEBUG) console.error('Asset diagnostic setup failed', e);
+        }
+    })();
+</script>
+
+<!-- Secure popup template helper (loaded before ESM bootstrap) -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
+
+<!-- ESM entry that bootstraps PoiMapManager and PoiTiles -->
+<script type="module" src="<?php echo htmlspecialchars(asset_url('assets/js/poi-entry.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
+
+<?php
+// Include footer with Bootstrap JS and main.js
+if (file_exists(__DIR__ . '/../includes/footer.php')) {
+    require_once __DIR__ . '/../includes/footer.php';
+}
+?>

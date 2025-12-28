@@ -1,0 +1,18 @@
+# Allow PATH_INFO and route requests to the front controller
+# Place this file in the `src/` directory.
+
+# Prefer AcceptPathInfo On when available so /index.php/user/login works
+AcceptPathInfo On
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Allgemein/planvoyage_V2/src/
+
+    # If request targets an existing file or directory, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Otherwise route to index.php (preserves PATH_INFO and query string)
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>

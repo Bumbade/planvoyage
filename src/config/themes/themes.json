@@ -1,0 +1,29 @@
+{
+    "dark": {
+        "name": "dark",
+        "label": "Dark",
+        "description": "Default dark theme",
+        "created_at": "2025-11-30 15:50:31",
+        "colors": {
+            "primary-color": "#ffa200",
+            "primary-dark": "#003366",
+            "primary-light": "#4d94ff",
+            "secondary-color": "#2c3e50",
+            "success-color": "#27ae60",
+            "warning-color": "#f39c12",
+            "error-color": "#e74c3c",
+            "info-color": "#3498db",
+            "text-dark": "#e0e0e0",
+            "text-light": "#b0b0b0",
+            "text-lighter": "#808080",
+            "bg-light": "#000000",
+            "bg-lighter": "#000000",
+            "border-color": "#404040"
+        },
+        "shadows": {
+            "shadow": "0 2px 8px rgba(0, 0, 0, 0.3)",
+            "shadow-lg": "0 4px 16px rgba(0, 0, 0, 0.4)"
+        },
+        "updated_at": "2025-11-30 15:50:31"
+    }
+}

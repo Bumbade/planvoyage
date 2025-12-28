@@ -1,0 +1,460 @@
+<?php
+/**
+ * Router Class - Centralized routing for TravelPlanner
+ * 
+ * Manages:
+ * - Route definition and matching
+ * - Request dispatching to controllers/handlers
+ * - Parameter extraction from URLs
+ * - Middleware support (CSRF, auth, etc.)
+ * 
+ * Usage:
+ *   $router = new Router();
+ *   $router->get('/locations', [LocationController::class, 'index']);
+ *   $router->post('/user/login', [UserController::class, 'login'])->middleware('csrf');
+ *   $router->dispatch();
+ */
+
+declare(strict_types=1);
+
+class Router
+{
+    /**
+     * Route storage: path => ['method' => HTTP_METHOD, 'handler' => callable, 'middleware' => []]
+     */
+    private array $routes = [];
+
+    /**
+     * Named route storage for reverse routing
+     */
+    private array $namedRoutes = [];
+
+    /**
+     * Current request path
+     */
+    private string $currentPath;
+
+    /**
+     * Current request method
+     */
+    private string $currentMethod;
+
+    /**
+     * Application base path
+     */
+    private string $appBase;
+
+    /**
+     * Route parameters (extracted from URL)
+     */
+    private array $params = [];
+
+    /**
+     * Middleware handlers
+     */
+    private array $middlewares = [];
+
+    /**
+     * Constructor
+     * 
+     * @param string $appBase Application base URL path (e.g., '/planvoyage')
+     */
+    public function __construct(string $appBase = '')
+    {
+        $this->appBase = $appBase;
+        $this->currentMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $this->currentPath = $this->extractPath();
+    }
+
+    /**
+     * Register a GET route
+     */
+    public function get(string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        return $this->registerRoute('GET', $pattern, $handler, $name);
+    }
+
+    /**
+     * Register a POST route
+     */
+    public function post(string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        return $this->registerRoute('POST', $pattern, $handler, $name);
+    }
+
+    /**
+     * Register a PUT route
+     */
+    public function put(string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        return $this->registerRoute('PUT', $pattern, $handler, $name);
+    }
+
+    /**
+     * Register a DELETE route
+     */
+    public function delete(string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        return $this->registerRoute('DELETE', $pattern, $handler, $name);
+    }
+
+    /**
+     * Register a route for all HTTP methods
+     */
+    public function any(string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        return $this->registerRoute('*', $pattern, $handler, $name);
+    }
+
+    /**
+     * Register a route with all necessary metadata
+     */
+    private function registerRoute(string $method, string $pattern, $handler, string $name = ''): RouteDefinition
+    {
+        // Normalize pattern
+        $pattern = $this->normalizePattern($pattern);
+
+        // Store route with method:pattern key to allow same path for different HTTP methods
+        $routeKey = $method . ':' . $pattern;
+        $this->routes[$routeKey] = [
+            'method' => $method,
+            'handler' => $handler,
+            'middleware' => [],
+            'pattern' => $pattern,
+        ];
+
+        // Register named route for reverse routing
+        if ($name) {
+            $this->namedRoutes[$name] = $pattern;
+        }
+
+        // Return RouteDefinition for method chaining
+        return new RouteDefinition($this, $routeKey);
+    }
+
+    /**
+     * Register middleware
+     */
+    public function middleware(string $name, callable $handler): self
+    {
+        $this->middlewares[$name] = $handler;
+        return $this;
+    }
+
+    /**
+     * Extract request path from REQUEST_URI or PATH_INFO
+     * 
+     * Supports both:
+     * 1. URL rewriting enabled: REQUEST_URI=/locations -> path=/locations
+     * 2. No rewriting: REQUEST_URI=/index.php/locations -> path=/locations
+     * 3. PATH_INFO fallback: PATH_INFO=/locations -> path=/locations
+     */
+    private function extractPath(): string
+    {
+        // Try PATH_INFO first (for fastCGI and direct index.php calls)
+        if (!empty($_SERVER['PATH_INFO'])) {
+            $requestUri = $_SERVER['PATH_INFO'];
+        } else {
+            // Fall back to REQUEST_URI
+            $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+        }
+        
+        // Debug logging
+        if (getenv('APP_DEBUG')) {
+            error_log(sprintf(
+                '[Router] REQUEST_URI=%s, PATH_INFO=%s, appBase=%s, SCRIPT_NAME=%s',
+                $_SERVER['REQUEST_URI'] ?? 'N/A',
+                $_SERVER['PATH_INFO'] ?? 'N/A',
+                $this->appBase,
+                $_SERVER['SCRIPT_NAME'] ?? 'N/A'
+            ));
+        }
+
+        // Strip app base from path
+        if ($this->appBase !== '' && strpos($requestUri, $this->appBase) === 0) {
+            $requestUri = substr($requestUri, strlen($this->appBase));
+            if ($requestUri === '') {
+                $requestUri = '/';
+            }
+        }
+
+        // Remove leading /index.php (handles fallback URLs)
+        if (strpos($requestUri, '/index.php') === 0) {
+            $requestUri = substr($requestUri, strlen('/index.php')) ?: '/';
+        }
+
+        // Normalize path
+        $path = '/' . trim($requestUri, '/');
+        if ($path === '//') $path = '/';
+
+        // Handle legacy /trips -> /routes alias
+        if (strpos($path, '/trips') === 0) {
+            $path = '/routes' . substr($path, strlen('/trips'));
+        }
+
+        if (getenv('APP_DEBUG')) {
+            error_log(sprintf('[Router] Final extracted path=%s', $path));
+        }
+
+        return $path;
+    }
+
+    /**
+     * Normalize route pattern (ensure leading slash, handle {param} syntax)
+     */
+    private function normalizePattern(string $pattern): string
+    {
+        return '/' . trim($pattern, '/');
+    }
+
+    /**
+     * Match a pattern against a path
+     * 
+     * Returns matched parameters or null if no match
+     * Pattern supports:
+     *   /locations -> exact match
+     *   /locations/{id} -> capture id parameter
+     *   /api/locations* -> prefix match
+     */
+    private function matchPattern(string $pattern, string $path): ?array
+    {
+        // Exact match
+        if ($pattern === $path) {
+            return [];
+        }
+
+        // Prefix match with asterisk
+        if (substr($pattern, -1) === '*') {
+            $prefix = substr($pattern, 0, -1);
+            if (strpos($path, $prefix) === 0) {
+                return [];
+            }
+            return null;
+        }
+
+        // Parameter matching {param}
+        if (strpos($pattern, '{') !== false && strpos($pattern, '}') !== false) {
+            // Convert pattern to regex
+            $regexPattern = preg_replace_callback(
+                '/\{(\w+)\}/',
+                function ($m) { return '(?P<' . $m[1] . '>[^/]+)'; },
+                $pattern
+            );
+
+            $regexPattern = '^' . str_replace('/', '\/', $regexPattern) . '$';
+
+            if (preg_match('/' . $regexPattern . '/', $path, $matches)) {
+                // Extract named parameters
+                $params = [];
+                foreach ($matches as $key => $value) {
+                    if (!is_numeric($key)) {
+                        $params[$key] = $value;
+                    }
+                }
+                return $params;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Find matching route for current request
+     */
+    private function findRoute(): ?array
+    {
+        foreach ($this->routes as $routeKey => $route) {
+            // Check HTTP method
+            if ($route['method'] !== '*' && $route['method'] !== $this->currentMethod) {
+                continue;
+            }
+
+            // Get the actual pattern from the route data (without method prefix)
+            $pattern = $route['pattern'];
+            
+            // Try to match pattern
+            $params = $this->matchPattern($pattern, $this->currentPath);
+            
+            if ($params !== null) {
+                $this->params = $params;
+                return $route;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Dispatch the current request
+     */
+    public function dispatch(): void
+    {
+        $route = $this->findRoute();
+
+        if ($route === null) {
+            // No route found - render 404
+            $this->render404();
+            exit;
+        }
+
+        // Execute middleware
+        foreach ($route['middleware'] as $middlewareName) {
+            if (isset($this->middlewares[$middlewareName])) {
+                $handler = $this->middlewares[$middlewareName];
+                $handler($this);
+            }
+        }
+
+        // Call handler
+        $this->callHandler($route['handler']);
+    }
+
+    /**
+     * Call a route handler
+     * 
+     * Supports:
+     *   'path.to.file' -> include file
+     *   [ClassName, 'methodName'] -> call class method
+     *   callable -> call function/closure
+     */
+    private function callHandler($handler): void
+    {
+        if (is_string($handler)) {
+            // File inclusion
+            $filePath = __DIR__ . '/../' . str_replace('.', '/', $handler) . '.php';
+            if (file_exists($filePath)) {
+                include $filePath;
+                return;
+            }
+
+            throw new \RuntimeException("Handler file not found: {$handler}");
+        }
+
+        if (is_array($handler) && count($handler) === 2) {
+            // [ClassName, 'methodName']
+            [$className, $methodName] = $handler;
+
+            if (!class_exists($className)) {
+                throw new \RuntimeException("Handler class not found: {$className}");
+            }
+
+            $instance = new $className();
+            if (!method_exists($instance, $methodName)) {
+                throw new \RuntimeException("Handler method not found: {$className}::{$methodName}");
+            }
+
+            call_user_func([$instance, $methodName], $this->params);
+            return;
+        }
+
+        if (is_callable($handler)) {
+            call_user_func($handler, $this->params);
+            return;
+        }
+
+        throw new \RuntimeException('Invalid handler type');
+    }
+
+    /**
+     * Render 404 response
+     */
+    private function render404(): void
+    {
+        header('HTTP/1.1 404 Not Found');
+        echo '<h1>404 Not Found</h1>';
+        echo '<p>The requested route does not exist.</p>';
+    }
+
+    /**
+     * Get a route parameter
+     */
+    public function param(string $name): ?string
+    {
+        return $this->params[$name] ?? null;
+    }
+
+    /**
+     * Get all route parameters
+     */
+    public function params(): array
+    {
+        return $this->params;
+    }
+
+    /**
+     * Get current request path
+     */
+    public function path(): string
+    {
+        return $this->currentPath;
+    }
+
+    /**
+     * Get current request method
+     */
+    public function method(): string
+    {
+        return $this->currentMethod;
+    }
+
+    /**
+     * Generate URL for named route
+     */
+    public function url(string $name, array $params = []): string
+    {
+        if (!isset($this->namedRoutes[$name])) {
+            throw new \RuntimeException("Named route not found: {$name}");
+        }
+
+        $pattern = $this->namedRoutes[$name];
+
+        // Replace parameters in pattern
+        $url = preg_replace_callback(
+            '/\{(\w+)\}/',
+            function ($m) use ($params) {
+                $key = $m[1];
+                if (!isset($params[$key])) {
+                    throw new \RuntimeException("Missing parameter for route: {$key}");
+                }
+                return urlencode($params[$key]);
+            },
+            $pattern
+        );
+
+        return $this->appBase . $url;
+    }
+}
+
+/**
+ * RouteDefinition - Fluent interface for route configuration
+ */
+class RouteDefinition
+{
+    private Router $router;
+    private string $pattern;
+
+    public function __construct(Router $router, string $pattern)
+    {
+        $this->router = $router;
+        $this->pattern = $pattern;
+    }
+
+    /**
+     * Attach middleware to this route
+     */
+    public function middleware(string ...$names): self
+    {
+        // This would be implemented to attach middleware to the specific route
+        // For now, this is a placeholder for the fluent interface
+        return $this;
+    }
+
+    /**
+     * Attach name to this route for reverse routing
+     */
+    public function name(string $name): self
+    {
+        // This would register the route name
+        return $this;
+    }
+}

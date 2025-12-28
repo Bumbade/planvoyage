@@ -1,0 +1,16 @@
+[Unit]
+Description=PlanVoyage Overpass Queue Worker
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/html/Allgemein/planvoyage_v2
+ExecStart=/usr/bin/php /var/www/html/Allgemein/planvoyage_v2/src/tools/process_overpass_queue.php
+Restart=on-failure
+RestartSec=10
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target

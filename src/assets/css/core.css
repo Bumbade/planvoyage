@@ -1,0 +1,1205 @@
+
+/* ==== STYLE ====
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+}
+
+header {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    padding: 10px 0;
+    text-align: center;
+}
+
+nav {
+    margin: 10px 0;
+}
+
+nav a {
+    color: var(--color-text-on-primary);
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+nav a:hover {
+    background: var(--color-secondary);
+}
+
+/* .container styling moved to src/styles/global.css */
+
+h1, h2, h3 {
+    color: var(--color-primary);
+}
+
+form {
+    background: var(--color-bg);
+    padding: 20px;
+    border-radius: var(--radius-base);
+    box-shadow: 0 0 10px var(--shadow-06);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--color-border);
+    border-radius: calc(var(--radius-base) / 1.6);
+}
+
+input[type="submit"] {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background: var(--color-secondary);
+}
+
+/* Flash and error messages */
+.flash-success {
+    background: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: var(--color-success-text);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: calc(var(--radius-base) / 2);
+}
+.error {
+    background: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: var(--color-error-text);
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: calc(var(--radius-base) / 2);
+}
+
+/* Route items list and drag state */
+
+#route-items li.over { background: var(--primary-08); border-color: var(--primary-60); }
+.drag-handle { color: var(--color-muted); margin-right:6px; }
+.remove-item, .move-up, .move-down { margin-left:8px; padding:4px 6px; border-radius:3px; border:1px solid var(--color-border); background: var(--surface-60); cursor:pointer; }
+.remove-item:hover { background: var(--color-error-bg); }
+.move-up:hover, .move-down:hover { background: var(--primary-60); }
+
+/* Typeahead suggestions */
+#location_suggestions div:hover { background: var(--color-surface); }
+
+/* POI filter layout moved to poi-controls.css to avoid duplicate selectors.
+   See src/assets/css/poi-controls.css for authoritative styles. */
+
+/* POI Filter Buttons - Toggle style */
+.poi-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 200ms ease;
+    white-space: nowrap;
+}
+
+.poi-filter-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--primary-08);
+    color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--shadow-sm, rgba(0, 0, 0, 0.1));
+}
+
+.poi-filter-btn[aria-pressed="true"] {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px var(--primary-shadow, rgba(43, 138, 243, 0.3));
+}
+
+.poi-filter-btn[aria-pressed="true"]:hover {
+    background: var(--primary-80);
+    border-color: var(--primary-80);
+}
+
+.poi-count {
+    display: inline-block;
+    min-width: 1.5rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.poi-filter-btn[aria-pressed="true"] .poi-count {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Category badge styles - uses CATEGORY_COLORS from pois.js */
+/* Base style for all category badges within buttons */
+.poi-filter-btn .poi-count {
+    padding: 0.2rem 0.4rem;
+    border-radius: 12px;
+    box-shadow: inset 0 -1px 0 var(--shadow-inset, rgba(0,0,0,0.15));
+    color: #fff;
+}
+
+.poi-filter-btn .poi-count-campgrounds { background: var(--cat-campgrounds, #2b8f2b); }
+.poi-filter-btn .poi-count-provincial_parks { background: var(--cat-provincial-parks, #2b8af3); }
+.poi-filter-btn .poi-count-shopping { background: var(--cat-shopping, #3498db); }
+.poi-filter-btn .poi-count-banks { background: var(--cat-banks, #27ae60); }
+.poi-filter-btn .poi-count-cannabis { background: var(--cat-cannabis, #228b22); }
+.poi-filter-btn .poi-count-hotels { background: var(--cat-hotels, #8a2bcb); }
+.poi-filter-btn .poi-count-food { background: var(--cat-food, #e67e22); }
+.poi-filter-btn .poi-count-restaurants { background: var(--cat-restaurants, #e67e22); }
+.poi-filter-btn .poi-count-fuel { background: var(--cat-fuel, #e74c3c); }
+.poi-filter-btn .poi-count-gas_stations { background: var(--cat-gas-stations, #e74c3c); }
+.poi-filter-btn .poi-count-dump_station { background: var(--cat-dump-station, #7f8c8d); }
+.poi-filter-btn .poi-count-attractions { background: var(--cat-attractions, #f39c12); }
+.poi-filter-btn .poi-count-fitness { background: var(--cat-fitness, #c0392b); }
+.poi-filter-btn .poi-count-laundry { background: var(--cat-laundry, #16a085); }
+.poi-filter-btn .poi-count-parking { background: var(--cat-parking, #95a5a6); }
+.poi-filter-btn .poi-count-pharmacy { background: var(--cat-pharmacy, #d35400); }
+.poi-filter-btn .poi-count-tobacco_vape { background: var(--cat-tobacco-vape, #34495e); }
+.poi-filter-btn .poi-count-tourist_info { background: var(--cat-tourist-info, #9b59b6); }
+.poi-filter-btn .poi-count-transportation { background: var(--cat-transportation, #1abc9c); }
+.poi-filter-btn .poi-count-supermarket { background: var(--cat-supermarket, #f1c40f); color: #333; }
+
+
+
+/* ==== GLOBAL ====
+/* =============================================================================
+   GLOBAL STYLES - Base styling for entire application
+   
+   THEME: Dark Mode (Default)
+   NOTE: This is now the standard theme. Future versions may support:
+         - Light Mode variant
+         - Custom theme switching via CSS variables
+         - Theme provider system for runtime configuration
+   ============================================================================= */
+
+:root {
+    /* COLOR PALETTE - Dark Mode (Primary) */
+    /* Future versions can override these variables for light mode or other themes */
+    
+    /* Primary Colors */
+    --primary-color: #0044ff;           /* Primary Blue */
+    --primary-dark: #003366;            /* Darker Blue */
+    --primary-light: #4d94ff;           /* Lighter Blue */
+    
+    /* Secondary Colors */
+    --secondary-color: #2c3e50;         /* Dark Slate */
+    --secondary-light: #34495e;         /* Light Slate */
+    
+    /* Semantic Colors */
+    --success-color: #27ae60;           /* Green */
+    --warning-color: #f39c12;           /* Orange */
+    --error-color: #e74c3c;             /* Red */
+    --info-color: #3498db;              /* Info Blue */
+    
+    /* Text Colors - Dark Mode */
+    --text-dark: #e0e0e0;               /* Light Text on Dark BG */
+    --text-light: #b0b0b0;              /* Medium Text on Dark BG */
+    --text-lighter: #808080;            /* Lighter Text on Dark BG */
+    
+    /* Background Colors - Dark Mode */
+    --bg-light: #1a1a1a;                /* Light Dark BG */
+    --bg-lighter: #2d2d2d;              /* Lighter Dark BG */
+    
+    /* Border Colors - Dark Mode */
+    --border-color: #404040;            /* Dark Borders */
+    
+    /* Shadows - Dark Mode */
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+    
+    /* Spacing System */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Typography */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    
+    /* Transitions */
+    --transition: all 0.3s ease;
+    --transition-fast: all 0.15s ease;
+    
+    /* Theme-compatible UI Colors */
+    --warning-bg-light: #2a2a00;        /* Dark Mode Warning Background */
+    --warning-border: #666600;          /* Dark Mode Warning Border */
+    --warning-text: #ffcc00;            /* Dark Mode Warning Text */
+    --text-hint: #999999;               /* Hint/Placeholder Text */
+    
+    /* Map Line Colors (Leaflet) */
+    --map-primary-line: #4da6ff;        /* Primary Route Line */
+    --map-outline: #1a1a1a;             /* Route Outline */
+    --map-fallback-line: #ffaa00;       /* Fallback/Alternative Route */
+    
+    /* UI Element Colors */
+    --selection-bg: #1a3a5a;            /* Item Selection Highlight */
+}
+
+/* Dark theme overrides - Currently the default */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-dark: #ecf0f1;
+        --text-light: #bdc3c7;
+        --text-lighter: #95a5a6;
+        --bg-light: #2c3e50;
+        --bg-lighter: #34495e;
+        --border-color: #7f8c8d;
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    background-color: var(--bg-light) !important;
+    color: var(--text-dark);
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    color: var(--text-dark);
+    background-color: var(--bg-light) !important;
+    background: var(--bg-light) !important;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Layout structure for sticky footer */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    padding: var(--spacing-lg);
+    background-color: var(--bg-light) !important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-dark);
+}
+
+h1 { font-size: var(--font-size-2xl); }
+h2 { font-size: var(--font-size-xl); }
+h3 { font-size: var(--font-size-lg); }
+h4 { font-size: var(--font-size-base); }
+h5 { font-size: var(--font-size-sm); }
+h6 { font-size: var(--font-size-sm); }
+
+p {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Links - VISIBLE colors */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition-fast);
+}
+
+a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #7030a0;
+}
+
+a:active {
+    color: var(--primary-dark);
+}
+
+/* Ensure links are visible in all contexts */
+footer a,
+.footer a {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+footer a:hover,
+.footer a:hover {
+    color: var(--primary-color);
+}
+
+/* Lists */
+ul, ol {
+    margin-left: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+li {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Code */
+code, pre {
+    font-family: var(--font-mono);
+    background-color: var(--bg-lighter);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: 4px;
+}
+
+pre {
+    overflow-x: auto;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Forms */
+input, textarea, select {
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-lighter);
+    color: var(--text-dark);
+    transition: var(--transition-fast);
+}
+
+/* Override any inline colors */
+input[style], textarea[style], select[style] {
+    background-color: var(--bg-lighter) !important;
+    color: var(--text-dark) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-lighter) !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1) !important;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* Override any inline styles on labels */
+label[style] {
+    color: var(--text-dark);
+}
+
+/* Ensure form labels are always visible and light */
+.form-group label,
+.form-label,
+.field-label {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* Buttons */
+button, .button, a.btn {
+    display: inline-block;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: none;
+    border-radius: 4px;
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    text-decoration: none;
+    text-align: center;
+}
+
+button:hover, .button:hover, a.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+button:active, .button:active, a.btn:active {
+    transform: translateY(0);
+}
+
+button:disabled, .button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Button variants */
+.btn, button.btn, a.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    color: white;
+    background-color: var(--primary-color, #0044ff);
+}
+
+.btn-primary, button.btn-primary, a.btn-primary {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+.btn-primary:hover, button.btn-primary:hover, a.btn-primary:hover {
+    background-color: var(--primary-dark);
+    color: white !important;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: var(--secondary-light);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: darken(#27ae60, 10%);
+}
+
+.btn-danger {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: darken(#e74c3c, 10%);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Containers */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.container-sm {
+    max-width: 600px;
+}
+
+.container-md {
+    max-width: 800px;
+}
+
+.container-lg {
+    max-width: 1400px;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Flex */
+.flex {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-between {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+/* Spacing utilities */
+.mt { margin-top: var(--spacing-md); }
+.mb { margin-bottom: var(--spacing-md); }
+.ml { margin-left: var(--spacing-md); }
+.mr { margin-right: var(--spacing-md); }
+.mx { margin-left: var(--spacing-md); margin-right: var(--spacing-md); }
+.my { margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); }
+
+.pt { padding-top: var(--spacing-md); }
+.pb { padding-bottom: var(--spacing-md); }
+.pl { padding-left: var(--spacing-md); }
+.pr { padding-right: var(--spacing-md); }
+.px { padding-left: var(--spacing-md); padding-right: var(--spacing-md); }
+.py { padding-top: var(--spacing-md); padding-bottom: var(--spacing-md); }
+
+/* Cards */
+.card {
+    background-color: var(--bg-lighter);
+    border-radius: 8px;
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--bg-lighter);
+}
+
+.card-title {
+    margin: 0;
+    font-size: var(--font-size-lg);
+}
+
+/* Alerts */
+.alert {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 4px;
+    margin-bottom: var(--spacing-md);
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: rgba(39, 174, 96, 0.2);
+    color: var(--success-color, #27ae60);
+    border-color: var(--success-color);
+}
+
+.alert-warning {
+    background-color: rgba(243, 156, 18, 0.2);
+    color: var(--warning-color, #f39c12);
+    border-color: var(--warning-color);
+}
+
+.alert-error, .alert-danger {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: var(--error-color, #e74c3c);
+    border-color: var(--error-color);
+}
+
+.alert-info {
+    background-color: rgba(52, 152, 219, 0.2);
+    color: var(--info-color, #3498db);
+    border-color: var(--info-color);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: var(--spacing-lg);
+    background-color: var(--bg-lighter);
+}
+
+th {
+    background-color: var(--bg-lighter);
+    color: var(--text-dark);
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--bg-lighter);
+}
+
+tr:hover {
+    background-color: var(--bg-light);
+}
+
+/* Ensure Bootstrap .table uses the dark theme variables site-wide
+   and that page headers inside .container match route view styling. */
+.table {
+    background-color: var(--bg-lighter) !important;
+    color: var(--text-dark) !important;
+}
+.table th {
+    background-color: var(--bg-lighter) !important;
+    color: var(--text-dark) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+}
+.table td {
+    background-color: transparent !important;
+    color: var(--text-light) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+}
+.table tr:hover {
+    background-color: var(--bg-light) !important;
+}
+
+.container > h1 {
+    margin-bottom: 1rem;
+    padding: 10px;
+    background: var(--bg-lighter);
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .flex {
+        flex-direction: column;
+    }
+    
+    main {
+        padding: var(--spacing-md);
+    }
+}
+
+/* ====== UTILITY CLASSES (from consolidated inline styles) ====== */
+
+/* Layout utilities */
+.inline-form {
+    display: inline;
+}
+
+.debug-box {
+    padding: 1rem;
+    background: var(--bg-lighter, #2d2d2d);
+    border: 1px solid var(--border-color, #404040);
+    margin: 1rem;
+}
+
+/* Flash/Alert Messages */
+.flash-success {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(39, 174, 96, 0.2);
+    color: var(--success-color, #27ae60);
+    border: 1px solid var(--success-color, #27ae60);
+    border-radius: 4px;
+}
+
+.flash-error {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: rgba(231, 76, 60, 0.2);
+    color: var(--error-color, #e74c3c);
+    border: 1px solid var(--error-color, #e74c3c);
+    border-radius: 4px;
+}
+
+/* Notice Boxes */
+.notice {
+    margin: 1rem 0;
+    padding: 1rem;
+    border: 1px solid var(--border-color, #404040);
+    background: var(--bg-lighter, #2d2d2d);
+}
+
+/* ====== CONSOLIDATED UTILITY CLASSES FROM INLINE STYLES ====== */
+
+/* Spacing Utilities - Margins */
+.margin-xs {
+    margin: 0.25rem;
+}
+
+.margin-small {
+    margin: 0.5rem;
+}
+
+.margin-medium {
+    margin: 1rem;
+}
+
+.margin-top-small {
+    margin-top: 0.5rem;
+}
+
+.margin-top-medium {
+    margin-top: 1rem;
+}
+
+.margin-bottom-small {
+    margin-bottom: 0.5rem;
+}
+
+.margin-bottom-medium {
+    margin-bottom: 1rem;
+}
+
+.margin-bottom-large {
+    margin-bottom: 1.5rem;
+}
+
+.margin-left-small {
+    margin-left: 0.5rem;
+}
+
+.margin-left-medium {
+    margin-left: 0.75rem;
+}
+
+/* Spacing Utilities - Padding */
+.padding-small {
+    padding: 0.5rem;
+}
+
+.padding-medium {
+    padding: 1rem;
+}
+
+/* Flex Layout Utilities */
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.gap-xs {
+    gap: 0.35rem;
+}
+
+.gap-small {
+    gap: 0.5rem;
+}
+
+.gap-medium {
+    gap: 1rem;
+}
+
+.gap-large {
+    gap: 1.5rem;
+}
+
+/* Grid Utilities */
+.grid-auto-fill {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.grid-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Width Utilities */
+.w-full {
+    width: 100%;
+}
+
+.w-col-fixed {
+    flex: 0 0 auto;
+}
+
+.w-col-110 {
+    width: 110px;
+    flex: 0 0 110px;
+}
+
+.w-col-160 {
+    width: 160px;
+    flex: 0 0 160px;
+}
+
+.w-search-60 {
+    width: 60%;
+}
+
+/* Typography Utilities */
+.text-small {
+    font-size: 0.9rem;
+}
+
+.text-smaller {
+    font-size: 0.85rem;
+}
+
+.text-primary {
+    color: #0044ff;
+}
+
+.text-meta {
+    color: #666;
+}
+
+.text-muted {
+    color: #999;
+}
+
+.text-error {
+    color: darkred;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Alignment Utilities */
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+/* Border Utilities */
+.border {
+    border: 1px solid var(--border-color);
+}
+
+.border-sm {
+    border: 1px solid var(--border-color); border-radius: 4px; }
+
+.border-md { border: 1px solid var(--border-color); border-radius: 6px; }
+
+.border-lg { border: 1px solid var(--border-color); border-radius: 8px; }
+
+/* Background Utilities */
+.bg-primary { background-color: var(--primary-color); color: white; }
+
+.bg-secondary { background-color: var(--secondary-color); color: white; }
+
+.bg-success { background-color: var(--success-color); color: white; }
+
+.bg-error { background-color: var(--error-color); color: white; }
+
+.bg-info { background-color: var(--info-color); color: white; }
+
+.bg-light { background-color: var(--bg-lighter); }
+
+.bg-muted { background-color: rgba(128, 128, 128, 0.1); }
+
+/* Display Utilities */
+.hidden { display: none !important; }
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+.block { display: block; }
+
+/* Overflow Utilities */
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow: auto; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+
+
+/* ==== TOKENS ====
+/* Design tokens - MAPPED TO THEME MANAGER VARIABLES */
+/* These tokens are now aliases to the centralized theme system in global.css */
+:root {
+    /* Map old tokens to new theme variables */
+    --color-primary: var(--primary-color, #0044ff);
+    --color-secondary: var(--secondary-color, #2c3e50);
+    --color-bg: var(--bg-light, #1a1a1a);
+    --color-text: var(--text-dark, #e0e0e0);
+    --color-text-on-primary: #ffffff;
+
+    --radius-base: 8px;
+    --spacing-base: 1rem;
+
+    --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --font-heading: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Small utility to ensure body background/text follow tokens */
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+}
+
+/* Additional tokens for common uses - mapped to theme system */
+:root {
+    --color-border: var(--border-color, #404040);
+    --color-success-bg: var(--success-color, #27ae60);
+    --color-success-border: var(--border-color, #404040);
+    --color-success-text: var(--text-dark, #e0e0e0);
+
+    --color-error-bg: var(--error-color, #e74c3c);
+    --color-error-border: var(--border-color, #404040);
+    --color-error-text: var(--text-dark, #e0e0e0);
+
+    --color-muted: var(--text-lighter, #808080);
+}
+
+/* Extended tokens for surfaces, links and primary shades - mapped to theme */
+:root {
+    --color-surface: var(--bg-lighter, #2d2d2d);
+    --color-on-surface: var(--text-dark, #e0e0e0);
+    --color-link: var(--primary-color, #0044ff);
+
+    --color-warning-bg: var(--warning-color, #f39c12);
+    --color-warning-border: var(--border-color, #404040);
+    --color-warning-text: var(--text-dark, #e0e0e0);
+
+    --color-primary-dark: var(--primary-dark, #003366);
+}
+
+/* Alpha / shadow tokens for dark mode */
+:root {
+    --surface-95: rgba(26, 26, 26, 0.95);
+    --overlay-04: rgba(255, 255, 255, 0.04);
+    --overlay-06: rgba(255, 255, 255, 0.06);
+    --shadow-06: rgba(0, 0, 0, 0.35);
+    --shadow-08: rgba(0, 0, 0, 0.4);
+    --shadow-12: rgba(0, 0, 0, 0.6);
+    --primary-08: rgba(0, 68, 255, 0.08);
+    --primary-60: rgba(0, 68, 255, 0.6);
+    --surface-60: rgba(26, 26, 26, 0.6);
+    --nav-overlay-05: rgba(255, 255, 255, 0.03);
+}
+
+
+
+/* ==== LEAFLET-FIXES ====
+/* leaflet-fixes.css - defensive overrides to avoid site CSS breaking Leaflet tiles */
+.leaflet-container img,
+.leaflet-container .leaflet-tile,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container img.leaflet-image-layer {
+    max-width: none !important;
+    max-height: none !important;
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+    padding: 0 !important;
+}
+/* Promote hardware acceleration for smoother rendering */
+.leaflet-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+/* Small inline spinner for loading state */
+#pois-status.loading {
+    background: var(--surface-95);
+}
+#pois-status.loading:after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Map container sizing and POI status styles (no inline styles) */
+.pois-map { height: 600px; border: 1px solid var(--color-border); position: relative; }
+.pois-status {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--color-text);
+    background: var(--surface-95);
+    z-index: 10;
+    border-radius: 4px;
+    display: none;
+}
+.pois-status.loading { display: inline-block; }
+
+/* Highlight animation for a focused POI (used when ?id= is present) */
+.leaflet-marker-icon.highlight-poi {
+    animation: poi-highlight 900ms cubic-bezier(.2,.9,.2,1) 1;
+    transform-origin: center bottom;
+    /* subtle glow to make it stand out */
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35)) drop-shadow(0 0 6px rgba(255,150,50,0.6));
+}
+
+@keyframes poi-highlight {
+    0% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-8px) scale(1.25); }
+    70% { transform: translateY(-4px) scale(1.08); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+/* Temporary CSS class used when we want to flash a marker programmatically */
+.leaflet-marker-icon.flash-poi {
+    animation: poi-flash 1200ms ease-out 1;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.4)) drop-shadow(0 0 10px rgba(255,200,80,0.7));
+}
+
+@keyframes poi-flash {
+    0% { transform: scale(0.9); opacity: 0.9; }
+    40% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Constrain marker image sizes within the POI map to avoid oversized icons
+   (some vendor SVGs can be large). Target the POI map specifically to avoid
+   affecting other Leaflet instances. */
+#pois-map .leaflet-marker-icon,
+#pois-map .leaflet-marker-shadow {
+    width: auto !important;
+    height: auto !important;
+}
+#pois-map .leaflet-marker-icon img,
+#pois-map .leaflet-marker-shadow img {
+    max-width: 36px !important;
+    max-height: 36px !important;
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+}
+
+/* Slightly larger allowance for clustered markers if needed */
+#pois-map .leaflet-marker-icon.leaflet-div-icon,
+#pois-map .leaflet-marker-icon.poi-logo-icon {
+    max-width: 48px !important;
+    max-height: 48px !important;
+}
+
+/* Force all marker icons to render at a reasonable size to avoid oversized images
+   (some logo files can be very large; constrain them here). */
+#pois-map .leaflet-marker-icon {
+    width: 36px !important;
+    height: 36px !important;
+    overflow: hidden !important;
+}
+#pois-map .leaflet-marker-icon img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+/* Ensure category div-icons use contained background images */
+.poi-div-icon .poi-icon {
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* Extra safety: logo class for imported POI images */
+.leaflet-marker-icon.poi-logo-icon{
+    width: 36px !important;
+    height: 36px !important;
+}
+
+
+

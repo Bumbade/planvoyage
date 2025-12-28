@@ -1,0 +1,375 @@
+<?php declare(strict_types=1);
+/**
+ * PlanVoyage Application Router
+ * 
+ * Modern front controller using Router class for clean, maintainable routing.
+ * Routes are organized by domain (API, Locations, Routes, User/Auth).
+ */
+
+declare(strict_types=1);
+
+require_once __DIR__ . '/config/app.php';        // Central configuration (loads env.php automatically)
+require_once __DIR__ . '/config/mysql.php';      // Database helper
+require_once __DIR__ . '/helpers/session.php';
+require_once __DIR__ . '/core/Router.php';
+require_once __DIR__ . '/controllers/RouteController.php';
+require_once __DIR__ . '/controllers/LocationController.php';
+require_once __DIR__ . '/controllers/UserController.php';
+require_once __DIR__ . '/controllers/DocumentsController.php';
+require_once __DIR__ . '/services/LocationService.php';
+require_once __DIR__ . '/services/RouteService.php';
+
+start_secure_session();
+
+// Get PDO instance for dependency injection
+$pdo = get_db();
+
+// Determine application base path. Use configured `app.base` when present,
+// otherwise fall back to the directory of the current script. Keep this
+// intentionally simple to avoid implicit '/src' or 'index.php' rewrites.
+$appBase = config('app.base') ?? '';
+if (empty($appBase)) {
+    $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+    $appBase = rtrim(dirname($script), '/');
+    if ($appBase === '/') $appBase = '';
+}
+
+// Helper: return normalized app base
+function normalized_app_base(): string
+{
+    global $appBase;
+    return $appBase === '' ? '' : rtrim($appBase, '/');
+}
+
+// Initialize router
+$router = new Router($appBase);
+
+// ============================================
+// API Routes
+// ============================================
+
+// Locations API list
+$router->get('/api/locations', function () use ($pdo) {
+    $service = new LocationService($pdo);
+    $service->listLocations();
+})
+    ->name('api.locations.list');
+
+// Locations API import (CSRF protected)
+$router->post('/api/locations/import', function () use ($pdo) {
+    $service = new LocationService($pdo);
+    $service->importPoi();
+})
+    ->name('api.locations.import');
+
+// Debug: build import SQL without executing to detect column mismatches
+$router->post('/api/locations/test_import', function () use ($pdo) {
+    $service = new LocationService($pdo);
+    $service->debugImportSql();
+})
+    ->name('api.locations.test_import');
+
+// CSRF token endpoint for scripts/tests
+$router->get('/api/session/csrf', function () {
+    header('Content-Type: application/json; charset=utf-8');
+    if (session_status() !== PHP_SESSION_ACTIVE) start_secure_session();
+    echo json_encode(['success' => true, 'csrf_token' => csrf_token()]);
+})
+    ->name('api.session.csrf');
+
+// Note: PostGIS-backed search removed; Frontend should call Overpass-backed endpoints.
+
+// Expose Overpass-backed search file via router (frontend may call via index.php/...)
+$router->get('/api/locations/search_overpass_v2.php', function () {
+    require_once __DIR__ . '/api/locations/search_overpass_v2.php';
+})
+    ->name('api.locations.search_overpass_v2');
+
+// Fast Overpass import endpoint (frontend posts osm_id/osm_ids here)
+$router->post('/api/locations/import_from_overpass_fast.php', function () use ($pdo) {
+    require_once __DIR__ . '/api/locations/import_from_overpass_fast.php';
+})
+    ->name('api.locations.import_from_overpass_fast');
+
+// Expose MySQL-backed search endpoint so frontend candidate URLs like
+// `/api/locations/search.php` and `/api/locations/search` work regardless
+// of whether the client requests the .php file or the extensionless route.
+$router->get('/api/locations/search.php', function () {
+    require_once __DIR__ . '/api/locations/search.php';
+})
+    ->name('api.locations.search_php');
+
+$router->get('/api/locations/search', function () {
+    require_once __DIR__ . '/api/locations/search.php';
+})
+    ->name('api.locations.search');
+// ============================================
+// Locations Routes
+// ============================================
+
+$router->get('/locations', [LocationController::class, 'index'])
+    ->name('locations.index');
+
+$router->get('/locations/view', [LocationController::class, 'show'])
+    ->name('locations.show');
+
+// Allow POST to the same path for edit form submissions
+$router->post('/locations/view', [LocationController::class, 'show'])
+    ->name('locations.show.post');
+
+// ============================================
+// Routes Routes
+// ============================================
+
+$router->get('/routes', [RouteController::class, 'index'])
+    ->name('routes.index');
+
+$router->get('/routes/create', [RouteController::class, 'create'])
+    ->name('routes.create');
+
+$router->post('/routes/create', [RouteController::class, 'create'])
+    ->name('routes.create.post');
+
+$router->get('/routes/view', [RouteController::class, 'view'])
+    ->name('routes.view');
+
+$router->post('/routes/view', [RouteController::class, 'view'])
+    ->name('routes.view.post');
+
+$router->get('/routes/select_pois', function () {
+    require_once __DIR__ . '/views/routes/select_pois.php';
+})
+    ->name('routes.select_pois');
+
+// ============================================
+// User / Auth Routes
+// ============================================
+
+// Login page (GET shows form, POST processes login)
+$router->get('/user/login', function () {
+    $controller = new UserController();
+    require_once __DIR__ . '/views/auth/login.php';
+})
+    ->name('user.login');
+
+$router->post('/user/login', function () {
+    $controller = new UserController();
+    $token = $_POST['csrf_token'] ?? null;
+    
+    if (!csrf_check($token)) {
+        $expected = $_SESSION['csrf_token'] ?? '';
+        error_log(sprintf(
+            "CSRF mismatch on login: expected=%s got=%s sid=%s host=%s path=%s",
+            substr($expected, 0, 8),
+            substr((string)$token, 0, 8),
+            session_id(),
+            $_SERVER['HTTP_HOST'] ?? '',
+            $_SERVER['REQUEST_URI'] ?? ''
+        ));
+        $error = 'Invalid CSRF token';
+        require_once __DIR__ . '/views/auth/login.php';
+        exit;
+    }
+    
+    $result = $controller->login($_POST['email'] ?? '', $_POST['password'] ?? '');
+    if (!empty($result['success'])) {
+        flash_set('success', 'Logged in successfully');
+        $norm = normalized_app_base();
+        $redirectBase = $norm !== '' ? rtrim($norm, '/') . '/' : '/';
+        header('Location: ' . $redirectBase);
+        exit;
+    }
+    
+    $error = $result['message'] ?? 'Login failed';
+    require_once __DIR__ . '/views/auth/login.php';
+    exit;
+})
+    ->name('user.login.post');
+
+// Register page (GET shows form, POST processes registration)
+$router->get('/user/register', function () {
+    $controller = new UserController();
+    require_once __DIR__ . '/views/auth/register.php';
+})
+    ->name('user.register');
+
+$router->post('/user/register', function () {
+    $controller = new UserController();
+    $token = $_POST['csrf_token'] ?? null;
+    
+    if (!csrf_check($token)) {
+        $expected = $_SESSION['csrf_token'] ?? '';
+        error_log(sprintf(
+            "CSRF mismatch on register: expected=%s got=%s sid=%s host=%s path=%s",
+            substr($expected, 0, 8),
+            substr((string)$token, 0, 8),
+            session_id(),
+            $_SERVER['HTTP_HOST'] ?? '',
+            $_SERVER['REQUEST_URI'] ?? ''
+        ));
+        $error = 'Invalid CSRF token';
+        require_once __DIR__ . '/views/auth/register.php';
+        exit;
+    }
+    
+    $res = $controller->register($_POST);
+    if (!empty($res['success'])) {
+        flash_set('success', 'Registration successful. Please login.');
+        $norm = normalized_app_base();
+        $redirectBase = $norm !== '' ? rtrim($norm, '/') . '/' : '/';
+        header('Location: ' . $redirectBase . 'user/login');
+        exit;
+    }
+    
+    $error = $res['message'] ?? 'Registration failed';
+    require_once __DIR__ . '/views/auth/register.php';
+    exit;
+})
+    ->name('user.register.post');
+
+// Logoff
+$router->get('/user/logoff', function () {
+    $controller = new UserController();
+    $controller->logoff();
+    $norm = normalized_app_base();
+    header('Location: ' . ($norm ?: '/'));
+    exit;
+})
+    ->name('user.logoff');
+
+// User profile (GET shows form, POST processes update)
+$router->get('/user/profile', function () {
+    $controller = new UserController();
+    $user = null;
+    $userId = $_SESSION['user_id'] ?? null;
+    if ($userId) {
+        $user = $controller->getById((int)$userId);
+    }
+    require_once __DIR__ . '/views/auth/profile.php';
+})
+    ->name('user.profile');
+
+$router->post('/user/profile', function () {
+    $controller = new UserController();
+    $token = $_POST['csrf_token'] ?? null;
+    $error = null;
+    $status = null;
+    
+    if (!csrf_check($token)) {
+        $expected = $_SESSION['csrf_token'] ?? '';
+        error_log(sprintf(
+            "CSRF mismatch on profile update: expected=%s got=%s sid=%s host=%s path=%s",
+            substr($expected, 0, 8),
+            substr((string)$token, 0, 8),
+            session_id(),
+            $_SERVER['HTTP_HOST'] ?? '',
+            $_SERVER['REQUEST_URI'] ?? ''
+        ));
+        $error = 'Invalid CSRF token';
+    } else {
+        $userId = $_SESSION['user_id'] ?? null;
+        if ($userId) {
+            $result = $controller->updateProfile((int)$userId, $_POST);
+            $status = $result['message'] ?? '';
+        } else {
+            $norm = normalized_app_base();
+            header('Location: ' . ($norm ?: '/') . 'user/login');
+            exit;
+        }
+    }
+    
+    // Show profile view with form data and status
+    $user = null;
+    $userId = $_SESSION['user_id'] ?? null;
+    if ($userId) {
+        $user = $controller->getById((int)$userId);
+    }
+    require_once __DIR__ . '/views/auth/profile.php';
+    exit;
+})
+    ->name('user.profile.post');
+
+// Default /user -> redirect to login
+$router->get('/user', function () {
+    $norm = normalized_app_base();
+    header('Location: ' . ($norm ?: '/') . 'user/login');
+    exit;
+})
+    ->name('user.default');
+
+// ============================================
+// Home Page (Default Route)
+// ============================================
+
+$router->get('/', function () {
+    require_once __DIR__ . '/includes/header.php';
+    ?>
+    <main style="display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:calc(100vh - 200px);padding:2rem;">
+        <style>
+            .home-logo-container {
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            .home-logo-container img {
+                max-width: 300px;
+                width: 100%;
+                height: auto;
+                filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            }
+            .home-content h1 {
+                font-size: 2.5rem;
+                margin: 1rem 0;
+                color: #0044ff;
+            }
+            .home-content p {
+                font-size: 1.1rem;
+                color: #666;
+                max-width: 600px;
+                line-height: 1.6;
+                margin: 1rem 0 2rem 0;
+            }
+            .home-content a {
+                display: inline-block;
+                padding: 12px 24px;
+                background: #0044ff;
+                color: white;
+                text-decoration: none;
+                border-radius: 6px;
+                font-weight: 600;
+                transition: background 0.3s, transform 0.2s;
+                margin: 0 8px;
+            }
+            .home-content a:hover {
+                background: #003366;
+                transform: translateY(-2px);
+            }
+        </style>
+        <div class="home-logo-container">
+            <img src="<?php echo htmlspecialchars(app_url('assets/logos/PlanVoyage-Logo_400.png')); ?>" alt="PlanVoyage Logo">
+        </div>
+        <div class="home-content">
+            <h1><?php echo htmlspecialchars(t('site_title', 'PlanVoyage.de')); ?></h1>
+            <p><?php echo htmlspecialchars(t('welcome', 'Welcome to PlanVoyage.de')); ?></p>
+            <p><?php echo htmlspecialchars(t('home_description', 'Plan your perfect journey. Create routes, manage points of interest, and export your travel plans.')); ?></p>
+            <div>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="<?php echo htmlspecialchars(app_url('/index.php/routes')); ?>"><?php echo htmlspecialchars(t('view_routes', 'View Routes')); ?></a>
+                    <a href="<?php echo htmlspecialchars(app_url('/index.php/locations')); ?>"><?php echo htmlspecialchars(t('view_locations', 'View Locations')); ?></a>
+                <?php else: ?>
+                    <a href="<?php echo htmlspecialchars(app_url('index.php/user/login')); ?>"><?php echo htmlspecialchars(t('login', 'Login')); ?></a>
+                    <a href="<?php echo htmlspecialchars(app_url('index.php/user/register')); ?>"><?php echo htmlspecialchars(t('register', 'Register')); ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </main>
+    <?php
+    require_once __DIR__ . '/includes/footer.php';
+    exit;
+})
+    ->name('home');
+
+// ============================================
+// Dispatch Router
+// ============================================
+
+$router->dispatch();
