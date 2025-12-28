@@ -166,11 +166,18 @@ $maps = [
 	===================== */
 
 	'tobacco' => [
+		['k'=>'vending','v'=>'cigarettes'],
 		['k'=>'shop','v'=>'tobacco'],
 		['k'=>'shop','v'=>'vape'],
-		['k'=>'shop','v'=>'e-cigarette'],
+		['k'=>'shop','v'=>'vape_shop'],
+		// Additional common variants/aliases to improve recall
 		['k'=>'shop','v'=>'ecigarette'],
-		['k'=>'shop','v'=>'convenience']
+		['k'=>'shop','v'=>'e-cigarette'],
+		['k'=>'shop','v'=>'ecig'],
+		['k'=>'shop','v'=>'cigar'],
+		['k'=>'shop','v'=>'cigars'],
+		['k'=>'shop','v'=>'tobacconist'],
+		['k'=>'shop','v'=>'smoke_shop'],
 	],
 
 	'cannabis' => [
