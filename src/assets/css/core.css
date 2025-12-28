@@ -158,27 +158,26 @@ input[type="submit"]:hover {
     color: #fff;
 }
 
-.poi-filter-btn .poi-count-campgrounds { background: var(--cat-campgrounds, #2b8f2b); }
-.poi-filter-btn .poi-count-provincial_parks { background: var(--cat-provincial-parks, #2b8af3); }
-.poi-filter-btn .poi-count-shopping { background: var(--cat-shopping, #3498db); }
-.poi-filter-btn .poi-count-banks { background: var(--cat-banks, #27ae60); }
-.poi-filter-btn .poi-count-cannabis { background: var(--cat-cannabis, #228b22); }
-.poi-filter-btn .poi-count-hotels { background: var(--cat-hotels, #8a2bcb); }
-.poi-filter-btn .poi-count-food { background: var(--cat-food, #e67e22); }
-.poi-filter-btn .poi-count-restaurants { background: var(--cat-restaurants, #e67e22); }
-.poi-filter-btn .poi-count-fuel { background: var(--cat-fuel, #e74c3c); }
-.poi-filter-btn .poi-count-gas_stations { background: var(--cat-gas-stations, #e74c3c); }
-.poi-filter-btn .poi-count-dump_station { background: var(--cat-dump-station, #7f8c8d); }
-.poi-filter-btn .poi-count-attractions { background: var(--cat-attractions, #f39c12); }
-.poi-filter-btn .poi-count-fitness { background: var(--cat-fitness, #c0392b); }
-.poi-filter-btn .poi-count-laundry { background: var(--cat-laundry, #16a085); }
-.poi-filter-btn .poi-count-parking { background: var(--cat-parking, #95a5a6); }
-.poi-filter-btn .poi-count-pharmacy { background: var(--cat-pharmacy, #d35400); }
-.poi-filter-btn .poi-count-tobacco_vape { background: var(--cat-tobacco-vape, #34495e); }
-.poi-filter-btn .poi-count-tobacco { background: var(--cat-tobacco, #34495e); }
+/* Optimized for 19 active filters - removed legacy categories */
+.poi-filter-btn .poi-count-hotel { background: var(--cat-hotel, #8a2bcb); }
+.poi-filter-btn .poi-count-attraction { background: var(--cat-attraction, #f39c12); }
 .poi-filter-btn .poi-count-tourist_info { background: var(--cat-tourist-info, #9b59b6); }
-.poi-filter-btn .poi-count-transportation { background: var(--cat-transportation, #1abc9c); }
+.poi-filter-btn .poi-count-food { background: var(--cat-food, #e67e22); }
+.poi-filter-btn .poi-count-nightlife { background: var(--cat-nightlife, #f39c12); }
+.poi-filter-btn .poi-count-gas_stations { background: var(--cat-gas-stations, #e74c3c); }
+.poi-filter-btn .poi-count-charging_station { background: var(--cat-charging-station, #e67e22); }
+.poi-filter-btn .poi-count-parking { background: var(--cat-parking, #95a5a6); }
+.poi-filter-btn .poi-count-bank { background: var(--cat-bank, #27ae60); }
+.poi-filter-btn .poi-count-healthcare { background: var(--cat-healthcare, #27ae60); }
+.poi-filter-btn .poi-count-fitness { background: var(--cat-fitness, #16a085); }
+.poi-filter-btn .poi-count-laundry { background: var(--cat-laundry, #3498db); }
 .poi-filter-btn .poi-count-supermarket { background: var(--cat-supermarket, #f1c40f); color: #333; }
+.poi-filter-btn .poi-count-tobacco { background: var(--cat-tobacco, #34495e); }
+.poi-filter-btn .poi-count-cannabis { background: var(--cat-cannabis, #5b8e23); }
+.poi-filter-btn .poi-count-transport { background: var(--cat-transport, #1abc9c); }
+.poi-filter-btn .poi-count-dump_station { background: var(--cat-dump-station, #7f8c8d); }
+.poi-filter-btn .poi-count-campgrounds { background: var(--cat-campgrounds, #2c8c2c); }
+.poi-filter-btn .poi-count-natureparks { background: var(--cat-natureparks, #2b8af3); }
 
 
 

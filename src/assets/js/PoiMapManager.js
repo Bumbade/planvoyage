@@ -171,10 +171,9 @@ export default class PoiMapManager {
         transport: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                console.error('TRANSPORT PREDICATE CHECK for', name, ': tags.highway =', tags?.highway, 'tags.amenity =', tags?.amenity);
+                
                 if (tags && tags.amenity && ['bus_station','ferry_terminal'].includes(String(tags.amenity).trim().toLowerCase())) return true;
                 if (tags && tags.highway && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
-                    console.error('TRANSPORT PREDICATE: highway bus_stop matched for', name);
                     return true;
                 }
                 if (tags && tags.railway && String(tags.railway).trim().toLowerCase() === 'station') return true;
@@ -641,6 +640,17 @@ export default class PoiMapManager {
                     category = 'transport';
                 }
             }
+
+            // If the UI has a single active filter and it's `tobacco`, force the
+            // tobacco category/color so all results appear uniform when searching.
+            try {
+                const checked = (typeof document !== 'undefined')
+                    ? Array.from(document.querySelectorAll('.poi-filter-checkbox:checked')).map(n => n.value)
+                    : [];
+                if (checked.length === 1 && checked[0] === 'tobacco') {
+                    category = 'tobacco';
+                }
+            } catch (e) {}
 
             const color = PoiMapManager.CATEGORY_COLORS[category] || PoiMapManager._colorForOsm(poi?.osm_id);
             console.debug('_getColoredMarkerIcon:', { osm_id: poi.osm_id, name: poi.name, category, color, isTransport: category === 'transport' });
@@ -1867,10 +1877,34 @@ export default class PoiMapManager {
                 try {
                     cat = this._getCategoryForPoi(poi);
                 } catch (e) {}
+                // Derive effective category used for coloring/clustering. This mirrors
+                // the logic used in `_getColoredMarkerIcon` so cluster icons pick
+                // the same color as individual markers (handles bus_stop -> transport
+                // and single-filter tobacco overrides).
+                let effectiveCat = cat || '';
+                try {
+                    // merge tags/top-level fields similar to _getColoredMarkerIcon
+                    let tags = null;
+                    if (typeof poi.tags === 'object' && poi.tags) tags = poi.tags;
+                    else if (typeof poi.tags === 'string' && poi.tags.trim()) tags = PoiMapManager.parseHstore(poi.tags) || {};
+                    else tags = {};
+                    if (typeof poi.highway !== 'undefined' && poi.highway !== '') tags.highway = tags.highway || poi.highway;
+                    if (typeof poi.railway !== 'undefined' && poi.railway !== '') tags.railway = tags.railway || poi.railway;
+                    if (typeof poi.aeroway !== 'undefined' && poi.aeroway !== '') tags.aeroway = tags.aeroway || poi.aeroway;
+                    if (typeof tags.highway !== 'undefined' && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
+                        effectiveCat = 'transport';
+                    }
+                    // If UI has a single active filter 'tobacco', force tobacco category
+                    try {
+                        const checked = (typeof document !== 'undefined') ? Array.from(document.querySelectorAll('.poi-filter-checkbox:checked')).map(n => n.value) : [];
+                        if (checked.length === 1 && checked[0] === 'tobacco') effectiveCat = 'tobacco';
+                    } catch (e) {}
+                } catch (e) {}
+
                 const markerOptions = {
                     osm_id: poi.osm_id,
                     osm_type: poi.osm_type,
-                    _pv_category: cat,
+                    _pv_category: effectiveCat,
                     _pv_source: poi.source || (this._isAppPoi(poi) ? 'mysql' : 'overpass')
                 };
 

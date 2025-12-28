@@ -35,32 +35,149 @@ $typeList = array_values(array_filter(array_map('trim', explode(',', $types))));
 
 // Map simple type names to likely OSM tags
 $maps = [
-	// category key => array of tag k/v to search
-	'gas_stations' => [['k'=>'amenity','v'=>'fuel']],
-	'charging_station' => [['k'=>'amenity','v'=>'charging_station']],
-	'restaurant' => [['k'=>'amenity','v'=>'restaurant']],
-	'cafe' => [['k'=>'amenity','v'=>'cafe']],
-	'hotel' => [['k'=>'tourism','v'=>'hotel']],
-	'hotels' => [['k'=>'tourism','v'=>'hotel'], ['k'=>'amenity','v'=>'hotel']],
-	'food' => [['k'=>'amenity','v'=>'restaurant'], ['k'=>'amenity','v'=>'biergarten'], ['k'=>'amenity','v'=>'fast_food'], ['k'=>'amenity','v'=>'food_court'], ['k'=>'shop','v'=>'bakery'], ['k'=>'amenity','v'=>'cafe'], ['k'=>'amenity','v'=>'pub'], ['k'=>'amenity','v'=>'bar']],
-	'shopping' => [['k'=>'shop','v'=>'shoes'],['k'=>'shop','v'=>'supermarket'],['k'=>'shop','v'=>'gift'],['k'=>'shop','v'=>'clothes'],['k'=>'shop','v'=>'electronics'],['k'=>'shop','v'=>'books'],['k'=>'shop','v'=>'department_store'],['k'=>'shop','v'=>'variety_store'],['k'=>'shop','v'=>'convenience'],['k'=>'shop','v'=>'art'],['k'=>'shop','v'=>'computer'],['k'=>'shop','v'=>'mall']],
-	'supermarket' => [['k'=>'shop','v'=>'supermarket'],['k'=>'shop','v'=>'mall'],['k'=>'shop','v'=>'department_store']],
-	'banks' => [['k'=>'amenity','v'=>'bank'],['k'=>'amenity','v'=>'atm']],
-	'campgrounds' => [['k'=>'tourism','v'=>'camp_site'],['k'=>'tourism','v'=>'caravan_site']],
-	'provincial_parks' => [['k'=>'leisure','v'=>'park'],['k'=>'natural','v'=>'nature_reserve'],['k'=>'leisure','v'=>'nature_reserve']],
-	'dump_station' => [['k'=>'amenity','v'=>'sanitary_dump_station'],['k'=>'amenity','v'=>'waste_disposal']],
-	'tourist_info' => [['k'=>'tourism','v'=>'information']],
-	'transport' => [['k'=>'amenity','v'=>'ferry_terminal'],['k'=>'amenity','v'=>'bus_station'],['k'=>'highway','v'=>'bus_stop'],['k'=>'aeroway','v'=>'aerodrome'],['k'=>'public_transport','v'=>'stop_position'],['k'=>'public_transport','v'=>'station']],
-	'laundry' => [['k'=>'amenity','v'=>'laundry'],['k'=>'shop','v'=>'laundry']],
-	'pharmacy' => [['k'=>'amenity','v'=>'pharmacy'],['k'=>'amenity','v'=>'hospital']],
-	'parking' => [['k'=>'amenity','v'=>'parking'],['k'=>'amenity','v'=>'parking_entrance'],['k'=>'amenity','v'=>'parking_space']],
-	'fitness' => [['k'=>'leisure','v'=>'fitness_centre'],['k'=>'leisure','v'=>'sports_hall'],['k'=>'leisure','v'=>'sports_centre'],['k'=>'leisure','v'=>'fitness_station']],
-	'attractions' => [['k'=>'tourism','v'=>'museum'],['k'=>'tourism','v'=>'theme_park'],['k'=>'natural','v'=>'waterfall'],['k'=>'waterway','v'=>'waterfall'],['k'=>'tourism','v'=>'attraction'],['k'=>'tourism','v'=>'viewpoint'],['k'=>'tourism','v'=>'zoo'],['k'=>'leisure','v'=>'nature_reserve'],['k'=>'tourism','v'=>'museum']],
-	'nightlife' => [['k'=>'amenity','v'=>'bar'],['k'=>'amenity','v'=>'pub'],['k'=>'amenity','v'=>'nightclub']],
-	'tobacco_vape' => [['k'=>'shop','v'=>'tobacco'],['k'=>'shop','v'=>'e-cigarette']],
-	// alias key to support modern frontend key `tobacco`
-	'tobacco' => [['k'=>'shop','v'=>'tobacco'],['k'=>'shop','v'=>'e-cigarette']],
-	'cannabis' => [['k'=>'shop','v'=>'cannabis']]
+
+	/* =====================
+	   MOBILITÄT
+	===================== */
+
+	'gas_stations' => [
+		['k'=>'amenity','v'=>'fuel']
+	],
+
+	'charging_station' => [
+		['k'=>'amenity','v'=>'charging_station']
+	],
+
+	'transport' => [
+		['k'=>'amenity','v'=>'bus_station'],
+		['k'=>'highway','v'=>'bus_stop'],
+		['k'=>'railway','v'=>'station'],
+		['k'=>'amenity','v'=>'ferry_terminal'],
+		['k'=>'aeroway','v'=>'aerodrome']
+	],
+
+	'parking' => [
+		['k'=>'amenity','v'=>'parking'],
+		['k'=>'amenity','v'=>'parking_entrance']
+	],
+
+	/* =====================
+	   UNTERKÜNFTE & TOURISMUS
+	===================== */
+
+	'hotel' => [
+		['k'=>'tourism','v'=>'hotel'],
+		['k'=>'tourism','v'=>'guest_house'],
+		['k'=>'tourism','v'=>'hostel'],
+		['k'=>'tourism','v'=>'bed_and_breakfast'],
+		['k'=>'tourism','v'=>'alpine_hut'],
+		['k'=>'tourism','v'=>'apartment'],
+		['k'=>'tourism','v'=>'guesthouse']
+	],
+
+	'tourist_info' => [
+		['k'=>'tourism','v'=>'information']
+	],
+
+	'attraction' => [
+		['k'=>'tourism','v'=>'attraction'],
+		['k'=>'tourism','v'=>'museum'],
+		['k'=>'tourism','v'=>'viewpoint'],
+		['k'=>'tourism','v'=>'zoo'],
+		['k'=>'tourism','v'=>'theme_park'],
+		['k'=>'natural','v'=>'waterfall'],
+		['k'=>'waterway','v'=>'waterfall']
+	],
+
+	/* =====================
+	   ESSEN & VERSORGUNG
+	===================== */
+
+	'food' => [
+		['k'=>'amenity','v'=>'restaurant'],
+		['k'=>'amenity','v'=>'fast_food'],
+		['k'=>'amenity','v'=>'cafe'],
+		['k'=>'amenity','v'=>'food_court'],
+		['k'=>'amenity','v'=>'biergarten'],
+		['k'=>'amenity','v'=>'pub'],
+		['k'=>'amenity','v'=>'bar'],
+		['k'=>'shop','v'=>'bakery']
+	],
+
+	'supermarket' => [
+		['k'=>'shop','v'=>'supermarket'],
+		['k'=>'shop','v'=>'department_store'],
+		['k'=>'shop','v'=>'mall']
+	],
+
+	/* =====================
+	   SERVICE
+	===================== */
+
+	'bank' => [
+		['k'=>'amenity','v'=>'bank'],
+		['k'=>'amenity','v'=>'atm']
+	],
+
+	'laundry' => [
+		['k'=>'amenity','v'=>'laundry'],
+		['k'=>'shop','v'=>'laundry']
+	],
+
+	'healthcare' => [
+		['k'=>'amenity','v'=>'pharmacy'],
+		['k'=>'amenity','v'=>'clinic'],
+		['k'=>'amenity','v'=>'hospital']
+	],
+
+	'dump_station' => [
+		['k'=>'amenity','v'=>'sanitary_dump_station'],
+	],
+
+	/* =====================
+	   FREIZEIT
+	===================== */
+
+	'fitness' => [
+		['k'=>'leisure','v'=>'fitness_centre'],
+		['k'=>'leisure','v'=>'sports_centre'],
+		['k'=>'leisure','v'=>'sports_hall'],
+		['k'=>'leisure','v'=>'fitness_station']
+	],
+
+	'nightlife' => [
+		['k'=>'amenity','v'=>'bar'],
+		['k'=>'amenity','v'=>'pub'],
+		['k'=>'amenity','v'=>'nightclub']
+	],
+
+	'campgrounds' => [
+		['k'=>'tourism','v'=>'camp_site'],
+		['k'=>'tourism','v'=>'caravan_site']
+	],
+
+	'natureparks' => [
+		['k'=>'leisure','v'=>'nature_reserve'],
+		['k'=>'natural','v'=>'nature_reserve']
+	],
+
+	/* =====================
+	   REGULIERTE WAREN
+	===================== */
+
+	'tobacco' => [
+		['k'=>'shop','v'=>'tobacco'],
+		['k'=>'shop','v'=>'vape'],
+		['k'=>'shop','v'=>'e-cigarette'],
+		['k'=>'shop','v'=>'ecigarette'],
+		['k'=>'shop','v'=>'convenience']
+	],
+
+	'cannabis' => [
+		['k'=>'shop','v'=>'cannabis'],
+		['k'=>'shop','v'=>'hemp']
+	]
+
 ];
 
 // Build Overpass QL parts
@@ -68,13 +185,20 @@ $conds = [];
 if (!empty($typeList)) {
 	foreach ($typeList as $t) {
 		if (isset($maps[$t])) {
-			foreach ($maps[$t] as $m) {
-				$conds[] = sprintf('node[%s=%s](%F,%F,%F,%F);way[%s=%s](%F,%F,%F,%F);rel[%s=%s](%F,%F,%F,%F);',
-					$m['k'], $m['v'], $minLat, $minLon, $maxLat, $maxLon,
-					$m['k'], $m['v'], $minLat, $minLon, $maxLat, $maxLon,
-					$m['k'], $m['v'], $minLat, $minLon, $maxLat, $maxLon
-				);
-			}
+				foreach ($maps[$t] as $m) {
+					// build base filter like [k=v] and append any extra attributes
+					$baseFilter = sprintf('[%s=%s]', $m['k'], $m['v']);
+					if (!empty($m['extra']) && is_array($m['extra'])) {
+						foreach ($m['extra'] as $ek => $ev) {
+							$baseFilter .= sprintf('[%s=%s]', $ek, $ev);
+						}
+					}
+					$conds[] = sprintf('node%s(%F,%F,%F,%F);way%s(%F,%F,%F,%F);rel%s(%F,%F,%F,%F);',
+						$baseFilter, $minLat, $minLon, $maxLat, $maxLon,
+						$baseFilter, $minLat, $minLon, $maxLat, $maxLon,
+						$baseFilter, $minLat, $minLon, $maxLat, $maxLon
+					);
+				}
 		} else {
 			// fallback: search amenity and shop keys
 			$conds[] = sprintf('node[amenity=%s](%F,%F,%F,%F);way[amenity=%s](%F,%F,%F,%F);rel[amenity=%s](%F,%F,%F,%F);',
@@ -94,15 +218,17 @@ if (!empty($typeList)) {
 	$conds[] = sprintf('node[amenity](%F,%F,%F,%F);way[amenity](%F,%F,%F,%F);rel[amenity](%F,%F,%F,%F);', $minLat, $minLon, $maxLat, $maxLon, $minLat, $minLon, $maxLat, $maxLon, $minLat, $minLon, $maxLat, $maxLon);
 }
 
-$overpassQL = '[out:json][timeout:25];(' . implode('', $conds) . ');out center qt;';
+$overpassQL = '[out:json][timeout:25];(' . implode('', $conds) . ');out center;';
 
 // Try multiple Overpass endpoints (fallbacks) to improve resilience
+// Try multiple Overpass endpoints (fallbacks) to improve resilience
 $endpoints = [
-	'https://overpass.openstreetmap.org/api/interpreter',
+	// prefer public mirrors that are often reachable from filtered networks
 	'https://overpass.kumi.systems/api/interpreter',
-	'https://overpass-api.de/api/interpreter'
+	'https://overpass-api.de/api/interpreter',
+	'https://overpass.openstreetmap.org/api/interpreter'
 ];
-$resp = null; $errMsg = null; $used = null;
+$resp = null; $errMsg = null; $used = null; $lastInfo = null;
 foreach ($endpoints as $ep) {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $ep);
@@ -113,10 +239,11 @@ foreach ($endpoints as $ep) {
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($ch, CURLOPT_USERAGENT, 'PlanVoyage/2.0 (+https://example.invalid)');
 	$resp = curl_exec($ch);
+	$info = curl_getinfo($ch);
 	$errNo = curl_errno($ch);
 	$errMsg = curl_error($ch);
 	curl_close($ch);
-	if ($errNo === 0 && $resp) { $used = $ep; break; }
+	if ($errNo === 0 && $resp) { $used = $ep; $lastInfo = $info; break; }
 	usleep(150000);
 }
 
@@ -128,7 +255,12 @@ if (!$resp) {
 
 $data = json_decode($resp, true);
 if (!$data || !isset($data['elements'])) {
-	ov_log(['ts'=>date('c'),'error'=>'parse_error','msg'=>'invalid_json','uri'=>$_SERVER['REQUEST_URI']]);
+	// Dump raw Overpass response to temp for debugging (do not expose publicly)
+	try {
+		$dumpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'planvoyage_overpass_raw_' . time() . '.txt';
+		@file_put_contents($dumpPath, "endpoint: " . ($used ?? 'unknown') . PHP_EOL . "request_uri: " . ($_SERVER['REQUEST_URI'] ?? '') . PHP_EOL . "\n---RAW-RESPONSE---\n" . (string)$resp);
+	} catch (\Exception $e) { /* ignore */ }
+	ov_log(['ts'=>date('c'),'error'=>'parse_error','msg'=>'invalid_json','uri'=>$_SERVER['REQUEST_URI'],'dump'=>$dumpPath ?? null,'used'=>$used ?? null,'http_info'=>$lastInfo ?? null]);
 	echo json_encode(['page' => 1, 'per_page' => $limit, 'data' => [], 'error' => 'invalid_overpass_response']);
 	exit;
 }
@@ -142,7 +274,10 @@ foreach ($data['elements'] as $el) {
 		$lat = $el['center']['lat'] ?? null;
 		$lon = $el['center']['lon'] ?? null;
 	}
-	$rows[] = [
+	
+	// Extract key OSM tag fields to top level for category detection
+	// (Frontend _getCategoryForPoi looks for poi.highway, poi.railway, etc.)
+	$row = [
 		'id' => ($el['type'] ?? '') . '/' . ($el['id'] ?? 0),
 		'osm_id' => $el['id'] ?? null,
 		'osm_type' => $el['type'] ?? null,
@@ -153,6 +288,22 @@ foreach ($data['elements'] as $el) {
 		'tags' => $tags,
 		'source' => 'overpass',
 	];
+	
+	// Extract critical OSM tags to top level for proper categorization
+	if (isset($tags['amenity'])) $row['amenity'] = $tags['amenity'];
+	if (isset($tags['tourism'])) $row['tourism'] = $tags['tourism'];
+	if (isset($tags['shop'])) $row['shop'] = $tags['shop'];
+	if (isset($tags['leisure'])) $row['leisure'] = $tags['leisure'];
+	if (isset($tags['highway'])) $row['highway'] = $tags['highway'];
+	if (isset($tags['railway'])) $row['railway'] = $tags['railway'];
+	if (isset($tags['aeroway'])) $row['aeroway'] = $tags['aeroway'];
+	if (isset($tags['natural'])) $row['natural'] = $tags['natural'];
+	if (isset($tags['waterway'])) $row['waterway'] = $tags['waterway'];
+	if (isset($tags['public_transport'])) $row['public_transport'] = $tags['public_transport'];
+	if (isset($tags['brand'])) $row['brand'] = $tags['brand'];
+	if (isset($tags['operator'])) $row['operator'] = $tags['operator'];
+	
+	$rows[] = $row;
 	if (count($rows) >= $limit) break;
 }
 

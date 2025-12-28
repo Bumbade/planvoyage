@@ -60,8 +60,6 @@ $filters = [
         ['k'=>'shop', 'v'=>'department_store']
     ],
     'tobacco' => [['k'=>'shop', 'v'=>'tobacco']],
-    // alias for legacy key used in some views
-    'tobacco_vape' => [['k'=>'shop', 'v'=>'tobacco'], ['k'=>'shop', 'v'=>'e-cigarette']],
     'cannabis' => [['k'=>'shop', 'v'=>'cannabis']],
     'transport' => [
         ['k'=>'public_transport', 'v'=>'stop_position'],
@@ -71,6 +69,12 @@ $filters = [
     'campgrounds' => [
         ['k'=>'tourism', 'v'=>'caravan_site'],
         ['k'=>'tourism', 'v'=>'camp_site']
+    ]
+    ,
+    'natureparks' => [
+        ['k'=>'leisure', 'v'=>'park'],
+        ['k'=>'leisure', 'v'=>'nature_reserve'],
+        ['k'=>'natural', 'v'=>'nature_reserve']
     ]
 ];
 

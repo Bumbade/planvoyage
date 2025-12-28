@@ -23,26 +23,27 @@ try {
         exit;
     }
 
-    // Map category keys to location types (matching test_all_categories.php)
+    // Map category keys to location types (matching 19 active filters)
     $categoryToTypeMap = [
-        'hotels' => 'Hotel',
+        'hotel' => 'Hotel',
         'food' => 'Food',
-        'shopping' => 'Shopping',
-        'banks' => 'Bank',
-        'fuel' => 'Gas Station',
-        'campgrounds' => 'Campground',
-        'provincial_parks' => 'Park',
-        'dump_station' => 'Dump Station',
         'tourist_info' => 'Tourist Information',
-        'transport' => 'Transport',
-        'laundry' => 'Laundry',
-        'pharmacy' => 'Pharmacy',
+        'attraction' => 'Attractions',
+        'nightlife' => 'Nightlife',
+        'gas_stations' => 'Gas Station',
+        'charging_station' => 'Charging Station',
         'parking' => 'Parking',
+        'bank' => 'Bank',
+        'healthcare' => 'Healthcare',
         'fitness' => 'Fitness',
-        'attractions' => 'Attractions',
-        'tobacco_vape' => 'Tobacco / Vape',
+        'laundry' => 'Laundry',
+        'supermarket' => 'Supermarket',
         'tobacco' => 'Tobacco / Vape',
-        'cannabis' => 'Cannabis'
+        'cannabis' => 'Cannabis',
+        'transport' => 'Transport',
+        'dump_station' => 'Dump Station',
+        'campgrounds' => 'Campground',
+        'natureparks' => 'Nature Parks'
     ];
 
     // Convert category key to location type if needed

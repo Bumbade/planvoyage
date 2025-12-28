@@ -7,16 +7,16 @@
 require_once __DIR__ . '/../src/helpers/url.php';
 require_once __DIR__ . '/../src/config/mysql.php';
 
-// Categories to test (keys matching server POI_FILTERS / select_pois)
+// Categories to test (keys matching 19 active filters)
 $categories = [
-    'hotels','attraction','tourist_info','food','nightlife','fuel','supermarket','banks','healthcare','laundry','fitness','tobacco_vape','cannabis','transport','dump_station','campgrounds','attractions'
+    'hotel','attraction','tourist_info','food','nightlife','gas_stations','charging_station','parking','bank','healthcare','fitness','laundry','supermarket','tobacco','cannabis','transport','dump_station','campgrounds','natureparks'
 ];
 
 // Minimal sample OSM-like payloads per category (two samples each)
 $samples = [
-    'hotels' => [
+    'hotel' => [
         ['name'=>'Test Hotel Alpha','lat'=>52.52,'lon'=>13.405,'tags'=>['tourism'=>'hotel','name'=>'Test Hotel Alpha']],
-        ['name'=>'Test Motel Beta','lat'=>52.53,'lon'=>13.406,'tags'=>['tourism'=>'motel','name'=>'Test Motel Beta']]
+        ['name'=>'Test Guest House Beta','lat'=>52.53,'lon'=>13.406,'tags'=>['tourism'=>'guest_house','name'=>'Test Guest House Beta']]
     ],
     'attraction' => [
         ['name'=>'Test Museum One','lat'=>48.8566,'lon'=>2.3522,'tags'=>['tourism'=>'museum','name'=>'Test Museum One']],

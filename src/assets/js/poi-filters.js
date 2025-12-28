@@ -12,9 +12,17 @@ export default function initPoiFilters() {
             return;
         }
         
-        const allowed = window.POI_ALLOWED_CATEGORIES && window.POI_ALLOWED_CATEGORIES.length 
-            ? window.POI_ALLOWED_CATEGORIES 
+        const allowed = (window.POI_ALLOWED_CATEGORIES && window.POI_ALLOWED_CATEGORIES.length)
+            ? window.POI_ALLOWED_CATEGORIES
             : Object.keys(filters);
+
+        // Ensure we include any server-provided filters even when the allow-list
+        // (e.g. from `get_poi_categories`) doesn't mention them. This prevents
+        // missing buttons when new categories were added server-side.
+        const allFilterKeys = Object.keys(filters);
+        for (const fk of allFilterKeys) {
+            if (allowed.indexOf(fk) === -1) allowed.push(fk);
+        }
         
         const labels = (window.I18N && (window.I18N.pois_types || window.I18N.pois)) || {};
         
@@ -29,7 +37,7 @@ export default function initPoiFilters() {
             attraction: 'Attractions.png',
             tourist_info: 'TouristInfo.png',
             food: 'food.png',
-            nightlife: 'poi.png',
+            nightlife: 'nightlife.png',
             gas_stations: 'gas_station.png',
             charging_station: 'charging.png',
             parking: 'Parking.png',
@@ -38,18 +46,19 @@ export default function initPoiFilters() {
             fitness: 'Fitness.png',
             laundry: 'Laundry.png',
             supermarket: 'supermarket.png',
-            tobacco: 'TabacoVape.png',
+            tobacco: 'tobaccoVape.png',
             cannabis: 'Cannabis.png',
             transport: 'Transportation.png',
             dump_station: 'dump_station.png',
-            campgrounds: 'campground.png'
+            campgrounds: 'campground.png',
+            natureparks: 'national_park.png'
         };
 
         const iconsBase = (window.ICONS_BASE || (window.APP_BASE ? (window.APP_BASE + '/assets/icons/') : '/src/assets/icons/'));
 
         // Define groups and desired order (use id + fallback title)
         const GROUPS = [
-            { id: 'tourism', title: 'Tourismus & Freizeit', keys: ['hotel','attraction','tourist_info','campgrounds'] },
+            { id: 'tourism', title: 'Tourismus & Freizeit', keys: ['hotel','attraction','tourist_info','campgrounds','natureparks'] },
             { id: 'gastronomy', title: 'Gastronomie & Ausgehen', keys: ['food','nightlife'] },
             { id: 'mobility', title: 'Mobilität & Infrastruktur', keys: ['transport','parking','gas_stations','charging_station','dump_station'] },
             { id: 'services', title: 'Versorgung & Dienstleistungen', keys: ['supermarket','bank','healthcare','laundry'] },
@@ -112,6 +121,12 @@ export default function initPoiFilters() {
             const item = renderFilterItem(k);
             if (item) { container.appendChild(item); rendered.add(k); }
         });
+
+        // Log rendered keys for debugging (helps identify missing categories)
+        try {
+            console.info('POI filters rendered:', Array.from(rendered).join(', '));
+            console.info(`POI filters count: rendered=${rendered.size}, available=${Object.keys(filters).length}, allowed=${allowed.length}`);
+        } catch (e) {}
 
         // Re-append preserved load controls (so buttons placed in HTML stay visible)
         if (existingLoadControls) {

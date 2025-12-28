@@ -475,6 +475,29 @@ try {
         if (!array_key_exists('tags', $r)) {
             $r['tags'] = null;
         }
+        
+        // Extract critical OSM tags from JSON string to top-level fields for category detection
+        // (Frontend _getCategoryForPoi looks for poi.highway, poi.railway, poi.amenity, etc.)
+        if ($r['tags'] && is_string($r['tags'])) {
+            try {
+                $tagsObj = json_decode($r['tags'], true);
+                if (is_array($tagsObj)) {
+                    if (isset($tagsObj['amenity'])) $r['amenity'] = $tagsObj['amenity'];
+                    if (isset($tagsObj['tourism'])) $r['tourism'] = $tagsObj['tourism'];
+                    if (isset($tagsObj['shop'])) $r['shop'] = $tagsObj['shop'];
+                    if (isset($tagsObj['leisure'])) $r['leisure'] = $tagsObj['leisure'];
+                    if (isset($tagsObj['highway'])) $r['highway'] = $tagsObj['highway'];
+                    if (isset($tagsObj['railway'])) $r['railway'] = $tagsObj['railway'];
+                    if (isset($tagsObj['aeroway'])) $r['aeroway'] = $tagsObj['aeroway'];
+                    if (isset($tagsObj['natural'])) $r['natural'] = $tagsObj['natural'];
+                    if (isset($tagsObj['waterway'])) $r['waterway'] = $tagsObj['waterway'];
+                    if (isset($tagsObj['public_transport'])) $r['public_transport'] = $tagsObj['public_transport'];
+                    if (isset($tagsObj['brand'])) $r['brand'] = $tagsObj['brand'];
+                    if (isset($tagsObj['operator'])) $r['operator'] = $tagsObj['operator'];
+                }
+            } catch (Throwable $e) { /* ignore JSON parse errors */ }
+        }
+        
         // mark source so frontend can choose icons accordingly
         $r['source'] = 'mysql';
         // provide a simple logo status field so the client can react when icons are missing

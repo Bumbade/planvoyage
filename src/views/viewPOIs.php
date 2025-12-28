@@ -130,9 +130,9 @@ if (function_exists('get_poi_categories')) {
     $allKeys = (array) get_poi_categories();
 } else {
     $allKeys = [
-        'hotel','attraction','tourist_info','food','nightlife','fuel','parking',
+        'hotel','attraction','tourist_info','food','nightlife','gas_stations','charging_station','parking',
         'bank','healthcare','fitness','laundry','supermarket','tobacco','cannabis',
-        'transport','dump_station','campgrounds'
+        'transport','dump_station','campgrounds','natureparks'
     ];
 }
 foreach ($allKeys as $k) {

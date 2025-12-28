@@ -1059,6 +1059,10 @@ class LocationController
                 } elseif ($hasTag('tourism', 'camp_site') || $hasTag('tourism', 'caravan_site')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Campground';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'campground.png';
+                } elseif ($hasTag('leisure', 'park') || $hasTag('leisure', 'nature_reserve') || $hasTag('natural', 'nature_reserve')) {
+                    // Nature parks: set specific type and national park logo
+                    $updates[] = 'type = :type_val'; $binds[':type_val'] = 'natureparks';
+                    $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'national_park.png';
                 } elseif ($hasTag('amenity', 'restaurant') || $hasTag('amenity', 'fast_food') || $hasTag('amenity', 'food_court') || $hasTag('shop', 'bakery') || $hasTag('amenity', 'cafe')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Food';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'food.png';
@@ -1084,13 +1088,10 @@ class LocationController
                 } elseif ($hasTag('shop', 'supermarket') || $hasTag('amenity', 'supermarket')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Supermarket';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'supermarket.png';
-                    } elseif ($hasTag('shop', 'department_store') || strpos($tagsLower, 'department_store') !== false || stripos($nameStr, 'department store') !== false) {
-                        // Department stores -> use generic shopping icon when available
-                        $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Department Store';
-                        $candShop = __DIR__ . '/../assets/icons/shopping.png';
-                        if (file_exists($candShop)) {
-                            $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'shopping.png';
-                        }
+                } elseif ($hasTag('shop', 'department_store') || strpos($tagsLower, 'department_store') !== false || stripos($nameStr, 'department store') !== false) {
+                        // Department stores -> use supermarket icon as fallback
+                        $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Supermarket';
+                        $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'supermarket.png';
                 } elseif ($hasTag('amenity', 'hospital') || $hasTag('amenity', 'pharmacy')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Healthcare';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'Pharmacy.png';
@@ -1104,11 +1105,11 @@ class LocationController
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Cannabis';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'Cannabis.png';
                 } elseif ($hasTag('shop', 'tobacco') || $hasTag('shop', 'e-cigarette')) {
-                    // Tobacco/vape: set type and use existing TabacoVape.png icon when present
+                    // Tobacco/vape: set type and use existing tobaccoVape.png icon when present
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Tobacco';
-                    $candTv = __DIR__ . '/../assets/icons/TabacoVape.png';
+                    $candTv = __DIR__ . '/../assets/icons/tobaccoVape.png';
                     if (file_exists($candTv)) {
-                        $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'TabacoVape.png';
+                        $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'tobaccoVape.png';
                     }
                 }
                 // If any logo/type binds were added above they will be applied below
