@@ -19,7 +19,7 @@ if (file_exists(__DIR__ . '/../../helpers/import_log.php')) {
 }
 header('Content-Type: application/json; charset=utf-8');
 
-$q = trim($_GET['q'] ?? '');
+$q = trim((string)($_GET['q'] ?? $_GET['search'] ?? ''));
 $typeFilter = trim($_GET['type'] ?? '');
 // support multiple types as CSV when filtering from frontend (e.g. types=food,hotel)
 $typesFilter = trim($_GET['types'] ?? '');
@@ -36,7 +36,7 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 // Optional bounding box: lat1,lon1,lat2,lon2 (south,west,north,east)
 $bbox = isset($_GET['bbox']) ? trim($_GET['bbox']) : null;
 // Optional filter: when set (mine=1 or user_only=1) restrict results to current session user_id
-$explicitFilterByUser = (isset($_GET['mine']) && $_GET['mine']) || (isset($_GET['user_only']) && $_GET['user_only']);
+$explicitFilterByUser = (isset($_GET['mine']) && $_GET['mine']) || (isset($_GET['user_only']) && $_GET['user_only']) || (isset($_GET['only_mine']) && $_GET['only_mine']);
 // Default behaviour: if a user is logged in and NOT an admin, show only their POIs
 $sessionUserId = (int)($_SESSION['user_id'] ?? 0);
 $filterByUser = $explicitFilterByUser || ($sessionUserId > 0 && !(function_exists('is_admin_user') && is_admin_user()));

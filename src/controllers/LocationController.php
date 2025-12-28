@@ -1084,6 +1084,13 @@ class LocationController
                 } elseif ($hasTag('shop', 'supermarket') || $hasTag('amenity', 'supermarket')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Supermarket';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'supermarket.png';
+                    } elseif ($hasTag('shop', 'department_store') || strpos($tagsLower, 'department_store') !== false || stripos($nameStr, 'department store') !== false) {
+                        // Department stores -> use generic shopping icon when available
+                        $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Department Store';
+                        $candShop = __DIR__ . '/../assets/icons/shopping.png';
+                        if (file_exists($candShop)) {
+                            $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'shopping.png';
+                        }
                 } elseif ($hasTag('amenity', 'hospital') || $hasTag('amenity', 'pharmacy')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Healthcare';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'Pharmacy.png';

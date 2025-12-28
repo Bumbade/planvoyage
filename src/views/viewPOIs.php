@@ -58,6 +58,9 @@ $HEAD_EXTRA = '';
 $HEAD_EXTRA .= '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">';
 $HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.css') . '">';
 $HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.Default.css') . '">';
+// Load centralized POI cluster overrides (no inline styles)
+require_once __DIR__ . '/../includes/header.php';
+// poi-clusters.css merged into features.css; no separate include required
 require_once __DIR__ . '/../includes/header.php';
 // All POI CSS (popups, controls) now loaded via features.css
 // single PHP close tag below to avoid accidental whitespace/output
@@ -78,6 +81,7 @@ require_once __DIR__ . '/../includes/header.php';
     #pois-map{flex:1 1 700px;max-width:1400px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:480px}
     /* Ensure Leaflet controls remain visible above rounded corner */
     #pois-map .leaflet-control{z-index:650}
+    /* Cluster styling moved to assets/css/poi-clusters.css (best-practice external stylesheet) */
     /* Filter item compact spacing (no inline styles) */
     #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0}
     #poi-filter .poi-filter-item{margin:0;padding:4px 6px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:6px}

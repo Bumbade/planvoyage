@@ -73,68 +73,68 @@
 /* Dark-mode adaptations for Bootstrap navbar/navigation */
 @media (prefers-color-scheme: dark) {
     .navbar, .bg-light {
-        background-color: var(--color-surface, #2d2d2d) !important;
-        color: var(--color-on-surface, #e0e0e0) !important;
-        border-color: var(--color-border, #404040) !important;
+        background-color: var(--color-surface, #2d2d2d);
+        color: var(--color-on-surface, #e0e0e0);
+        border-color: var(--color-border, #404040);
     }
 }
 
 /* Also support explicit .theme-dark container */
 .theme-dark .navbar,
 .theme-dark .bg-light {
-    background-color: var(--color-surface, #2d2d2d) !important;
-    color: var(--color-on-surface, #e0e0e0) !important;
-    border-color: var(--color-border, #404040) !important;
+    background-color: var(--color-surface, #2d2d2d);
+    color: var(--color-on-surface, #e0e0e0);
+    border-color: var(--color-border, #404040);
 }
 
 /* Ensure the nav inside a theme-dark container uses dark colors */
 .theme-dark .navbar,
 .theme-dark .navbar .container-fluid {
-    background-color: var(--color-surface, #2d2d2d) !important;
+    background-color: var(--color-surface, #2d2d2d);
 }
 .theme-dark .navbar .navbar-brand,
 .theme-dark .navbar .nav-link,
 .theme-dark .navbar .navbar-text {
-    color: var(--color-on-surface, #e0e0e0) !important;
+    color: var(--color-on-surface, #e0e0e0);
 }
 .theme-dark .navbar .nav-link:hover,
 .theme-dark .navbar .nav-link:focus {
-    color: var(--color-link, #4d94ff) !important;
+    color: var(--color-link, #4d94ff);
 }
 .theme-dark .navbar-light .navbar-toggler {
-    border-color: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.12);
 }
 .theme-dark .navbar-light .navbar-toggler-icon {
-    filter: invert(1) brightness(1.6) !important;
+    filter: invert(1) brightness(1.6);
 }
 
 /* Dropdowns */
 .theme-dark .dropdown-menu {
-    background-color: var(--color-surface, #2d2d2d) !important;
-    color: var(--color-on-surface, #e0e0e0) !important;
-    border: 1px solid var(--color-border, #404040) !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.45) !important;
+    background-color: var(--color-surface, #2d2d2d);
+    color: var(--color-on-surface, #e0e0e0);
+    border: 1px solid var(--color-border, #404040);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.45);
 }
 .theme-dark .dropdown-item {
-    color: var(--color-on-surface, #e0e0e0) !important;
+    color: var(--color-on-surface, #e0e0e0);
 }
 .theme-dark .dropdown-item:hover,
 .theme-dark .dropdown-item:focus {
-    background-color: rgba(255,255,255,0.04) !important;
-    color: var(--color-link, #4d94ff) !important;
+    background-color: rgba(255,255,255,0.04);
+    color: var(--color-link, #4d94ff);
 }
 
 /* Ensure navbar links in dark theme are readable when using .bg-light/.navbar-light markup */
 .theme-dark .bg-light {
-    background-color: var(--color-surface, #2d2d2d) !important;
+    background-color: var(--color-surface, #2d2d2d);
 }
 .theme-dark .navbar-light .nav-link,
 .theme-dark .navbar-light .navbar-brand {
-    color: var(--color-on-surface, #e0e0e0) !important;
+    color: var(--color-on-surface, #e0e0e0);
 }
 
 /* Small screens: ensure toggler icon remains visible */
-.theme-dark .navbar-toggler { color: var(--color-on-surface, #e0e0e0) !important; }
+.theme-dark .navbar-toggler { color: var(--color-on-surface, #e0e0e0); }
 
 
 

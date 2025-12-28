@@ -1812,6 +1812,18 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
     }
 }
 
+/* Map-scoped cluster color and size rules. These prefer the CSS variable
+   `--pv-bg` provided by the cluster HTML and provide solid fallbacks without
+   using `!important`. Size classes are added by the iconCreateFunction. */
+#pois-map .marker-cluster div.pv-cluster-simple {
+    background-color: var(--pv-bg, #4a4a4a);
+    opacity: 1;
+}
+#pois-map .marker-cluster.marker-cluster-small div.pv-cluster-simple { background-color: var(--pv-bg, #6ecc39); }
+#pois-map .marker-cluster.marker-cluster-medium div.pv-cluster-simple { background-color: var(--pv-bg, #f0c20c); }
+#pois-map .marker-cluster.marker-cluster-large div.pv-cluster-simple { background-color: var(--pv-bg, #f17817); }
+
+
 /* Popup classes replacing inline styles */
 .poi-popup{ min-width:180px }
 .poi-popup-title{ margin:0 0 .25rem 0 }

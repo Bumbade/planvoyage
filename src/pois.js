@@ -521,8 +521,8 @@
                 if (document.getElementById('pois-js-icon-style')) return;
                 var s = document.createElement('style'); s.id = 'pois-js-icon-style';
                 s.textContent = '\n.poi-div-icon .poi-icon{ display:inline-block; width:18px; height:18px; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,0.35); border:2px solid #fff; }\n' +
-                                '.leaflet-marker-icon.poi-logo-icon{ width:32px !important; height:32px !important; max-width:64px !important; max-height:64px !important; }\n' +
-                                '.leaflet-marker-icon.poi-logo-icon img{ width:32px !important; height:32px !important; }\n' +
+                                '.leaflet-marker-icon.poi-logo-icon{ width:32px; height:32px; max-width:64px; max-height:64px; }\n' +
+                                '.leaflet-marker-icon.poi-logo-icon img{ width:32px; height:32px; }\n' +
                                 '.poi-popup-img{ max-width:200px; max-height:200px; width:auto; height:auto; object-fit:cover; border-radius:4px; margin-right:8px; display:inline-block; vertical-align:middle; }\n' +
                                 '\n/* Popup container and import button styles */\n' +
                                 '.poi-popup-container{ font-family: system-ui,Segoe UI,Roboto,Arial,sans-serif; font-size:13px; color:#222; }\n' +
@@ -536,7 +536,7 @@
                                 '.poi-import-btn{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:4px; border:0; background:#2b8af3; color:#fff; cursor:pointer; }\n' +
                                 '.poi-import-btn[disabled]{ opacity:0.6; cursor:default; }\n' +
                                 '.poi-import-btn .spinner{ width:14px; height:14px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; display:inline-block; }\n' +
-                                '.poi-import-success{ background:#2ecc71 !important; }\n' +
+                                '.poi-import-success{ background:#2ecc71; }\n' +
                                 '.poi-import-btn.import-pulse{ box-shadow: 0 0 8px 3px rgba(43,138,243,0.55); transform: scale(1.03); animation: importPulse 1.2s ease; }\n' +
                                 '@keyframes importPulse{ 0%{ transform: scale(1); } 50%{ transform: scale(1.06); } 100%{ transform: scale(1); } }\n';
                 document.head.appendChild(s);

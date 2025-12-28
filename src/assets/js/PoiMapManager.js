@@ -754,7 +754,8 @@ export default class PoiMapManager {
             try {
                 const displayName = PoiMapManager.poiDisplayName(poi);
                 const popupContent = PoiPopupTemplate.createPopupHtmlString(poi, displayName);
-                marker.bindPopup(popupContent, { closeOnClick: false, autoClose: false, autoPan: false, keepInView: false });
+                // Allow previous popups to close when a new one opens (default Leaflet behavior)
+                marker.bindPopup(popupContent, { closeOnClick: true, autoClose: true, autoPan: false, keepInView: false });
             } catch (e) {}
             marker.on('click', () => { this.toggleSelection(marker); try { marker.openPopup(); } catch (e) {} });
             // Register marker under multiple canonical variants for robust lookups
@@ -838,6 +839,14 @@ export default class PoiMapManager {
 
         // Simplified cluster rendering: minimal logic, semantic classes and CSS-only sizing.
         this.markers = L.markerClusterGroup({
+            // cluster behavior improvements
+            disableClusteringAtZoom: 14,
+            maxClusterRadius: 50,
+            spiderfyOnMaxZoom: true,
+            // disable animated cluster expand/zoom to avoid briefly showing
+            // individual markers before clusters re-evaluate
+            animate: false,
+            animateAddingMarkers: false,
             iconCreateFunction: (cluster) => {
                 try {
                     const childMarkers = cluster.getAllChildMarkers();
@@ -850,11 +859,16 @@ export default class PoiMapManager {
                     let topColor = '#888'; let topCount = 0;
                     for (const c in counts) { if (counts[c] > topCount) { topCount = counts[c]; topColor = c; } }
                     const total = childMarkers.length || 0;
-                    const html = `<div class="pv-cluster-simple" style="--pv-bg:${topColor};background-color:${topColor}"><span class="pv-cluster-count">${total}</span></div>`;
+                    // size class: small (<10), medium (10-49), large (>=50)
+                    let sizeClass = 'small';
+                    if (total >= 50) sizeClass = 'large';
+                    else if (total >= 10) sizeClass = 'medium';
+                    // Use CSS variable for background color; prefer CSS to control visuals.
+                    const html = `<div class="pv-cluster-simple" style="--pv-bg:${topColor}"><span class="pv-cluster-count">${total}</span></div>`;
                     // Use a fixed iconSize so Leaflet doesn't fall back to default marker rendering.
-                    return L.divIcon({ html: html, className: 'marker-cluster pv-cluster-icon pv-cluster-simple', iconSize: [36, 36], iconAnchor: [18, 18] });
+                    return L.divIcon({ html: html, className: `marker-cluster marker-cluster-${sizeClass} pv-cluster-icon pv-cluster-simple`, iconSize: [36, 36], iconAnchor: [18, 18] });
                 } catch (e) {
-                    return L.divIcon({ html: `<div class="pv-cluster-simple" style="background-color:#888"><span class="pv-cluster-count">?</span></div>`, className: 'marker-cluster pv-cluster-icon pv-cluster-simple', iconSize: [36,36], iconAnchor: [18,18] });
+                    return L.divIcon({ html: `<div class="pv-cluster-simple" style="--pv-bg:#888"><span class="pv-cluster-count">?</span></div>`, className: 'marker-cluster marker-cluster-small pv-cluster-icon pv-cluster-simple', iconSize: [36,36], iconAnchor: [18,18] });
                 }
             }
         });
@@ -1756,7 +1770,8 @@ export default class PoiMapManager {
                 // Prevent Leaflet from panning the map to keep the popup in view.
                 // Panning can trigger cluster/marker re-layout which closes popups
                 // and temporarily removes marker DOM nodes (causing icons to disappear).
-                marker.bindPopup(popupContent, { closeOnClick: false, autoClose: false, autoPan: false, keepInView: false });
+                // Allow previous popups to close when a new one opens
+                marker.bindPopup(popupContent, { closeOnClick: true, autoClose: true, autoPan: false, keepInView: false });
                 marker.on('click', () => { this.toggleSelection(marker); try { marker.openPopup(); } catch (e) {} });
                 
                 this.setMarkerSelected(marker, this.selectedOsm.has(osmKey));
@@ -2325,6 +2340,8 @@ export default class PoiMapManager {
                         spinner.style.cssText = 'display:inline-block;margin-left:6px;width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,0.6);border-top-color:rgba(255,255,255,1);animation:pv-spin 0.8s linear infinite;vertical-align:middle;';
                         spinner.dataset.pvSpinner = '1';
                         btn.appendChild(spinner);
+                        // visual pulse while import is in progress
+                        try { btn.classList.add && btn.classList.add('pv-import-pulse'); } catch (e) {}
                     } catch (e) {}
 
                     // Call import but DO NOT close the popup; animate button on result
@@ -2345,6 +2362,7 @@ export default class PoiMapManager {
                             try {
                                 const s = btn.querySelector('[data-pv-spinner]');
                                 if (s) s.remove();
+                                try { btn.classList.remove && btn.classList.remove('pv-import-pulse'); } catch (e) {}
                                 if (!success) {
                                     btn.disabled = false;
                                 } else {
@@ -2360,6 +2378,7 @@ export default class PoiMapManager {
                                 btn.disabled = false;
                                 const s = btn.querySelector('[data-pv-spinner]');
                                 if (s) s.remove();
+                                try { btn.classList.remove && btn.classList.remove('pv-import-pulse'); } catch (e) {}
                             } catch (e) {}
                         }, 16000);
                     }

@@ -284,7 +284,7 @@ input[type="submit"]:hover {
 html {
     height: 100%;
     width: 100%;
-    background-color: var(--bg-light) !important;
+    background-color: var(--bg-light);
     color: var(--text-dark);
 }
 
@@ -294,8 +294,8 @@ body {
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     color: var(--text-dark);
-    background-color: var(--bg-light) !important;
-    background: var(--bg-light) !important;
+    background-color: var(--bg-light);
+    background: var(--bg-light);
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -310,7 +310,7 @@ body {
 main {
     flex: 1;
     padding: var(--spacing-lg);
-    background-color: var(--bg-light) !important;
+    background-color: var(--bg-light);
 }
 
 /* Typography */
@@ -401,18 +401,18 @@ input, textarea, select {
 
 /* Override any inline colors */
 input[style], textarea[style], select[style] {
-    background-color: var(--bg-lighter) !important;
-    color: var(--text-dark) !important;
+    background-color: var(--bg-lighter);
+    color: var(--text-dark);
 }
 
 input::placeholder, textarea::placeholder {
-    color: var(--text-lighter) !important;
+    color: var(--text-lighter);
 }
 
 input:focus, textarea:focus, select:focus {
     outline: none;
-    border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1) !important;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 68, 255, 0.1);
 }
 
 textarea {
@@ -484,12 +484,12 @@ button:disabled, .button:disabled {
 
 .btn-primary, button.btn-primary, a.btn-primary {
     background-color: var(--primary-color);
-    color: white !important;
+    color: white;
 }
 
 .btn-primary:hover, button.btn-primary:hover, a.btn-primary:hover {
     background-color: var(--primary-dark);
-    color: white !important;
+    color: white;
 }
 
 .btn-secondary {
@@ -691,21 +691,21 @@ tr:hover {
 /* Ensure Bootstrap .table uses the dark theme variables site-wide
    and that page headers inside .container match route view styling. */
 .table {
-    background-color: var(--bg-lighter) !important;
-    color: var(--text-dark) !important;
+    background-color: var(--bg-lighter);
+    color: var(--text-dark);
 }
 .table th {
-    background-color: var(--bg-lighter) !important;
-    color: var(--text-dark) !important;
-    border-bottom: 2px solid var(--border-color) !important;
+    background-color: var(--bg-lighter);
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border-color);
 }
 .table td {
-    background-color: transparent !important;
-    color: var(--text-light) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+    background-color: transparent;
+    color: var(--text-light);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 .table tr:hover {
-    background-color: var(--bg-light) !important;
+    background-color: var(--bg-light);
 }
 
 .container > h1 {
@@ -989,7 +989,7 @@ tr:hover {
 .bg-muted { background-color: rgba(128, 128, 128, 0.1); }
 
 /* Display Utilities */
-.hidden { display: none !important; }
+.hidden { display: none; }
 .inline { display: inline; }
 .inline-block { display: inline-block; }
 .block { display: block; }
@@ -1076,12 +1076,12 @@ body {
 .leaflet-container .leaflet-tile-pane img,
 .leaflet-container .leaflet-marker-pane img,
 .leaflet-container img.leaflet-image-layer {
-    max-width: none !important;
-    max-height: none !important;
-    width: auto !important;
-    height: auto !important;
-    display: block !important;
-    padding: 0 !important;
+    max-width: none;
+    max-height: none;
+    width: auto;
+    height: auto;
+    display: block;
+    padding: 0;
 }
 /* Promote hardware acceleration for smoother rendering */
 .leaflet-container {
@@ -1155,50 +1155,50 @@ body {
    affecting other Leaflet instances. */
 #pois-map .leaflet-marker-icon,
 #pois-map .leaflet-marker-shadow {
-    width: auto !important;
-    height: auto !important;
+    width: auto;
+    height: auto;
 }
 #pois-map .leaflet-marker-icon img,
 #pois-map .leaflet-marker-shadow img {
-    max-width: 36px !important;
-    max-height: 36px !important;
-    width: auto !important;
-    height: auto !important;
-    display: block !important;
+    max-width: 36px;
+    max-height: 36px;
+    width: auto;
+    height: auto;
+    display: block;
 }
 
 /* Slightly larger allowance for clustered markers if needed */
 #pois-map .leaflet-marker-icon.leaflet-div-icon,
 #pois-map .leaflet-marker-icon.poi-logo-icon {
-    max-width: 48px !important;
-    max-height: 48px !important;
+    max-width: 48px;
+    max-height: 48px;
 }
 
 /* Force all marker icons to render at a reasonable size to avoid oversized images
    (some logo files can be very large; constrain them here). */
 #pois-map .leaflet-marker-icon {
-    width: 36px !important;
-    height: 36px !important;
-    overflow: hidden !important;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
 }
 #pois-map .leaflet-marker-icon img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 /* Ensure category div-icons use contained background images */
 .poi-div-icon .poi-icon {
-    background-size: contain !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 /* Extra safety: logo class for imported POI images */
 .leaflet-marker-icon.poi-logo-icon{
-    width: 36px !important;
-    height: 36px !important;
+    width: 36px;
+    height: 36px;
 }
 
 
