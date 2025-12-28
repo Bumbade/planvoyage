@@ -111,7 +111,49 @@ if (!function_exists('session_is_admin')) {
 
 $currentUser = $_SESSION['user_id'] ?? null;
 $isAdmin = session_is_admin();
-$canEdit = $isAdmin || ($currentUser && isset($row['user_id']) && $row['user_id'] !== null && ((int)$currentUser === (int)$row['user_id']));
+$canEdit = $isAdmin;
+if (!$canEdit && $currentUser && $id > 0) {
+    // Prüfe, ob der User diesen POI als Favorit hat
+    $favStmt = $db->prepare('SELECT 1 FROM favorites WHERE user_id = :uid AND location_id = :lid LIMIT 1');
+    $favStmt->bindValue(':uid', $currentUser, PDO::PARAM_INT);
+    $favStmt->bindValue(':lid', $id, PDO::PARAM_INT);
+    try {
+        $favStmt->execute();
+        if ($favStmt->fetchColumn()) {
+            $canEdit = true;
+        }
+    } catch (Exception $e) { /* ignore */ }
+}
+
+// Handle POST delete (Favorit oder POI)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_poi']) && $id > 0 && $currentUser) {
+    // 1. Lösche Favorit für diesen User
+    $delFav = $db->prepare('DELETE FROM favorites WHERE user_id = :uid AND location_id = :lid');
+    $delFav->bindValue(':uid', $currentUser, PDO::PARAM_INT);
+    $delFav->bindValue(':lid', $id, PDO::PARAM_INT);
+    try { $delFav->execute(); } catch (Exception $e) { $error = 'Favorit konnte nicht entfernt werden: ' . $e->getMessage(); }
+
+    // 2. Prüfe, ob noch weitere Favoriten für diesen POI existieren
+    $checkFav = $db->prepare('SELECT COUNT(*) FROM favorites WHERE location_id = :lid');
+    $checkFav->bindValue(':lid', $id, PDO::PARAM_INT);
+    $checkFav->execute();
+    $favCount = (int)$checkFav->fetchColumn();
+    if ($favCount === 0) {
+        // Letzter User: POI komplett löschen
+        $delPoi = $db->prepare('DELETE FROM locations WHERE id = :lid');
+        $delPoi->bindValue(':lid', $id, PDO::PARAM_INT);
+        try { $delPoi->execute(); } catch (Exception $e) { $error = 'POI konnte nicht gelöscht werden: ' . $e->getMessage(); }
+        // Nach dem Löschen weiterleiten auf die POI-Liste
+        header('Location: ' . app_url('/index.php/locations'));
+        exit;
+    } else {
+        // Nur Favorit entfernt, POI bleibt erhalten
+        $success = 'POI wurde aus deinen Favoriten entfernt.';
+        // Nach dem Entfernen weiterleiten auf die POI-Liste
+        header('Location: ' . app_url('/index.php/locations'));
+        exit;
+    }
+}
 
 // Handle POST update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id > 0) {
@@ -291,9 +333,8 @@ require_once __DIR__ . '/../includes/header.php';
     <div class="poi-header">
         <div class="poi-header-logo-block">
             <?php if (!empty($row['logo'])): ?><img src="<?php echo htmlspecialchars(asset_url('assets/icons/' . $row['logo'])); ?>" alt="" class="poi-header-logo" /><?php endif; ?>
-            <p class="poi-header-type"><?php echo htmlspecialchars($row['type'] ?? ''); ?></p>
-        </div>
-        <h1 class="poi-title"><?php echo htmlspecialchars($row['name'] ?? 'POI'); ?></h1>
+       
+        <p><h1 class="poi-title"><?php echo htmlspecialchars($row['name'] ?? 'POI'); ?></h1></p> </div>
     </div>
     <?php if (!empty($error)): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
     <?php if (!empty($success)): ?><div class="flash-success"><?php echo htmlspecialchars($success); ?></div><?php endif; ?>
@@ -305,11 +346,17 @@ require_once __DIR__ . '/../includes/header.php';
             ?>
 
             <?php if (!$is_edit): ?>
+
                 <div class="poi-actions">
-                        <h3><?php echo htmlspecialchars(t('details','Details')); ?></h3>
                     <div class="poi-buttons">
-                            <a class="btn btn-cancel" href="<?php echo htmlspecialchars(app_url('/index.php/locations')); ?>"><?php echo htmlspecialchars(t('back_to_poi_map','Back to POI map')); ?></a>
-                            <?php if ($canEdit): ?><a class="btn" href="<?php echo htmlspecialchars(app_url('/index.php/locations/view') . '?id=' . urlencode($id) . '&edit=1'); ?>"><?php echo htmlspecialchars(t('edit','Edit')); ?></a><?php endif; ?>
+                        <a class="btn btn-cancel" href="<?php echo htmlspecialchars(app_url('/index.php/locations')); ?>"><?php echo htmlspecialchars(t('back_to_poi_map','Back to POI map')); ?></a>
+                        <?php if ($canEdit): ?>
+                            <a class="btn" href="<?php echo htmlspecialchars(app_url('/index.php/locations/view') . '?id=' . urlencode($id) . '&edit=1'); ?>"><?php echo htmlspecialchars(t('edit','Edit')); ?></a>
+                            <form method="post" action="" style="display:inline;" onsubmit="return confirm('Wirklich löschen? Der POI wird ggf. nur aus deinen Favoriten entfernt.');">
+                                <input type="hidden" name="delete_poi" value="1" />
+                                <button type="submit" class="btn btn-danger"><?php echo htmlspecialchars(t('delete','Delete')); ?></button>
+                            </form>
+                        <?php endif; ?>
                     </div>
                 </div>
 
