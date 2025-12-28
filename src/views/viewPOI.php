@@ -326,86 +326,94 @@ require_once __DIR__ . '/../includes/header.php';
                 ?>
 
                 <div class="view-groups">
-                    <?php
-                        foreach ($viewGroupOrder as $g) {
-                            $isLocation = ($g === 'Location');
-                            echo '<div class="group-box' . ($isLocation ? ' group-location' : '') . '">';
-                            echo '<h4 class="poi-section">' . htmlspecialchars($g) . '</h4>';
-                            if ($g === 'Primary') {
-                                foreach ($groups['Primary'] as $col) {
-                                    if (in_array($col, $excludeView, true)) continue;
-                                    $val = $row[$col] ?? null;
-                                    if ($val === null || $val === '') continue;
-                                    $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
-                                    if ($col === 'logo') {
-                                        echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br /><img src="' . htmlspecialchars(asset_url('assets/icons/' . $val)) . '" class="poi-logo-large" alt="" /></p>';
-                                        continue;
-                                    }
-                                    echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br />' . nl2br(htmlspecialchars((string)$val)) . '</p>';
-                                }
-                            } elseif ($isLocation) {
-                                $lat = $row['latitude'] ?? null; $lon = $row['longitude'] ?? null;
-                                echo '<div class="poi-map-wrap">';
-                                echo '<div id="poi-map-view" class="poi-map"></div>';
-                                if ($lat !== null && $lat !== '' && $lon !== null && $lon !== '') {
-                                    echo '<p><strong>Latitude:</strong><br />' . htmlspecialchars($lat) . '</p>';
-                                    echo '<p><strong>Longitude:</strong><br />' . htmlspecialchars($lon) . '</p>';
-                                } else {
-                                    echo '<p class="muted">' . htmlspecialchars(t('no_coordinates_available','No coordinates available')) . '</p>';
-                                }
-                                echo '</div>';
-                            } elseif ($g === 'Address') {
-                                foreach ($groups['Address'] as $col) {
-                                    if (in_array($col, $excludeView, true)) continue;
-                                    $val = $row[$col] ?? null;
-                                    if ($val === null || $val === '') continue;
-                                    $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
-                                    echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br />' . nl2br(htmlspecialchars((string)$val)) . '</p>';
-                                }
-                            } elseif ($g === 'Contact') {
-                                foreach ($groups['Contact'] as $col) {
-                                    if (in_array($col, $excludeView, true)) continue;
-                                    $val = $row[$col] ?? null;
-                                    if ($val === null || $val === '') continue;
-                                    $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
-                                    if ($col === 'website') {
-                                        echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br /><a href="' . htmlspecialchars($val) . '" target="_blank" rel="noopener">' . htmlspecialchars($val) . '</a></p>';
-                                    } else {
-                                        echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br />' . nl2br(htmlspecialchars((string)$val)) . '</p>';
-                                    }
-                                }
-                            } elseif ($g === 'Tags') {
-                                // Render parsed tags (if any) as individual fields
-                                $tagsText = $row['tags_text'] ?? ($row['tags'] ?? null);
-                                $tagsArr = $parseTags($tagsText);
-                                if (!empty($tagsArr) && is_array($tagsArr)) {
-                                    $printedAny = false;
-                                    foreach ($tagsArr as $k => $v) {
-                                        if ($v === null || $v === '') continue;
-                                        $printedAny = true;
-                                        $label = htmlspecialchars($k);
-                                        echo '<p><strong>' . $label . ':</strong><br />' . nl2br(htmlspecialchars((string)$v)) . '</p>';
-                                    }
-                                    if (!$printedAny) {
-                                        echo '<p class="muted">' . htmlspecialchars(t('no_tags','(no tags)')) . '</p>';
-                                    }
-                                } else {
-                                    echo '<p class="muted">' . htmlspecialchars(t('no_tags','(no tags)')) . '</p>';
-                                }
-                            } else {
-                                $covered = array_merge($groups['Primary'], $groups['Address'], $groups['Contact'], $groups['Location']);
-                                foreach ($ordered as $col) {
-                                    if (in_array($col, $covered, true)) continue;
-                                    if (in_array($col, $excludeView, true)) continue;
-                                    $val = $row[$col] ?? null;
-                                    if ($val === null || $val === '') continue;
-                                    $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
-                                    echo '<p><strong>' . htmlspecialchars($label) . ':</strong><br />' . nl2br(htmlspecialchars((string)$val)) . '</p>';
-                                }
-                            }
-                            echo '</div>';
+                <?php
+                // Spezial-Layout für Campgrounds
+                $isCampground = (isset($row['type']) && strtolower($row['type']) === 'campground');
+                if ($isCampground) {
+                    // Karte mit Lat/Lon klein
+                    echo '<div class="group-box group-location"><h4 class="poi-section">Map</h4>';
+                    $lat = $row['latitude'] ?? null; $lon = $row['longitude'] ?? null;
+                    echo '<div class="poi-map-wrap"><div id="poi-map-view" class="poi-map"></div>';
+                    if ($lat !== null && $lat !== '' && $lon !== null && $lon !== '') {
+                        echo '<div style="font-size:0.95em;color:#666;margin-top:4px;">Lat: ' . htmlspecialchars($lat) . ' &nbsp; Lon: ' . htmlspecialchars($lon) . '</div>';
+                    } else {
+                        echo '<p class="muted">' . htmlspecialchars(t('no_coordinates_available','No coordinates available')) . '</p>';
+                    }
+                    echo '</div></div>';
+
+                    // Address
+                    echo '<div class="group-box"><h4 class="poi-section">Address</h4>';
+                    $addressFields = [
+                        'city','addr_postcode','addr_street','addr_housenumber','state','country'
+                    ];
+                    foreach ($addressFields as $col) {
+                        $val = $row[$col] ?? null;
+                        if ($val === null || $val === '') continue;
+                        $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
+                        echo '<div class="field-row"><span class="field-label">' . htmlspecialchars($label) . ':</span><span class="field-value">' . nl2br(htmlspecialchars((string)$val)) . '</span></div>';
+                    }
+                    echo '</div>';
+
+                    // Contact
+                    echo '<div class="group-box"><h4 class="poi-section">Contact</h4>';
+                    $contactFields = ['phone','email','website'];
+                    foreach ($contactFields as $col) {
+                        $val = $row[$col] ?? null;
+                        if ($val === null || $val === '') continue;
+                        $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
+                        echo '<div class="field-row"><span class="field-label">' . htmlspecialchars($label) . ':</span><span class="field-value">';
+                        if ($col === 'website') {
+                            echo '<a href="' . htmlspecialchars($val) . '" target="_blank" rel="noopener" class="website-btn">' . htmlspecialchars($val) . '</a>';
+                        } elseif ($col === 'phone') {
+                            $tel = preg_replace('/[^+0-9]/', '', $val);
+                            echo '<a href="tel:' . htmlspecialchars($tel) . '" class="phone-btn">' . htmlspecialchars($val) . '</a>';
+                        } elseif ($col === 'email') {
+                            echo '<a href="mailto:' . htmlspecialchars($val) . '" class="email-btn">' . htmlspecialchars($val) . '</a>';
+                        } else {
+                            echo nl2br(htmlspecialchars((string)$val));
                         }
-                    ?>
+                        echo '</span></div>';
+                    }
+                    echo '</div>';
+
+                    // Amenities
+                    echo '<div class="group-box"><h4 class="poi-section">Amenities</h4>';
+                    $amenitiesFields = [
+                        'drinking_water','internet_access','internet_access_fee','power_supply','sanitary_dump_station','shower','tents','toilets'
+                    ];
+                    foreach ($amenitiesFields as $col) {
+                        $val = $row[$col] ?? null;
+                        if ($val === null || $val === '') continue;
+                        $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
+                        echo '<div class="field-row"><span class="field-label">' . htmlspecialchars($label) . ':</span><span class="field-value">' . nl2br(htmlspecialchars((string)$val)) . '</span></div>';
+                    }
+                    echo '</div>';
+
+                    // Infos
+                    echo '<div class="group-box"><h4 class="poi-section">Infos</h4>';
+                    $infoFields = ['operator','capacity','fee'];
+                    foreach ($infoFields as $col) {
+                        $val = $row[$col] ?? null;
+                        if ($val === null || $val === '') continue;
+                        $label = $labelMap[$col] ?? ucwords(str_replace('_', ' ', $col));
+                        echo '<div class="field-row"><span class="field-label">' . htmlspecialchars($label) . ':</span><span class="field-value">' . nl2br(htmlspecialchars((string)$val)) . '</span></div>';
+                    }
+                    echo '</div>';
+
+                    // Wetter-Abschnitt (Platzhalter)
+                    echo '<div class="group-box"><h4 class="poi-section">Weather</h4>';
+                    echo '<div id="weather-section">Aktuelles Wetter und 5-Tage-Vorhersage (Platzhalter)</div>';
+                    echo '</div>';
+                } else {
+                    // Standard-Logik für andere POI-Typen (wie bisher)
+                    foreach ($viewGroupOrder as $g) {
+                        $isLocation = ($g === 'Location');
+                        echo '<div class="group-box' . ($isLocation ? ' group-location' : '') . '">';
+                        echo '<h4 class="poi-section">' . htmlspecialchars($g) . '</h4>';
+                        // ...existing code...
+                    }
+                }
+                ?>
                 </div>
 
             <?php else: ?>
