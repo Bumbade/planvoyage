@@ -596,6 +596,38 @@ export default class PoiMapManager {
         }
     }
 
+    _getColoredMarkerIcon(poi) {
+        try {
+            // Determine effective category and tags similar to marker creation logic
+            let cat = null;
+            try { cat = this._getCategoryForPoi(poi); } catch (e) { cat = null; }
+            let effectiveCat = cat || '';
+            try {
+                let tags = null;
+                if (typeof poi.tags === 'object' && poi.tags) tags = poi.tags;
+                else if (typeof poi.tags === 'string' && poi.tags.trim()) tags = PoiMapManager.parseHstore(poi.tags) || {};
+                else tags = {};
+                if (typeof poi.highway !== 'undefined' && poi.highway !== '') tags.highway = tags.highway || poi.highway;
+                if (typeof tags.highway !== 'undefined' && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
+                    effectiveCat = 'transport';
+                }
+                try {
+                    const checked = (typeof document !== 'undefined') ? Array.from(document.querySelectorAll('.poi-filter-checkbox:checked')).map(n => n.value) : [];
+                    if (checked.length === 1 && checked[0] === 'tobacco') effectiveCat = 'tobacco';
+                } catch (e) {}
+            } catch (e) {}
+
+            // Pick a color: prefer category color, else hashed color by osm id
+            let color = PoiMapManager.CATEGORY_COLORS[effectiveCat] || null;
+            if (!color) color = PoiMapManager._colorForOsm(poi && (poi.osm_id || poi.id) ? (poi.osm_id || poi.id) : '0');
+
+            const html = `<div class="pv-div-icon-overpass-root" style="--pv-marker-bg:${color}"><div class="pv-marker pv-marker-overpass pv-marker--sm" style="--pv-marker-bg:${color}"></div></div>`;
+            return L.divIcon({ className: 'pv-div-icon pv-div-icon-overpass pv-div-icon-overpass-root', html, iconSize: [20, 20], iconAnchor: [10, 10], popupAnchor: [0, -10] });
+        } catch (e) {
+            return null;
+        }
+    }
+
     // Try candidate icon URLs and resolve the first that successfully loads.
     _candidateIconUrlsFor(logoFile) {
         const urls = [];
@@ -1948,12 +1980,14 @@ export default class PoiMapManager {
 
             // If a search term was provided or caller requested force/onlyMysql, and we have results, center map on the first result
             try {
-                // Only auto-center when the user actively searched, or when the
-                // caller explicitly requested centering. Do NOT auto-center on the
-                // initial automatic MySQL-only load (when hasLoadedOnce === false).
+                // Only auto-center/open popups when caller explicitly requests it via
+                // `opts.center` or when a forced lookup / single-result found after
+                // initial load. This prevents automatic panning/opening when users
+                // apply filters within the current map viewport.
                 const hasSearch = (search && String(search).trim().length > 0);
                 const explicitCenter = !!(opts && opts.center);
-                const shouldCenter = hasSearch || explicitCenter || ((opts && (opts.force || opts.onlyMysql) || (Array.isArray(data) && data.length === 1)) && this.hasLoadedOnce);
+                const centerOnSingleResult = ((Array.isArray(data) && data.length === 1) && this.hasLoadedOnce);
+                const shouldCenter = explicitCenter || centerOnSingleResult;
                 if (shouldCenter && data.length > 0 && this.map) {
                     // Prefer a POI that best matches the search phrase/tokens when available
                     let firstPoi = data[0];
@@ -2015,6 +2049,8 @@ export default class PoiMapManager {
                                 this.setMarkerSelected(m, true);
                                 const showAndOpen = () => {
                                     try {
+                                        // Only open popup/zoom when caller explicitly requested centering
+                                        if (!explicitCenter) return;
                                         // If using MarkerClusterGroup, ensure cluster expands to show marker
                                         if (this.markers && typeof this.markers.zoomToShowLayer === 'function') {
                                             try {
