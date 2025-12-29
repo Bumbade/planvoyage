@@ -112,9 +112,7 @@ if ($flashErr): ?>
                             <option value="120"><?php echo htmlspecialchars(t('speed_120', '120 km/h')); ?></option>
                         </select>
                     </div>
-                    <button id="planner-calc" class="btn">
-                        <?php echo htmlspecialchars(t('planner_calc_route', 'Calc Route')); ?>
-                    </button>
+                    
                     <button id="planner-export" class="btn">
                         <?php echo htmlspecialchars(t('planner_export_gpx', 'Export GPX')); ?>
                     </button>
@@ -630,7 +628,7 @@ try {
             var doSave = (typeof options.save === 'undefined') ? true : !!options.save;
             // Ensure waypoints reflect the current Trip Items order before routing
             try { if (typeof rebuildPlannerFromTripItems === 'function') rebuildPlannerFromTripItems(); } catch(e) { console.warn('rebuildPlannerFromTripItems failed at calcRoute start', e); }
-            console.log('calcRoute invoked', {waypointsCount: waypoints.length, waypoints: waypoints, options: options});
+            try { console.log('tpv: calcRoute called', options || {}, 'waypoints_len=' + (Array.isArray(waypoints) ? waypoints.length : 0)); } catch(e) {}
             if (waypoints.length<2) { console.warn('Not enough waypoints:', locNotEnoughWaypoints, 'waypoints.length=', waypoints.length); return; }
             var coords = waypoints.map(function(w){ return {lat: w.lat, lon: w.lon}; });
             console.log('Sending coords to OSRM:', JSON.stringify(coords));
@@ -980,15 +978,37 @@ try {
             var a = document.createElement('a'); a.href = url; a.download = 'route-'+routeId+'-'+(new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'))+'.gpx'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
         }
 
-        // wire buttons
-        // Do not save by default when user clicks Calc Route — avoid page reload that clears results
-        document.getElementById('planner-calc').addEventListener('click', function(){ calcRoute({save:false}); });
-        // Optimize button removed; planner follows Trip Items order and reorders via Trip Items UI
-        document.getElementById('planner-export').addEventListener('click', function(){ exportGPX(); });
+        // wire buttons (bound on DOMContentLoaded below to ensure elements exist)
 
         // Load planner waypoints from Trip Items list after DOM is ready (route-items rendered below)
         document.addEventListener('DOMContentLoaded', function(){
             try{ initPlannerSpeed(); }catch(e){}
+            // Ensure changing planner speed immediately updates displayed ETA/duration
+            try {
+                var _ps = document.getElementById('planner-speed');
+                if (_ps && !_ps._tpv_bound_speed_change) {
+                    _ps.addEventListener('change', function(){
+                        try { localStorage.setItem('tpv_planner_speed_' + routeId, String(this.value)); } catch(e){}
+                        try { updateSummary(); } catch(e){}
+                    });
+                    _ps._tpv_bound_speed_change = true;
+                }
+            } catch (e) { console.warn('planner-speed bind failed', e); }
+            // Bind calc/export buttons now that DOM is ready
+            try {
+                var _calc = document.getElementById('planner-calc'); if (_calc && !_calc._tpv_bound) { _calc.addEventListener('click', function(){ try{ calcRoute({save:false}); }catch(e){ console.warn('calcRoute failed', e); } }); _calc._tpv_bound = true; }
+                var _exp = document.getElementById('planner-export'); if (_exp && !_exp._tpv_bound) { _exp.addEventListener('click', function(){ try{ exportGPX(); }catch(e){ console.warn('exportGPX failed', e); } }); _exp._tpv_bound = true; }
+            } catch (e) { console.warn('planner button bind failed', e); }
+
+            // Expose calcRoute for debugging and add onclick fallback in case addEventListener didn't attach
+            try {
+                try { window._tpv_calcRoute = calcRoute; console.log('tpv: calcRoute exposed as window._tpv_calcRoute'); } catch(e){}
+                var _fcalc = document.getElementById('planner-calc');
+                if (_fcalc) {
+                    _fcalc.onclick = function(){ try{ calcRoute({save:false}); }catch(e){ console.warn('calcRoute onclick fallback failed', e); } };
+                }
+            } catch(e) { console.warn('planner calc expose/fallback failed', e); }
+
             waitForMap(function(){ try { rebuildPlannerFromTripItems(); } catch(e){} try{ renderWaypoints(); updateLine(); updateSummary(); }catch(e){} try{ calcRoute({save:false}); }catch(e){} });
         });
     })();
@@ -1055,7 +1075,7 @@ try {
                 </div>
                 <div class="form-actions" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:8px;">
                     <button type="submit" class="btn"><?php echo htmlspecialchars(t('add_to_trip', 'Add to trip')); ?></button>
-                    <button type="button" id="planner-calc" class="btn"><?php echo htmlspecialchars(t('planner_calc', 'Calc Route')); ?></button>
+                    
                     <button type="button" id="planner-export" class="btn"><?php echo htmlspecialchars(t('planner_export', 'Export GPX')); ?></button>
                     <label for="planner-speed" style="margin-left:4px;"><?php echo htmlspecialchars(t('avg_speed', 'Speed')); ?>:</label>
                     <select id="planner-speed" class="select-min-width" style="min-width:110px;">
@@ -1725,31 +1745,59 @@ try {
             var list = document.getElementById('route-items');
             if (!list) return;
 
-            // Swap only POI-related data between two rows while keeping arrival/departure inputs in place
-            function swapPoiBetweenRows(a, b) {
-                if (!a || !b) return;
-                // swap data-item-id attributes
-                var idA = a.getAttribute('data-item-id');
-                var idB = b.getAttribute('data-item-id');
-                a.setAttribute('data-item-id', idB);
-                b.setAttribute('data-item-id', idA);
-                // swap visible POI info (name + type) - use correct selector
-                var poiA = a.querySelector('.route-item-poi-info');
-                var poiB = b.querySelector('.route-item-poi-info');
-                if (poiA && poiB) {
-                    var tmp = poiA.innerHTML;
-                    poiA.innerHTML = poiB.innerHTML;
-                    poiB.innerHTML = tmp;
-                }
-                // Update position labels to reflect new order instantly
+            // Move an item row up/down in the DOM and rebuild leg placeholders
+            function findPrevItemRow(el){
+                var p = el.previousElementSibling;
+                while(p && !p.classList.contains('route-item-row')) p = p.previousElementSibling;
+                return p;
+            }
+            function findNextItemRow(el){
+                var n = el.nextElementSibling;
+                while(n && !n.classList.contains('route-item-row')) n = n.nextElementSibling;
+                return n;
+            }
+
+            function refreshLegPlaceholders(){
+                // remove existing leg rows
+                Array.from(list.querySelectorAll('li.route-leg-row')).forEach(function(r){ try{ r.remove(); }catch(e){} });
+                // insert leg placeholders between consecutive item rows
+                var items = Array.from(list.querySelectorAll('li.route-item-row'));
+                items.forEach(function(it, idx){
+                    if (idx < items.length - 1) {
+                        var leg = document.createElement('li');
+                        leg.className = 'route-leg-row';
+                        leg.setAttribute('data-leg-index', idx);
+                        leg.setAttribute('aria-hidden', 'false');
+                        leg.innerHTML = '<div class="route-leg-info"><div class="route-leg-summary">&nbsp;</div></div>';
+                        try { it.parentNode.insertBefore(leg, it.nextSibling); } catch(e){}
+                    }
+                });
+            }
+
+            function updatePositionLabels(){
                 var allItems = Array.from(list.querySelectorAll('li.route-item-row'));
                 allItems.forEach(function(li, idx) {
                     var posLabel = li.querySelector('.route-item-col-fixed strong');
-                    if (posLabel) {
-                        posLabel.textContent = 'Station ' + (idx + 1);
-                    }
+                    if (posLabel) posLabel.textContent = 'Station ' + (idx + 1);
+                    li.setAttribute('data-position', idx + 1);
                 });
-                // After swapping DOM content, rebind controls so event listeners are correct
+            }
+
+            function moveRowUp(li){
+                var prev = findPrevItemRow(li);
+                if (!prev) return;
+                list.insertBefore(li, prev);
+                refreshLegPlaceholders();
+                updatePositionLabels();
+                bindRowControls();
+            }
+
+            function moveRowDown(li){
+                var next = findNextItemRow(li);
+                if (!next) return;
+                list.insertBefore(li, next.nextElementSibling);
+                refreshLegPlaceholders();
+                updatePositionLabels();
                 bindRowControls();
             }
 
@@ -1776,16 +1824,31 @@ try {
             }
 
             function saveOrder() {
-                var items = Array.from(list.querySelectorAll('li')).map(function(li, idx){
+                // Only collect actual route item rows (skip leg/summary rows)
+                var itemRows = Array.from(list.querySelectorAll('li.route-item-row'));
+                var items = itemRows.map(function(li, idx){
                     var arrivalEl = li.querySelector('.arrival-input');
                     var departureEl = li.querySelector('.departure-input');
                     var rawArrival = arrivalEl ? arrivalEl.value : (li.getAttribute('data-arrival') || null);
                     var rawDeparture = departureEl ? departureEl.value : (li.getAttribute('data-departure') || null);
                     var arrival = _normalizeDate(rawArrival);
                     var departure = _normalizeDate(rawDeparture);
+                    // Normalize attribute values that may be the string 'null' or empty
+                    var rawItemId = li.getAttribute('data-item-id');
+                    if (rawItemId === null || rawItemId === '' || rawItemId === 'null') rawItemId = null;
+                    else {
+                        rawItemId = parseInt(rawItemId, 10);
+                        if (isNaN(rawItemId)) rawItemId = null;
+                    }
+                    var rawLocId = li.getAttribute('data-location-id');
+                    if (rawLocId === null || rawLocId === '' || rawLocId === 'null') rawLocId = null;
+                    else {
+                        rawLocId = parseInt(rawLocId, 10);
+                        if (isNaN(rawLocId)) rawLocId = null;
+                    }
                     return {
-                        item_id: li.getAttribute('data-item-id'),
-                        location_id: li.getAttribute('data-location-id') || null,
+                        item_id: rawItemId,
+                        location_id: rawLocId,
                         arrival: arrival || null,
                         departure: departure || null,
                         position: idx + 1
@@ -1817,7 +1880,8 @@ try {
                                     updateStats();
                                 }
                             } catch(e) { console.warn('failed to reorder window.routePOIs', e); }
-                            try { if (typeof calcRoute === 'function') setTimeout(function(){ try{ calcRoute({save:false}); }catch(e){} }, 220); } catch(e){}
+                            try { if (typeof calcRoute === 'function') { try{ calcRoute({save:false}); }catch(e){} } } catch(e){}
+                            try { location.reload(); } catch(e) { console.warn('reload after reorder failed', e); }
                         }
                         if (savingEl) savingEl.style.display = 'none';
                     }).catch(function(err){ if (savingEl) savingEl.style.display = 'none'; console.error('saveOrder fetch failed', err); try{ alert(locNetworkErrorSavingOrder); }catch(e){ alert(locNetworkErrorSavingOrder); } });
@@ -1863,12 +1927,12 @@ try {
                 // move up / move down: swap POI info between rows (keep dates in place)
                 Array.from(list.querySelectorAll('.move-up')).forEach(function(btn){
                     if (btn._tpv_up) btn.removeEventListener('click', btn._tpv_up);
-                    btn._tpv_up = function(ev){ ev.preventDefault(); var li = this.closest('li'); if (!li) return; var prev = li.previousElementSibling; if (!prev) return; swapPoiBetweenRows(li, prev); saveOrder(); };
+                    btn._tpv_up = function(ev){ ev.preventDefault(); var li = this.closest('li'); if (!li) return; moveRowUp(li); saveOrder(); };
                     btn.addEventListener('click', btn._tpv_up);
                 });
                 Array.from(list.querySelectorAll('.move-down')).forEach(function(btn){
                     if (btn._tpv_down) btn.removeEventListener('click', btn._tpv_down);
-                    btn._tpv_down = function(ev){ ev.preventDefault(); var li = this.closest('li'); if (!li) return; var next = li.nextElementSibling; if (!next) return; swapPoiBetweenRows(li, next); saveOrder(); };
+                    btn._tpv_down = function(ev){ ev.preventDefault(); var li = this.closest('li'); if (!li) return; moveRowDown(li); saveOrder(); };
                     btn.addEventListener('click', btn._tpv_down);
                 });
             }
