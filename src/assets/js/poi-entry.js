@@ -6,6 +6,7 @@
 import PoiMapManager from './PoiMapManager.js';
 import PoiTiles from './PoiTiles.js';
 import initPoiFilters from './poi-filters.js';
+import loadPoiSearch from './poi-search-loader.js';
 
 function applyServerFilters() {
     try {
@@ -46,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
         applyServerFilters();
 
         __pv_poi_manager.initMap();
+        // Ensure search input/button are present before UI binding
+        try { loadPoiSearch('#poi-filter'); } catch (e) {}
         __pv_poi_manager.bindUIEvents();
         // Render filters from server config and restore saved selections
         try { initPoiFilters(); } catch (e) { if (window.DEBUG) console.warn('initPoiFilters failed', e); }
@@ -71,6 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.CURRENT_USER_ID) {
                 __pv_poi_manager.fetchAndRenderFullPoiList();
             }
+        } catch (e) {}
+
+        // Also ensure that MySQL POIs are loaded on initial page visit so
+        // users see application-stored POIs immediately without needing
+        // to press the "Reset Filters" button.
+        try {
+            __pv_poi_manager.fetchAndPlot({ force: true, onlyMysql: true });
         } catch (e) {}
     } catch (e) {
         console.error('poi-entry failed to initialise', e);
