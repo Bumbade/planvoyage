@@ -1,0 +1,5 @@
+/* Small corrective overrides for features.css
+   - Fix invalid property 'overflow:flex' used in .filter-icon
+   - Kept minimal to avoid changing values in features.css
+*/
+#poi-filter .filter-icon { width: 60px; height: 60px; display: flex; align-items: center; }

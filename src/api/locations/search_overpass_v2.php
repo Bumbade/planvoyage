@@ -32,6 +32,20 @@ $minLon = min($lon1, $lon2);
 $maxLon = max($lon1, $lon2);
 
 $typeList = array_values(array_filter(array_map('trim', explode(',', $types))));
+// optional free-text search (split into tokens)
+$searchRaw = trim($_GET['search'] ?? $_GET['q'] ?? '');
+$searchTokens = [];
+if ($searchRaw !== '') {
+	$parts = preg_split('/\s+/', $searchRaw);
+	foreach ($parts as $p) {
+		$t = trim($p);
+		if ($t !== '') {
+			// sanitize token for Overpass regex (remove quotes/slashes)
+			$t = str_replace(["\"", "\\"], ['',''], $t);
+			$searchTokens[] = $t;
+		}
+	}
+}
 
 // Map simple type names to likely OSM tags
 $maps = [
@@ -223,6 +237,16 @@ if (!empty($typeList)) {
 } else {
 	// No types provided -> fetch common POI types (amenity/shop) but keep lightweight
 	$conds[] = sprintf('node[amenity](%F,%F,%F,%F);way[amenity](%F,%F,%F,%F);rel[amenity](%F,%F,%F,%F);', $minLat, $minLon, $maxLat, $maxLon, $minLat, $minLon, $maxLat, $maxLon, $minLat, $minLon, $maxLat, $maxLon);
+}
+
+// If free-text search tokens provided, add name-based filters (OR across tokens)
+if (!empty($searchTokens)) {
+	foreach ($searchTokens as $tok) {
+		// use case-insensitive regex match for name/brand/operator fields
+		$tokEsc = preg_replace('/[^\w\-\s]/u', '', $tok);
+		if ($tokEsc === '') continue;
+		$conds[] = sprintf('node[name~"%s",i](%F,%F,%F,%F);way[name~"%s",i](%F,%F,%F,%F);rel[name~"%s",i](%F,%F,%F,%F);', $tokEsc, $minLat, $minLon, $maxLat, $maxLon, $tokEsc, $minLat, $minLon, $maxLat, $maxLon, $tokEsc, $minLat, $minLon, $maxLat, $maxLon);
+	}
 }
 
 $overpassQL = '[out:json][timeout:25];(' . implode('', $conds) . ');out center;';

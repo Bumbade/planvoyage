@@ -61,3 +61,11 @@ if (!function_exists('env')) {
 
 // Auto-load .env file (if present)
 load_dotenv();
+
+// Developer helper: if APP_DEBUG isn't set in the environment, enable it temporarily
+// so API debug output can be inspected during troubleshooting. Remove or comment
+// this block in production when finished.
+if (getenv('APP_DEBUG') === false) {
+    putenv('APP_DEBUG=1');
+    $_ENV['APP_DEBUG'] = '1';
+}

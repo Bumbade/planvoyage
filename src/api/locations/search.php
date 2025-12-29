@@ -44,6 +44,9 @@ $currentUserId = $filterByUser ? $sessionUserId : 0;
 
 // Initialize $sql early to avoid undefined variable in error handler
 $sql = '';
+// Initialize common query fragments to safe defaults
+$where = '';
+$bindings = [];
 
 try {
     $db = get_db();
@@ -69,6 +72,74 @@ try {
     // detect optional state column
     $hasState = in_array('state', $colNames, true);
     // pick best tags column for text searching when present
+        // user filter SQL (use favorites table to determine ownership). If locations has a user_id column,
+        // include it as an additional ownership condition; otherwise rely on favorites membership only.
+        if ($filterByUser && $currentUserId) {
+            $where = ' WHERE (EXISTS (SELECT 1 FROM favorites f WHERE f.location_id = locations.id AND f.user_id = :_user_id)';
+            if (in_array('user_id', $colNames, true)) {
+                $where .= ' OR user_id = :_user_id';
+            }
+            $where .= ')';
+            $bindings[':_user_id'] = [$currentUserId, PDO::PARAM_INT];
+        }
+        // single type param (backwards compatible)
+        if ($typeFilter !== '') {
+            $tlow = strtolower($typeFilter);
+            $isAttractionType = in_array($tlow, ['attraction','attractions'], true) || stripos($tlow, 'attract') !== false;
+            $isTransportType = in_array($tlow, ['transport','transportation'], true) || stripos($tlow, 'transport') !== false;
+            $isCampgroundType = in_array($tlow, ['campground','campgrounds','camp_site'], true) || stripos($tlow, 'camp') !== false;
+
+            // Build WHERE fragment for the single type filter. If we have a tags column,
+            // also include tag-based LIKE checks for attractions/transport/campgrounds.
+            $conds = [];
+            if ($tagsColumn !== null && ($isAttractionType || $isTransportType || $isCampgroundType)) {
+                if ($isAttractionType) {
+                    $conds = array_merge($conds, [
+                        $tagsColumn . " LIKE :_atag1",
+                        $tagsColumn . " LIKE :_atag2",
+                        $tagsColumn . " LIKE :_atag3",
+                        $tagsColumn . " LIKE :_atag4",
+                        'LOWER(name) LIKE :_atag5'
+                    ]);
+                }
+                if ($isTransportType) {
+                    $conds = array_merge($conds, [
+                        $tagsColumn . " LIKE :_tntag1",
+                        $tagsColumn . " LIKE :_tntag2",
+                        $tagsColumn . " LIKE :_tntag3",
+                        $tagsColumn . " LIKE :_tntag4",
+                    ]);
+                }
+                if ($isCampgroundType) {
+                    $conds = array_merge($conds, [
+                        $tagsColumn . " LIKE :_cgp1",
+                        $tagsColumn . " LIKE :_cgp2",
+                    ]);
+                }
+                $where .= ($where === '' ? ' WHERE ' : ' AND ') . '(type = :_type OR (' . implode(' OR ', $conds) . '))';
+                $bindings[':_type'] = [$typeFilter, PDO::PARAM_STR];
+                if ($isAttractionType) {
+                    $bindings[':_atag1'] = ['%"tourism":"attraction"%', PDO::PARAM_STR];
+                    $bindings[':_atag2'] = ['%"tourism"=>"attraction"%', PDO::PARAM_STR];
+                    $bindings[':_atag3'] = ['%"tourism":"viewpoint"%', PDO::PARAM_STR];
+                    $bindings[':_atag4'] = ['%"natural":"waterfall"%', PDO::PARAM_STR];
+                    $bindings[':_atag5'] = ['%waterfall%', PDO::PARAM_STR];
+                }
+                if ($isTransportType) {
+                    $bindings[':_tntag1'] = ['%"public_transport":"stop_position"%', PDO::PARAM_STR];
+                    $bindings[':_tntag2'] = ['%"public_transport"=>"station"%', PDO::PARAM_STR];
+                    $bindings[':_tntag3'] = ['%"amenity":"bus_station"%', PDO::PARAM_STR];
+                    $bindings[':_tntag4'] = ['%"highway":"bus_stop"%', PDO::PARAM_STR];
+                }
+                if ($isCampgroundType) {
+                    $bindings[':_cgp1'] = ['%"tourism":"camp_site"%', PDO::PARAM_STR];
+                    $bindings[':_cgp2'] = ['%"tourism"=>"caravan_site"%', PDO::PARAM_STR];
+                }
+            } else {
+                $where .= ($where === '' ? ' WHERE ' : ' AND ') . 'type = :_type';
+                $bindings[':_type'] = [$typeFilter, PDO::PARAM_STR];
+            }
+        }
     $tagsColumn = null;
     if (in_array('tags_text', $colNames, true)) $tagsColumn = 'tags_text';
     elseif (in_array('tags', $colNames, true)) $tagsColumn = 'tags';
@@ -424,28 +495,93 @@ try {
             $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
             $stmt->execute();
         } else {
-            $sql = 'SELECT id, name, type, ' . $selectCoords . $selectDesc . $selectCity . $selectState . $selectCountry . ($hasLogo ? ', logo' : '') . $selectTags . $selectExtras . ' FROM locations WHERE (name LIKE :like OR type LIKE :like)' . $where;
-            if ($countryFilter !== '') {
-                $sql .= ' AND country = :_country';
+            // Support multi-token searches by requiring each token to appear
+            // in either `name` or `type` (AND across tokens). For single-token
+            // queries fall back to the simple LIKE on name/type.
+            $tokens = preg_split('/\s+/', trim($q));
+            $tokens = array_values(array_filter($tokens));
+            if (count($tokens) > 1) {
+                $tokenConds = [];
+                foreach ($tokens as $i => $t) {
+                    $ph = ':lk' . $i;
+                    $tokenConds[] = "(name LIKE $ph OR type LIKE $ph)";
+                    $val = '%' . str_replace('%', '\\%', $t) . '%';
+                    $bindings[$ph] = [$val, PDO::PARAM_STR];
+                }
+                if ($where === '') {
+                    $where = ' WHERE ' . implode(' AND ', $tokenConds);
+                } else {
+                    $where .= ' AND ' . implode(' AND ', $tokenConds);
+                }
+
+                $sql = 'SELECT id, name, type, ' . $selectCoords . $selectDesc . $selectCity . $selectState . $selectCountry . ($hasLogo ? ', logo' : '') . $selectTags . $selectExtras . ' FROM locations' . $where . ' ORDER BY name ASC LIMIT :lim OFFSET :off';
+                $stmt = $db->prepare($sql);
+                // bind any collected bindings (named and positional)
+                foreach ($bindings as $k => $v) {
+                    if (is_int($k)) {
+                        $stmt->bindValue($k, $v[0], $v[1]);
+                    } else {
+                        $stmt->bindValue($k, $v[0], $v[1]);
+                    }
+                }
+                if ($filterByUser && $currentUserId && !array_key_exists(':_user_id', $bindings)) {
+                    $stmt->bindValue(':_user_id', $currentUserId, PDO::PARAM_INT);
+                }
+                if ($countryFilter !== '' && !array_key_exists(':_country', $bindings)) {
+                    $stmt->bindValue(':_country', $countryFilter, PDO::PARAM_STR);
+                }
+                if ($stateFilter !== '' && !array_key_exists(':_state', $bindings)) {
+                    $stmt->bindValue(':_state', $stateFilter, PDO::PARAM_STR);
+                }
+                $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
+                $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
+                $stmt->execute();
+                // If tokenized (AND) search returned no rows, fall back to a
+                // single-phrase LIKE search to be more permissive and avoid
+                // surprising empty results for common user queries.
+                try {
+                    $rc = $stmt->rowCount();
+                    if ($rc === 0) {
+                        $sql = 'SELECT id, name, type, ' . $selectCoords . $selectDesc . $selectCity . $selectState . $selectCountry . ($hasLogo ? ', logo' : '') . $selectTags . $selectExtras . ' FROM locations WHERE (name LIKE :like OR type LIKE :like)';
+                        if ($countryFilter !== '') $sql .= ' AND country = :_country';
+                        if ($stateFilter !== '') $sql .= ' AND state = :_state';
+                        $sql .= ' ORDER BY name ASC LIMIT :lim OFFSET :off';
+                        $stmt = $db->prepare($sql);
+                        $stmt->bindValue(':like', $like, PDO::PARAM_STR);
+                        if ($filterByUser && $currentUserId) {
+                            $stmt->bindValue(':_user_id', $currentUserId, PDO::PARAM_INT);
+                        }
+                        if ($countryFilter !== '') $stmt->bindValue(':_country', $countryFilter, PDO::PARAM_STR);
+                        if ($stateFilter !== '') $stmt->bindValue(':_state', $stateFilter, PDO::PARAM_STR);
+                        $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
+                        $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
+                        $stmt->execute();
+                    }
+                } catch (Throwable $e) { /* ignore fallback errors */ }
+            } else {
+                $sql = 'SELECT id, name, type, ' . $selectCoords . $selectDesc . $selectCity . $selectState . $selectCountry . ($hasLogo ? ', logo' : '') . $selectTags . $selectExtras . ' FROM locations WHERE (name LIKE :like OR type LIKE :like)' . $where;
+                if ($countryFilter !== '') {
+                    $sql .= ' AND country = :_country';
+                }
+                if ($stateFilter !== '') {
+                    $sql .= ' AND state = :_state';
+                }
+                $sql .= ' ORDER BY name ASC LIMIT :lim OFFSET :off';
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':like', $like, PDO::PARAM_STR);
+                if ($filterByUser && $currentUserId) {
+                    $stmt->bindValue(':_user_id', $currentUserId, PDO::PARAM_INT);
+                }
+                if ($countryFilter !== '') {
+                    $stmt->bindValue(':_country', $countryFilter, PDO::PARAM_STR);
+                }
+                if ($stateFilter !== '') {
+                    $stmt->bindValue(':_state', $stateFilter, PDO::PARAM_STR);
+                }
+                $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
+                $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
+                $stmt->execute();
             }
-            if ($stateFilter !== '') {
-                $sql .= ' AND state = :_state';
-            }
-            $sql .= ' ORDER BY name ASC LIMIT :lim OFFSET :off';
-            $stmt = $db->prepare($sql);
-            $stmt->bindValue(':like', $like, PDO::PARAM_STR);
-            if ($filterByUser && $currentUserId) {
-                $stmt->bindValue(':_user_id', $currentUserId, PDO::PARAM_INT);
-            }
-            if ($countryFilter !== '') {
-                $stmt->bindValue(':_country', $countryFilter, PDO::PARAM_STR);
-            }
-            if ($stateFilter !== '') {
-                $stmt->bindValue(':_state', $stateFilter, PDO::PARAM_STR);
-            }
-            $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
-            $stmt->bindValue(':off', $offset, PDO::PARAM_INT);
-            $stmt->execute();
         }
     }
 
@@ -567,7 +703,33 @@ try {
     unset($rr2);
 
     // Return the standardized shape used elsewhere: { page, per_page, data }
-    echo json_encode(['page' => $page, 'per_page' => $limit, 'data' => $rows]);
+    // If debugging enabled, include executed SQL and bindings to help investigate empty results
+    $debugEnabled = (getenv('APP_DEBUG') !== false && getenv('APP_DEBUG') !== '') || (defined('DEBUG') && DEBUG);
+    if ($debugEnabled) {
+        // If no explicit $bindings were collected (many branches bind directly to PDO stmt),
+        // infer common parameters so debug output is still useful.
+        if (empty($bindings)) {
+            $inferred = [];
+            if (isset($like)) $inferred[':like'] = $like;
+            if (!empty($countryFilter)) $inferred[':_country'] = $countryFilter;
+            if (!empty($stateFilter)) $inferred[':_state'] = $stateFilter;
+            if (!empty($typesFilter)) $inferred[':types'] = $typesFilter;
+            if (!empty($typeFilter)) $inferred[':_type'] = $typeFilter;
+            if (!empty($currentUserId)) $inferred[':_user_id'] = $currentUserId;
+            $inferred[':lim'] = $limit;
+            $inferred[':off'] = $offset;
+            $dbgBindings = $inferred;
+        } else {
+            $dbgBindings = [];
+            foreach ($bindings as $k => $v) {
+                // bindings stored as [$value, $pdo_type]
+                $dbgBindings[$k] = is_array($v) ? $v[0] : $v;
+            }
+        }
+        echo json_encode(['page' => $page, 'per_page' => $limit, 'data' => $rows, 'debug' => ['query' => $sql, 'bindings' => $dbgBindings]]);
+    } else {
+        echo json_encode(['page' => $page, 'per_page' => $limit, 'data' => $rows]);
+    }
     exit;
 } catch (Exception $e) {
     // Log the error with full context for debugging
