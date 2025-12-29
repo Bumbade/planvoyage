@@ -1,3 +1,56 @@
+.field-value .phone-btn {
+    display: inline-block;
+    background: var(--color-primary, #2b8af3);
+    color: var(--color-text-on-primary, #fff);
+    padding: 6px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1em;
+    border: none;
+    transition: background 0.15s;
+    margin-right: 6px;
+}
+.field-value .phone-btn:hover {
+    background: var(--color-primary-dark, #1760a8);
+    color: #fff;
+    text-decoration: none;
+}
+/* Button-Stil für Website-Links in POI-Details */
+.field-value .website-btn {
+    display: inline-block;
+    background: var(--color-primary, #2b8af3);
+    color: var(--color-text-on-primary, #fff);
+    padding: 6px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1em;
+    border: none;
+    transition: background 0.15s;
+}
+.field-value .website-btn:hover {
+    background: var(--color-primary-dark, #1760a8);
+    color: #fff;
+    text-decoration: none;
+}
+/* Horizontale Feldanzeige für group-box */
+.group-box .field-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+.group-box .field-label {
+    min-width: 120px;
+    font-weight: 600;
+    color: #ffffff;
+}
+.group-box .field-value {
+    flex: 1;
+    color: #ffffff;
+    word-break: break-word;
+}
 
 /* ==== AUTH ====
 /* =============================================================================
@@ -1679,7 +1732,15 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 .poi-title{margin:0;font-size:1.6rem}
 .poi-header-logo-block{display:flex;flex-direction:column;align-items:center;justify-content:center}
 .poi-header-type{margin-top:6px;font-size:0.95rem;color:var(--color-text);text-align:center}
-.poi-section{margin-top:.8rem;margin-bottom:.35rem;font-size:1rem;font-weight:600}
+.poi-section{
+    margin-top:.8rem;
+    margin-bottom:.35rem;
+    font-size:1.35rem;
+    font-weight:700;
+    color: whitesmoke;
+    border-bottom:2px solid #e0e0e0;
+    padding-bottom:4px;
+}
 .poi-row{display:flex;gap:var(--gap);margin-bottom:10px}
 .poi-field{flex:1;min-width:120px}
 .poi-field-full{width:100%}
@@ -1704,9 +1765,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
   .poi-container{flex-direction:column}
   .poi-side{width:100%}
 }
-#poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}
+#poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px;}
 /* view and edit map share styling */
-#poi-map, #poi-map-view, .poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px}
+#poi-map, #poi-map-view, .poi-map{height:320px;border:1px solid var(--color-border);border-radius:6px;margin-bottom:10px;}
 .poi-map-wrap{margin-bottom:12px}
 .view-groups{display:flex;flex-wrap:wrap;gap:16px}
 .group-box{flex:1 1 48%;min-width:260px;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--color-surface)}
@@ -1900,9 +1961,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 .poi-country-content{ padding-top:8px; }
 
 /* POI map layout moved from inline viewPOIs.php */
-.pois-layout{display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.pois-layout{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
 .pois-layout .pois-side{flex:0 0 800px;max-width:800px}
-#pois-map{flex:1 1 700px;max-width:1000px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px}
+#pois-map{flex:1 1 700px;max-width:1000px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px;margin-left:auto;margin-right:auto}
 /* Ensure Leaflet controls remain visible above rounded corner */
 #pois-map .leaflet-control{z-index:650}
 /* Filter item compact spacing (moved from inline styles) */
