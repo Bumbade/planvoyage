@@ -174,12 +174,14 @@ foreach ($allKeys as $k) {
 
     <!-- My POIs tile view (visible to logged-in users) -->
     <?php if (!empty($_SESSION['user_id'])): ?>
-        <section id="my-pois" class="my-pois-section">
+        <details id="my-pois" class="my-pois-section" aria-expanded="false">
+            <summary>
                 <h2><?php echo htmlspecialchars($I18N['pois']['my_pois'] ?? 'My POIs'); ?></h2>
-                <div id="my-pois-tiles" aria-live="polite">
-                    <p class="muted"><?php echo htmlspecialchars($I18N['general']['loading'] ?? 'Loading...'); ?></p>
-                </div>
-        </section>
+            </summary>
+            <div id="my-pois-tiles" aria-live="polite" class="">
+                <p class="muted"><?php echo htmlspecialchars($I18N['general']['loading'] ?? 'Loading...'); ?></p>
+            </div>
+        </details>
     <?php endif; ?>
 </main>
 
@@ -235,6 +237,9 @@ foreach ($allKeys as $k) {
     // Enable POI-specific debug logging when app DEBUG is on
     window.POI_DEBUG = !!window.DEBUG;
     if (window.POI_DEBUG) console.log('POI_DEBUG enabled');
+    // Alias for console convenience: some developers type `APP_DEBUG` in DevTools
+    // Keep this in sync with `window.DEBUG` to avoid ReferenceError when inspected.
+    window.APP_DEBUG = window.DEBUG;
     // Expose current logged-in user id (or null) for client-side logic
     window.CURRENT_USER_ID = <?php echo json_encode($_SESSION['user_id'] ?? null); ?>;
     if (window.DEBUG) console.log('DEBUG: window.CURRENT_USER_ID set to: ' + window.CURRENT_USER_ID);
@@ -288,7 +293,18 @@ foreach ($allKeys as $k) {
             fetch('https://restcountries.com/v3.1/all?fields=name,cca2,cca3,latlng,area')
                 .then(r=>r.ok? r.json() : Promise.reject(r.status))
                 .then(js=> populateCountries(sel, js || []))
-                .catch(e=>{ console.warn('Could not load country list', e); });
+                .catch(e=>{
+                    console.warn('Could not load country list', e);
+                    // Fallback: populate a small curated country list when external API fails
+                    const fallback = [
+                        { name: { common: 'Germany' }, cca2: 'DE', latlng: [51, 9], area: 357022 },
+                        { name: { common: 'United States' }, cca2: 'US', latlng: [38, -97], area: 9525067 },
+                        { name: { common: 'United Kingdom' }, cca2: 'GB', latlng: [54, -2], area: 244376 },
+                        { name: { common: 'France' }, cca2: 'FR', latlng: [46, 2], area: 643801 },
+                        { name: { common: 'Canada' }, cca2: 'CA', latlng: [60, -95], area: 9984670 }
+                    ];
+                    try { populateCountries(sel, fallback); } catch (e2) { console.warn('populateCountries fallback failed', e2); }
+                });
 
             sel.addEventListener('change', async ()=>{
                 const opt = sel.selectedOptions && sel.selectedOptions[0];
