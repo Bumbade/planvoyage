@@ -1917,18 +1917,24 @@ try {
                     // remove previous handler if present
                     if (inp._tpv_change) inp.removeEventListener('change', inp._tpv_change);
                     inp._tpv_change = function(){
-                        var li = inp.closest('li'); if (!li) return; li.setAttribute('data-arrival', inp.value || '');
-                        // debounce save so rapid edits don't produce many requests
-                        try { if (window._tpv_save_timer) clearTimeout(window._tpv_save_timer); window._tpv_save_timer = setTimeout(function(){ saveOrder(); }, 600); } catch(e){}
-                    };
+                            var li = inp.closest('li'); if (!li) return; li.setAttribute('data-arrival', inp.value || '');
+                            var val = (inp.value || '').trim();
+                            // only save when user entered a full date (YYYY-MM-DD) or cleared the field
+                            if (val === '' || /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                try { if (window._tpv_save_timer) clearTimeout(window._tpv_save_timer); window._tpv_save_timer = setTimeout(function(){ saveOrder(); }, 600); } catch(e){}
+                            }
+                        };
                     inp.addEventListener('change', inp._tpv_change);
                 });
                 Array.from(list.querySelectorAll('.departure-input')).forEach(function(inp){
                     if (inp._tpv_change) inp.removeEventListener('change', inp._tpv_change);
                     inp._tpv_change = function(){
-                        var li = inp.closest('li'); if (!li) return; li.setAttribute('data-departure', inp.value || '');
-                        try { if (window._tpv_save_timer) clearTimeout(window._tpv_save_timer); window._tpv_save_timer = setTimeout(function(){ saveOrder(); }, 600); } catch(e){}
-                    };
+                            var li = inp.closest('li'); if (!li) return; li.setAttribute('data-departure', inp.value || '');
+                            var val = (inp.value || '').trim();
+                            if (val === '' || /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                try { if (window._tpv_save_timer) clearTimeout(window._tpv_save_timer); window._tpv_save_timer = setTimeout(function(){ saveOrder(); }, 600); } catch(e){}
+                            }
+                        };
                     inp.addEventListener('change', inp._tpv_change);
                 });
 
