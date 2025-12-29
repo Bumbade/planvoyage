@@ -95,9 +95,11 @@ if ($flashErr): ?>
     </div>
     
         <!-- Quick Map Planner -->
-        <section id="quick-planner">
-            <h3><?php echo htmlspecialchars(t('quick_map_planner', 'Quick map planner')); ?></h3>
+        <section id="quick-planner" style="display:none;" aria-hidden="true">
+                <h3><?php echo htmlspecialchars(t('quick_map_planner', 'Quick map planner')); ?></h3>
+                <div style="display:none;" aria-hidden="true">
             <p><?php echo htmlspecialchars(t('planner_description', 'The quick planner follows the order of trip items. Move items to reorder. When ready, press Calc Route to compute the route; Export GPX downloads the route.')); ?></p>
+                </div>
             
             <div>
                 <!-- Controls Panel -->
@@ -122,21 +124,7 @@ if ($flashErr): ?>
                     </div>
                 </div>
                 
-                <!-- Summary Panel -->
-                <div class="planner-summary-container">
-                    <div class="planner-summary-header">
-                        <?php echo htmlspecialchars(t('planner_summary', 'Route Summary')); ?>
-                    </div>
-                    <div id="planner-summary">
-                        <div id="planner-distance">
-                            <?php echo htmlspecialchars(t('planner_total', 'Total Distance:')); ?> <span>—</span>
-                        </div>
-                        <div id="planner-duration">
-                            <?php echo htmlspecialchars(t('planner_eta', 'Est. Duration:')); ?> <span>—</span>
-                        </div>
-                        <div id="planner-legs"></div>
-                    </div>
-                </div>
+                <!-- Summary Panel (moved into route items list) -->
             </div>
         </section>
     <script src="<?php echo asset_url('assets/vendor/leaflet/leaflet.js'); ?>" crossorigin=""></script>
@@ -287,7 +275,7 @@ try {
             var legCount = 0;
             var list = document.querySelector('.route-items-list');
             if (list) {
-                legCount = list.querySelectorAll('li').length;
+                legCount = list.querySelectorAll('li.route-item-row').length;
             }
             legCountEl.querySelector('strong').textContent = legCount;
         }
@@ -419,6 +407,55 @@ try {
         loadFilters();
         updateMarkers();
     });
+    // Guard native cssRules property to avoid SecurityError when reading
+    // cross-origin stylesheets. This prevents third-party libs (flatpickr)
+    // from throwing uncaught errors when they inspect stylesheets.
+    try {
+        if (typeof CSSStyleSheet !== 'undefined') {
+            const desc = Object.getOwnPropertyDescriptor(CSSStyleSheet.prototype, 'cssRules');
+            if (desc && desc.get && !desc.__pv_patched) {
+                const origGet = desc.get;
+                Object.defineProperty(CSSStyleSheet.prototype, 'cssRules', {
+                    configurable: true,
+                    enumerable: false,
+                    get: function() {
+                        try {
+                            return origGet.call(this);
+                        } catch (e) {
+                            try {
+                                if (e && (e.name === 'SecurityError' || (e.message && e.message.indexOf('cssRules') !== -1))) {
+                                    return null;
+                                }
+                            } catch (ex) {}
+                            throw e;
+                        }
+                    }
+                });
+            }
+        }
+    } catch (e) { console.warn('cssRules guard failed', e); }
+
+    // Monkey-patch Flatpickr open to guard against SecurityError when reading cssRules
+    try {
+        if (typeof flatpickr !== 'undefined' && flatpickr && flatpickr.prototype && typeof flatpickr.prototype.open === 'function') {
+            (function(){
+                const _origOpen = flatpickr.prototype.open;
+                flatpickr.prototype.open = function(){
+                    try {
+                        return _origOpen.apply(this, arguments);
+                    } catch (e) {
+                        try {
+                            if ((e && e.name === 'SecurityError') || (e && e.message && e.message.indexOf('cssRules') !== -1)) {
+                                console.warn('flatpickr.open suppressed SecurityError:', e && e.message ? e.message : e);
+                                return;
+                            }
+                        } catch (ex) {}
+                        throw e;
+                    }
+                };
+            })();
+        }
+    } catch (e) { console.warn('flatpickr monkey-patch failed', e); }
     </script>
 
 
@@ -439,8 +476,14 @@ try {
         }
         var wpListEl = document.getElementById('planner-waypoints');
         // If the planner waypoint list is removed from the UI, guard usage (planner follows Trip Items)
-        var summaryDist = document.getElementById('planner-distance');
-        var summaryDur = document.getElementById('planner-duration');
+        var summaryDist = null;
+        var summaryDur = null;
+
+        function ensureSummaryEls() {
+            if (!summaryDist) summaryDist = document.getElementById('planner-distance');
+            if (!summaryDur) summaryDur = document.getElementById('planner-duration');
+            return (summaryDist && summaryDur);
+        }
         var waypoints = []; // {lat,lon,label,marker}
         var plannerLine = null;
         var routeLayer = null; // OSRM returned route layer
@@ -504,7 +547,7 @@ try {
                 // Track seen location_ids and coordinate pairs to avoid duplicate planner markers
                 var seenLocationIds = new Set();
                 var seenCoords = new Set();
-                Array.from(list.querySelectorAll('li')).forEach(function(li){
+                Array.from(list.querySelectorAll('li.route-item-row')).forEach(function(li){
                     var itemId = parseInt(li.getAttribute('data-item-id') || '0', 10);
                     var locId = parseInt(li.getAttribute('data-location-id') || '0', 10);
                     var p = null;
@@ -538,8 +581,8 @@ try {
                     }
                 });
                 try {
-                    var ids = Array.from(list.querySelectorAll('li')).map(function(li){ return li.getAttribute('data-item-id'); });
-                    var lids = Array.from(list.querySelectorAll('li')).map(function(li){ return li.getAttribute('data-location-id'); });
+                    var ids = Array.from(list.querySelectorAll('li.route-item-row')).map(function(li){ return li.getAttribute('data-item-id'); });
+                    var lids = Array.from(list.querySelectorAll('li.route-item-row')).map(function(li){ return li.getAttribute('data-location-id'); });
                     console.debug('rebuildPlannerFromTripItems built waypoints for itemIds:', ids, 'locationIds:', lids, 'waypoints:', waypoints.map(function(w){return {location_id:w.location_id, label:w.label};}));
                 } catch(e){}
                 saveAndRedraw();
@@ -814,6 +857,18 @@ try {
                                             }); })(idx);
                                             entry.appendChild(gotoBtn);
                                             legsContainer.appendChild(entry);
+                                            // also populate inline leg row between list items if present
+                                            try {
+                                                var list = document.getElementById('route-items');
+                                                if (list) {
+                                                    var legRow = list.querySelector('li.route-leg-row[data-leg-index="' + idx + '"]');
+                                                    if (legRow) {
+                                                        var summaryDiv = legRow.querySelector('.route-leg-summary');
+                                                        if (summaryDiv) summaryDiv.innerHTML = '<span class="route-leg-swatch" style="background: '+color+';"></span>' +
+                                                            '<span class="route-leg-summary-text"><strong>'+fromLabel+' → '+toLabel+'</strong><br/>'+distKm+' km, '+h+'h '+(m<10?('0'+m):m)+'m</span>';
+                                                    }
+                                                }
+                                            } catch(e) { console.warn('failed to populate inline leg row', idx, e); }
                                         } catch(e) { console.warn('failed to render leg info', idx, e); }
                                     });
                                         } else {
@@ -826,9 +881,11 @@ try {
                     // distance in meters, duration in seconds
                     var distKm = (route.distance || 0)/1000.0;
                     var durH = (route.duration || 0)/3600.0; // hours
-                    summaryDist.textContent = <?php echo json_encode(t('planner_total', 'Total:')); ?> + ' ' + distKm.toFixed(2) + ' km (routed)';
-                    var hh = Math.floor(durH); var mm = Math.round((durH - hh)*60);
-                    summaryDur.textContent = <?php echo json_encode(t('planner_eta', 'ETA:')); ?> + ' ' + hh + 'h ' + (mm<10?'0'+mm:mm) + 'm (routed)';
+                    if (ensureSummaryEls()) {
+                        summaryDist.textContent = <?php echo json_encode(t('planner_total', 'Total:')); ?> + ' ' + distKm.toFixed(2) + ' km (routed)';
+                        var hh = Math.floor(durH); var mm = Math.round((durH - hh)*60);
+                        summaryDur.textContent = <?php echo json_encode(t('planner_eta', 'ETA:')); ?> + ' ' + hh + 'h ' + (mm<10?'0'+mm:mm) + 'm (routed)';
+                    }
 
                     // Optionally save planner to server (convert waypoints to payload with location_id when available)
                     if (doSave) {
@@ -859,10 +916,14 @@ try {
                 var tot=0; for(var i=0;i<waypoints.length-1;i++){ tot += haversine(waypoints[i],waypoints[i+1]); }
                 totalKm = tot;
             }
-            summaryDist.textContent = <?php echo json_encode(t('planner_total', 'Total:')); ?> + ' ' + totalKm.toFixed(2) + ' km';
+            if (ensureSummaryEls()) {
+                summaryDist.textContent = <?php echo json_encode(t('planner_total', 'Total:')); ?> + ' ' + totalKm.toFixed(2) + ' km';
+            }
             var speed = getSelectedSpeed(); // km/h from dropdown/localStorage
             var hours = (speed > 0) ? (totalKm / speed) : 0; var hh = Math.floor(hours); var mm = Math.round((hours - hh)*60);
-            summaryDur.textContent = <?php echo json_encode(t('planner_eta', 'ETA:')); ?> + ' ' + hh + 'h ' + (mm<10?'0'+mm:mm) + 'm (est @'+speed+' km/h)';
+            if (ensureSummaryEls()) {
+                summaryDur.textContent = <?php echo json_encode(t('planner_eta', 'ETA:')); ?> + ' ' + hh + 'h ' + (mm<10?'0'+mm:mm) + 'm (est @'+speed+' km/h)';
+            }
         }
 
         function getSelectedSpeed(){
@@ -992,7 +1053,18 @@ try {
                     <label for="notes"><?php echo htmlspecialchars(t('notes_label', 'Notes (optional)')); ?></label>
                     <input type="text" id="notes" name="notes" class="w-full">
                 </div>
-                <button type="submit" class="btn"><?php echo htmlspecialchars(t('add_to_trip', 'Add to trip')); ?></button>
+                <div class="form-actions" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:8px;">
+                    <button type="submit" class="btn"><?php echo htmlspecialchars(t('add_to_trip', 'Add to trip')); ?></button>
+                    <button type="button" id="planner-calc" class="btn"><?php echo htmlspecialchars(t('planner_calc', 'Calc Route')); ?></button>
+                    <button type="button" id="planner-export" class="btn"><?php echo htmlspecialchars(t('planner_export', 'Export GPX')); ?></button>
+                    <label for="planner-speed" style="margin-left:4px;"><?php echo htmlspecialchars(t('avg_speed', 'Speed')); ?>:</label>
+                    <select id="planner-speed" class="select-min-width" style="min-width:110px;">
+                        <option value="60">60 km/h</option>
+                        <option value="80" selected>80 km/h</option>
+                        <option value="100">100 km/h</option>
+                        <option value="120">120 km/h</option>
+                    </select>
+                </div>
             </form>
         </div>
 
@@ -1012,40 +1084,113 @@ try {
     </div>
     <script src="<?php echo asset_url('assets/vendor/flatpickr/flatpickr.min.js'); ?>" crossorigin=""></script>
     <script>
-    // Initialize Flatpickr for date inputs
+    // Clean up any leftover Flatpickr calendar elements that are not open.
+    // This removes orphaned calendars that may have been left in the DOM
+    // after previous failures and ensures a fresh calendar is created on demand.
+    try {
+        // Destroy any flatpickr instances attached to the date inputs to avoid orphan calendars
+        document.querySelectorAll('input.arrival-input, input.departure-input').forEach(function(inp){
+            try { if (inp && inp._flatpickr && typeof inp._flatpickr.destroy === 'function') inp._flatpickr.destroy(); } catch(e) {}
+        });
+        // Remove any remaining calendar nodes
+        document.querySelectorAll('.flatpickr-calendar').forEach(function(el){ try{ el.remove(); } catch(e){} });
+    } catch (e) {}
+
+    // Ensure orphaned calendars are removed shortly after inputs lose focus
+    try {
+        document.addEventListener('focusout', function(ev){
+            try {
+                var tgt = ev.target;
+                if (!tgt) return;
+                if (tgt.matches && (tgt.matches('input.arrival-input') || tgt.matches('input.departure-input') || tgt.matches('input[type=date]'))) {
+                    setTimeout(function(){
+                        try { document.querySelectorAll('.flatpickr-calendar:not(.open)').forEach(function(el){ try{ el.remove(); } catch(e){} }); } catch(e) {}
+                    }, 120);
+                }
+            } catch(e) {}
+        }, true);
+    } catch (e) {}
+
+    // Robust removal: remove any existing calendars now and watch for new ones
+    (function(){
+        function removeAllFlatpickrCalendars(){
+            try {
+                // Try to destroy instances attached to inputs first
+                document.querySelectorAll('input.arrival-input, input.departure-input, input[type=date]').forEach(function(inp){
+                    try { if (inp && inp._flatpickr && typeof inp._flatpickr.destroy === 'function') inp._flatpickr.destroy(); } catch(e){}
+                });
+            } catch(e){}
+            try {
+                document.querySelectorAll('.flatpickr-calendar').forEach(function(el){ try{ el.remove(); } catch(e){} });
+            } catch(e){}
+        }
+
+        // initial pass
+        try { removeAllFlatpickrCalendars(); } catch(e){}
+
+        // Observe mutations and remove any calendars added dynamically for a short window
+        try {
+            var mo = new MutationObserver(function(mutations){
+                try {
+                    var removed = false;
+                    mutations.forEach(function(m){
+                        if (m.addedNodes && m.addedNodes.length) {
+                            m.addedNodes.forEach(function(n){
+                                try {
+                                    if (n && n.nodeType === 1 && n.classList && n.classList.contains('flatpickr-calendar')) {
+                                        try { n.remove(); removed = true; } catch(e){}
+                                    } else if (n && n.querySelectorAll) {
+                                        var found = n.querySelectorAll('.flatpickr-calendar');
+                                        if (found && found.length) { found.forEach(function(f){ try{ f.remove(); removed = true; }catch(e){} }); }
+                                    }
+                                } catch(e){}
+                            });
+                        }
+                    });
+                    if (removed) {
+                        // also attempt to destroy any instances on inputs
+                        try { document.querySelectorAll('input.arrival-input, input.departure-input, input[type=date]').forEach(function(inp){ try{ if (inp && inp._flatpickr && typeof inp._flatpickr.destroy === 'function') inp._flatpickr.destroy(); }catch(e){} }); } catch(e){}
+                    }
+                } catch(e){}
+            });
+            mo.observe(document.body, { childList: true, subtree: true });
+            // stop observing after 6 seconds
+            setTimeout(function(){ try{ mo.disconnect(); } catch(e){} }, 6000);
+        } catch(e){}
+    })();
+
+    // Initialize Flatpickr for date inputs — wrapped in try/catch to avoid
+    // SecurityError when flatpickr attempts to access cross-origin stylesheets.
     document.addEventListener('DOMContentLoaded', function(){
-        if (typeof flatpickr !== 'undefined') {
-            flatpickr('#arrival', {
-                dateFormat: 'Y-m-d',
-                allowInput: true,
-                mode: 'single'
-            });
-            flatpickr('#departure', {
-                dateFormat: 'Y-m-d',
-                allowInput: true,
-                mode: 'single'
-            });
-            // Also initialize date inputs in trip items list
-            var arrivalInputs = document.querySelectorAll('.arrival-input');
-            var departureInputs = document.querySelectorAll('.departure-input');
-            arrivalInputs.forEach(function(input) {
-                if (!input.hasAttribute('readonly')) {
-                    flatpickr(input, {
-                        dateFormat: 'Y-m-d',
-                        allowInput: true,
-                        mode: 'single'
-                    });
-                }
-            });
-            departureInputs.forEach(function(input) {
-                if (!input.hasAttribute('readonly')) {
-                    flatpickr(input, {
-                        dateFormat: 'Y-m-d',
-                        allowInput: true,
-                        mode: 'single'
-                    });
-                }
-            });
+        try {
+            if (typeof flatpickr !== 'undefined') {
+                try {
+                    flatpickr('#arrival', { dateFormat: 'Y-m-d', allowInput: true, mode: 'single' });
+                } catch (e) { console.warn('flatpickr init arrival failed', e); }
+                try {
+                    flatpickr('#departure', { dateFormat: 'Y-m-d', allowInput: true, mode: 'single' });
+                } catch (e) { console.warn('flatpickr init departure failed', e); }
+
+                // Also initialize date inputs in trip items list
+                var arrivalInputs = document.querySelectorAll('.arrival-input');
+                var departureInputs = document.querySelectorAll('.departure-input');
+                arrivalInputs.forEach(function(input) {
+                    if (!input.hasAttribute('readonly')) {
+                        try {
+                            flatpickr(input, { dateFormat: 'Y-m-d', allowInput: true, mode: 'single' });
+                        } catch (e) { console.warn('flatpickr init arrival-input failed', e); }
+                    }
+                });
+                departureInputs.forEach(function(input) {
+                    if (!input.hasAttribute('readonly')) {
+                        try {
+                            flatpickr(input, { dateFormat: 'Y-m-d', allowInput: true, mode: 'single' });
+                        } catch (e) { console.warn('flatpickr init departure-input failed', e); }
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn('flatpickr overall init failed', e);
         }
     });
     </script>
@@ -1378,7 +1523,7 @@ try {
                         <div class="route-item-info">
                             <div class="route-item-col-fixed">
                                 <?php $itemName = trim((string)($it['location_name'] ?? '')); ?>
-                                <strong><?php echo htmlspecialchars($itemName !== '' ? $itemName : (t('station_label', 'Station') . ' ' . $pos)); ?></strong>
+                            <strong><?php echo htmlspecialchars(t('station_label', 'Station') . ' ' . $pos); ?></strong>
                             </div>
 
                             <div class="route-item-col-dates">
@@ -1415,7 +1560,36 @@ try {
                             </div>
                         </div>
                     </li>
+                    <?php if ($idx < $totalItems - 1): // insert leg placeholder between items ?>
+                    <li class="route-leg-row" data-leg-index="<?php echo $idx; ?>" aria-hidden="false">
+                        <div class="route-leg-info">
+                            <div class="route-leg-summary">&nbsp;</div>
+                        </div>
+                    </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
+                <!-- Planner distance/duration displayed directly under the last route item -->
+                <li class="route-summary-stats" aria-hidden="false">
+                    <div class="planner-summary-stats">
+                        <div id="planner-distance">
+                            <?php echo htmlspecialchars(t('planner_total', 'Total Distance:')); ?> <span>—</span>
+                        </div>
+                        <div id="planner-duration">
+                            <?php echo htmlspecialchars(t('planner_eta', 'Est. Duration:')); ?> <span>—</span>
+                        </div>
+                    </div>
+                </li>
+                <!-- Planner legs (detailed per-leg list) kept as separate summary row (hidden by default) -->
+                <li id="planner-summary-row" class="route-summary-row" aria-hidden="true" style="display:none;">
+                    <div class="planner-summary-container">
+                        <div class="planner-summary-header">
+                            <?php echo htmlspecialchars(t('planner_summary', 'Route Summary')); ?>
+                        </div>
+                        <div id="planner-summary">
+                            <div id="planner-legs"></div>
+                        </div>
+                    </div>
+                </li>
             </ul>
     <?php else: ?>
         <p><?php echo htmlspecialchars(t('no_pois_added_trip', 'No POIs have been added to this trip yet.')); ?></p>
@@ -1568,7 +1742,7 @@ try {
                     poiB.innerHTML = tmp;
                 }
                 // Update position labels to reflect new order instantly
-                var allItems = Array.from(list.querySelectorAll('li'));
+                var allItems = Array.from(list.querySelectorAll('li.route-item-row'));
                 allItems.forEach(function(li, idx) {
                     var posLabel = li.querySelector('.route-item-col-fixed strong');
                     if (posLabel) {
@@ -1580,12 +1754,35 @@ try {
             }
 
             // Persist current order & associated arrival/departure values to server
+            function _normalizeDate(value) {
+                if (!value || value === '') return null;
+                // YYYY-MM-DD -> keep
+                if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+                // DD.MM.YYYY -> convert
+                var m = value.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+                if (m) return m[3] + '-' + m[2] + '-' + m[1];
+                // DD/MM/YYYY -> convert
+                m = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                if (m) return m[3] + '-' + m[2] + '-' + m[1];
+                // Fallback: try Date parse and format
+                var d = new Date(value);
+                if (!isNaN(d.getTime())) {
+                    var yyyy = d.getFullYear();
+                    var mm = String(d.getMonth() + 1).padStart(2, '0');
+                    var dd = String(d.getDate()).padStart(2, '0');
+                    return yyyy + '-' + mm + '-' + dd;
+                }
+                return null;
+            }
+
             function saveOrder() {
                 var items = Array.from(list.querySelectorAll('li')).map(function(li, idx){
                     var arrivalEl = li.querySelector('.arrival-input');
                     var departureEl = li.querySelector('.departure-input');
-                    var arrival = arrivalEl ? arrivalEl.value : (li.getAttribute('data-arrival') || null);
-                    var departure = departureEl ? departureEl.value : (li.getAttribute('data-departure') || null);
+                    var rawArrival = arrivalEl ? arrivalEl.value : (li.getAttribute('data-arrival') || null);
+                    var rawDeparture = departureEl ? departureEl.value : (li.getAttribute('data-departure') || null);
+                    var arrival = _normalizeDate(rawArrival);
+                    var departure = _normalizeDate(rawDeparture);
                     return {
                         item_id: li.getAttribute('data-item-id'),
                         location_id: li.getAttribute('data-location-id') || null,
@@ -1615,7 +1812,7 @@ try {
                                 if (window.routePOIs && Array.isArray(window.routePOIs)) {
                                     var mapById = {};
                                     window.routePOIs.forEach(function(p){ if (p && p.id) mapById[String(p.id)] = p; });
-                                    var newArr = Array.from(list.querySelectorAll('li')).map(function(li){ return mapById[String(li.getAttribute('data-item-id'))] || null; }).filter(Boolean);
+                                    var newArr = Array.from(list.querySelectorAll('li.route-item-row')).map(function(li){ return mapById[String(li.getAttribute('data-item-id'))] || null; }).filter(Boolean);
                                     window.routePOIs = newArr;
                                     updateStats();
                                 }
