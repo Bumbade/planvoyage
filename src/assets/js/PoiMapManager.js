@@ -9,6 +9,10 @@ try {
     }
 } catch (e) {}
 
+// Silence module debug output: make `console.debug` a no-op to remove
+// the many debugging statements added during investigation.
+try { if (typeof console !== 'undefined' && typeof console.debug === 'function') console.debug = function(){}; } catch (e) {}
+
 try {
     if (typeof window !== 'undefined') {
         window.parsePostgresHstore = parsePostgresHstore;
@@ -543,7 +547,7 @@ export default class PoiMapManager {
         for (const category in PoiMapManager.CATEGORY_PREDICATES) {
             if (PoiMapManager.CATEGORY_PREDICATES[category](tags, name)) {
                 if (poi.osm_id && (poi.highway === 'bus_stop' || tags.highway === 'bus_stop' || poi.name === 'Rupert' || poi.name === 'Renfrew' || poi.name === 'Boundary Loop')) {
-                    console.log(`MATCHED CATEGORY: ${category} for ${poi.name}`);
+                    // debug log removed
                 }
                 return category;
             }
@@ -564,109 +568,28 @@ export default class PoiMapManager {
     }
 
     _getIconForPoi(poi) {
-        // Only assign custom icons for POIs that come from the application DB (MySQL locations).
-        // Overpass results should keep the Leaflet default marker.
-        if (!this._isAppPoi(poi)) return null;
-
-        const category = this._getCategoryForPoi(poi);
-        // Prefer explicit logo set on the POI (comes from MySQL `locations.logo`) when available
-        // This lets imported locations show their assigned icon filenames.
-        // Ensure APP_BASE has trailing slash
-        let base = window.APP_BASE || '/';
-        if (base.charAt(base.length - 1) !== '/') base += '/';
-
-        
-
-        // If POI contains a `logo` filename, prefer that
-        if (poi && poi.logo) {
-            const logoFile = String(poi.logo).trim();
-            if (logoFile) {
-                const key = `logo:${logoFile}`;
-                if (this._iconCache[key]) return this._iconCache[key];
-                const icon = L.icon({
-                    iconUrl: `${base}assets/icons/${encodeURIComponent(logoFile)}`,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 32],
-                    popupAnchor: [0, -32]
-                });
-                try { if (window.POI_DEBUG && console && console.debug) console.debug('getIconForPoi -> logo icon created', { osm_id: poi?.osm_id, logoFile, iconUrl: icon.options && icon.options.iconUrl }); } catch (e) {}
-                this._iconCache[key] = icon;
-                return icon;
-            }
-        }
-
-        if (!category) return null;
-
-        if (this._iconCache[category]) {
-            return this._iconCache[category];
-        }
-
-        const iconFile = PoiMapManager.CATEGORY_ICONS[category];
-        if (!iconFile) return null;
-
-        const icon = L.icon({
-            iconUrl: `${base}assets/icons/${iconFile}`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
-        });
-        this._iconCache[category] = icon;
-        return icon;
-    }
-
-    // Return a simple colored marker icon (DivIcon) for non-app/Overpass POIs.
-    _getColoredMarkerIcon(poi) {
         try {
-            if (!poi) return null;
-            let category = this._getCategoryForPoi(poi) || '';
+            // Only assign custom icons for POIs that come from the application DB (MySQL locations).
+            if (!this._isAppPoi(poi)) return null;
 
-            // If Overpass returned highway=bus_stop (either in tags or top-level),
-            // force the transport category so bus stops get the transport color.
-            if (category !== 'transport') {
-                // obtain tags (object or hstore string)
-                let tags = null;
-                if (typeof poi.tags === 'object' && poi.tags) {
-                    tags = poi.tags;
-                } else if (typeof poi.tags === 'string' && poi.tags.trim()) {
-                    tags = PoiMapManager.parseHstore(poi.tags) || {};
-                } else {
-                    tags = {};
-                }
-                // merge relevant top-level OSM fields if present
-                if (typeof poi.highway !== 'undefined' && poi.highway !== '') tags.highway = tags.highway || poi.highway;
-                if (typeof poi.railway !== 'undefined' && poi.railway !== '') tags.railway = tags.railway || poi.railway;
-                if (typeof poi.aeroway !== 'undefined' && poi.aeroway !== '') tags.aeroway = tags.aeroway || poi.aeroway;
-                if (typeof tags.highway !== 'undefined' && String(tags.highway).trim().toLowerCase() === 'bus_stop') {
-                    category = 'transport';
-                }
-            }
+            const category = this._getCategoryForPoi(poi);
+            if (!category) return null;
 
-            // If the UI has a single active filter and it's `tobacco`, force the
-            // tobacco category/color so all results appear uniform when searching.
-            try {
-                const checked = (typeof document !== 'undefined')
-                    ? Array.from(document.querySelectorAll('.poi-filter-checkbox:checked')).map(n => n.value)
-                    : [];
-                if (checked.length === 1 && checked[0] === 'tobacco') {
-                    category = 'tobacco';
-                }
-            } catch (e) {}
+            // Reuse cached icons when possible
+            const cacheKey = `colored:${category}`;
+            if (this._iconCache[cacheKey]) return this._iconCache[cacheKey];
 
             const color = PoiMapManager.CATEGORY_COLORS[category] || PoiMapManager._colorForOsm(poi?.osm_id);
-            console.debug('_getColoredMarkerIcon:', { osm_id: poi.osm_id, name: poi.name, category, color, isTransport: category === 'transport' });
-            const key = `colored:${category || 'osm'}:${color}`;
-            if (this._iconCache[key]) return this._iconCache[key];
             const size = 20;
             const label = (category && PoiMapManager.POI_LETTER_MAP[category]) ? PoiMapManager.POI_LETTER_MAP[category] : ((category && String(category).length) ? String(category).charAt(0).toUpperCase() : '');
             const fontSize = Math.max(10, Math.round(size / 2.6));
-            // Use semantic classes for sizing and CSS variables for dynamic color/font.
-            // Most visual styles are defined in `features.css` under `.pv-marker`.
             let sizeClass = 'pv-marker--md';
             if (size <= 20) sizeClass = 'pv-marker--sm';
             else if (size >= 32) sizeClass = 'pv-marker--lg';
+
             const html = `<div class="pv-marker ${sizeClass}" style="--pv-marker-bg:${color}; --pv-marker-font:${fontSize}px">${label}</div>`;
             const icon = L.divIcon({ html: html, className: 'pv-div-icon', iconSize: [size, size], iconAnchor: [Math.round(size/2), size], popupAnchor: [0, -size] });
-            this._iconCache[key] = icon;
+            this._iconCache[cacheKey] = icon;
             return icon;
         } catch (e) {
             return null;
@@ -876,20 +799,9 @@ export default class PoiMapManager {
     }
 
     initMap() {
-        // Initialize view from URL params if present (lat,lng,z), otherwise use defaults
-        try {
-            const url = new URL(window.location.href);
-            const latP = url.searchParams.get('lat');
-            const lngP = url.searchParams.get('lng');
-            const zP = url.searchParams.get('z');
-            if (latP && lngP && zP && !Number.isNaN(parseFloat(latP)) && !Number.isNaN(parseFloat(lngP)) && !Number.isNaN(parseInt(zP))) {
-                this.map = L.map(this.options.mapId).setView([parseFloat(latP), parseFloat(lngP)], parseInt(zP, 10));
-            } else {
-                this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
-            }
-        } catch (e) {
-            this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
-        }
+        // Initialize view using configured defaults (show whole world by default).
+        // Ignore URL `lat/lng/z` on initial load to avoid deep-link centering.
+        this.map = L.map(this.options.mapId).setView(this.options.mapCenter, this.options.mapZoom);
         // Prevent map-level clicks from closing popups globally for this map.
         try { this.map.options.closePopupOnClick = false; } catch (e) {}
         // Ensure Leaflet default marker icons resolve even if local image files are missing.
@@ -984,6 +896,7 @@ export default class PoiMapManager {
         this.addImportControl();
         this.addZoomControl();
         this.addLegend();
+        this.addShareViewControl();
 
         // Track popup state so we can avoid refreshing markers while a popup is open
         this._popupOpenFlag = false;
@@ -1060,6 +973,28 @@ export default class PoiMapManager {
         overlay.style.justifyContent = 'center';
 
         mapEl.appendChild(overlay);
+    }
+
+    _flashSearchIndicator(text, timeout = 1400) {
+        try {
+            const input = document.getElementById('poi-search');
+            if (!input) return;
+            // avoid stacking multiple indicators
+            let existing = document.getElementById('pv-search-indicator');
+            if (existing) {
+                existing.textContent = text;
+                clearTimeout(existing._pvTimer);
+            } else {
+                existing = document.createElement('div');
+                existing.id = 'pv-search-indicator';
+                existing.style.cssText = 'position:relative; display:inline-block; margin-left:8px; padding:4px 8px; background:rgba(0,0,0,0.7); color:#fff; border-radius:4px; font-size:13px;';
+                input.insertAdjacentElement('afterend', existing);
+            }
+            existing.textContent = text;
+            existing._pvTimer = setTimeout(() => {
+                try { existing.remove(); } catch (e) {}
+            }, timeout);
+        } catch (e) {}
     }
 
     showLoadingOverlay(message) {
@@ -1144,6 +1079,47 @@ export default class PoiMapManager {
             }
         });
         this.map.addControl(new ImportControl());
+    }
+
+    addShareViewControl() {
+        try {
+            const ShareControl = L.Control.extend({
+                options: { position: 'topleft' },
+                onAdd: (map) => {
+                    const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                    const a = L.DomUtil.create('a', '', container);
+                    a.href = '#';
+                    a.title = (window.I18N?.pois?.share_view) || 'Share view';
+                    a.innerHTML = '&#128279;'; // link glyph
+                    L.DomEvent.on(a, 'click', L.DomEvent.stopPropagation)
+                        .on(a, 'click', L.DomEvent.preventDefault)
+                        .on(a, 'click', () => {
+                            try {
+                                const c = this.map.getCenter();
+                                const z = this.map.getZoom();
+                                const u = new URL(window.location.href);
+                                u.searchParams.set('lat', c.lat.toFixed(5));
+                                u.searchParams.set('lng', c.lng.toFixed(5));
+                                u.searchParams.set('z', String(z));
+                                const urlStr = u.toString();
+                                // Update address bar
+                                try { window.history.replaceState(null, '', urlStr); } catch (e) {}
+                                // Try to copy to clipboard, fallback to prompt
+                                if (navigator.clipboard && navigator.clipboard.writeText) {
+                                    navigator.clipboard.writeText(urlStr).then(()=>{
+                                        a.title = (window.I18N?.pois?.share_view_copied) || 'Link copied';
+                                        setTimeout(()=> { a.title = (window.I18N?.pois?.share_view) || 'Share view'; }, 1400);
+                                    }).catch(()=>{ try { window.prompt('Copy this URL', urlStr); } catch(e){} });
+                                } else {
+                                    try { window.prompt('Copy this URL', urlStr); } catch(e){}
+                                }
+                            } catch (e) { if (window.DEBUG) console.warn('share view failed', e); }
+                        });
+                    return container;
+                }
+            });
+            this.map.addControl(new ShareControl());
+        } catch (e) { if (window.DEBUG) console.warn('addShareView failed', e); }
     }
 
     addZoomControl(){
@@ -1436,6 +1412,7 @@ export default class PoiMapManager {
 
     async fetchAndPlot(opts = {}) {
         if (!this.map) return;
+        try { if (window.POI_DEBUG && console && console.debug) console.debug('fetchAndPlot start', { opts: opts, searchVal: (document.getElementById('poi-search') && document.getElementById('poi-search').value) || '' }); } catch (e) {}
         opts = opts || {};
 
         const bounds = this.map.getBounds();
@@ -1524,7 +1501,11 @@ export default class PoiMapManager {
         // apply the client-side filter and skip any network fetches (prevents large bbox errors).
         if (onlyMine) {
             const hasExistingMarkers = this.markerByOsm && Object.keys(this.markerByOsm).length > 0;
-            if (hasExistingMarkers) {
+            // If we already have markers loaded, we can skip network fetch ONLY when
+            // there is no active search term. If a search term exists, always fetch
+            // fresh server results so searching returns expected items.
+            const noSearch = !search || String(search).trim() === '';
+            if (hasExistingMarkers && noSearch) {
                 // Ensure any previously filtered markers are cleared/restored appropriately
                 this._clearOnlyMineFilter(); // restore to canonical state before re-applying
                 this._applyOnlyMineFilter();
@@ -1704,6 +1685,7 @@ export default class PoiMapManager {
                         } else {
                             rows = [];
                         }
+                        try { if (window.POI_DEBUG && console && console.debug) console.debug('MySQL fallback rows', { count: (rows && rows.length) || 0, sample: rows && rows.length ? rows[0] : null }); } catch (e) {}
                     } catch (e) {
                         console.warn('MySQL fallback failed', e);
                         rows = [];
@@ -1717,6 +1699,7 @@ export default class PoiMapManager {
                         console.warn('Failed to parse Overpass response', e);
                         rows = [];
                     }
+                    try { if (window.POI_DEBUG && console && console.debug) console.debug('Overpass rows', { count: (rows && rows.length) || 0, sample: rows && rows.length ? rows[0] : null }); } catch (e) {}
                 }
 
                 // Normalize each row to expected fields used by the frontend
@@ -1936,6 +1919,9 @@ export default class PoiMapManager {
                 try {
                     const variants = PoiMapManager.canonicalVariants(poi);
                     variants.forEach(v => { if (v) this.markerByOsm[v] = marker; });
+                    try {
+                        if (window.POI_DEBUG && console && console.debug) console.debug('Added marker', { osmKey, variants: variants, lat, lon });
+                    } catch (e) {}
                 } catch (e) { if (osmKey) this.markerByOsm[osmKey] = marker; }
                 // Try to asynchronously resolve icon URLs and apply to marker if needed
                 try { this._ensureMarkerIcon(poi, marker); } catch (e) { /* swallow */ }
@@ -1954,10 +1940,104 @@ export default class PoiMapManager {
                     if (wasSelected) {
                         this.selectedOsm.add(osmKey);
                         this.setMarkerSelected(marker, true);
-                        try { marker.openPopup(); } catch (e) {}
+                        // Do not automatically open popups when restoring selection to avoid
+                        // unexpected popups during refresh/search. User can click marker to open.
                     }
                 } catch (e) {}
             });
+
+            // If a search term was provided or caller requested force/onlyMysql, and we have results, center map on the first result
+            try {
+                // Only auto-center when the user actively searched, or when the
+                // caller explicitly requested centering. Do NOT auto-center on the
+                // initial automatic MySQL-only load (when hasLoadedOnce === false).
+                const hasSearch = (search && String(search).trim().length > 0);
+                const explicitCenter = !!(opts && opts.center);
+                const shouldCenter = hasSearch || explicitCenter || ((opts && (opts.force || opts.onlyMysql) || (Array.isArray(data) && data.length === 1)) && this.hasLoadedOnce);
+                if (shouldCenter && data.length > 0 && this.map) {
+                    // Prefer a POI that best matches the search phrase/tokens when available
+                    let firstPoi = data[0];
+                    try {
+                        const sRaw = (search || '').toString().trim();
+                        if (sRaw.length) {
+                            const toks = sRaw.toLowerCase().split(/\s+/).filter(t => t.length);
+                            if (toks.length) {
+                                // Score each POI by how many tokens appear across key fields
+                                let best = null; let bestScore = 0;
+                                for (const p of data) {
+                                    try {
+                                        if (!p) continue;
+                                        const hay = [p.name, p.type, p.description, p.city, p.state, p.country].filter(Boolean).join(' ').toLowerCase();
+                                        let score = 0;
+                                        for (const t of toks) if (hay.includes(t)) score++;
+                                        if (score > bestScore) { bestScore = score; best = p; }
+                                    } catch (e) { continue; }
+                                }
+                                if (best && bestScore > 0) firstPoi = best;
+                            }
+                        }
+                    } catch (e) { /* ignore matching errors */ }
+                    const lat = Number(firstPoi.lat);
+                    const lon = Number(firstPoi.lon);
+                    if (Number.isFinite(lat) && Number.isFinite(lon)) {
+                        try {
+                            const currentZoom = this.map.getZoom();
+                            const targetZoom = currentZoom < 14 ? 15 : currentZoom;
+                            if (window.POI_DEBUG && console && console.debug) console.debug('Centering map to firstPoi', { name: firstPoi && firstPoi.name, lat, lon, currentZoom, targetZoom });
+                            this.map.setView([lat, lon], targetZoom, { animate: true });
+                        } catch (e) { /* ignore map pan errors */ }
+                        try {
+                            const key = PoiMapManager.getCanonicalKey(firstPoi) || `${firstPoi.osm_type || 'N'}${firstPoi.osm_id}`;
+                            if (window.POI_DEBUG && console && console.debug) console.debug('Lookup marker by key', { key, markerCount: this.markerByOsm ? Object.keys(this.markerByOsm).length : 0 });
+                            let m = this.markerByOsm && this.markerByOsm[key];
+                            // If canonical lookup failed, try a coordinate-based match as fallback
+                            if ((!m || typeof m.openPopup !== 'function') && this.markerByOsm) {
+                                try {
+                                    const targetLat = Number(firstPoi.lat);
+                                    const targetLon = Number(firstPoi.lon);
+                                    const tol = 1e-5; // ~1 meter tolerance
+                                    for (const k in this.markerByOsm) {
+                                        try {
+                                            const cand = this.markerByOsm[k];
+                                            if (!cand || typeof cand.getLatLng !== 'function') continue;
+                                            const ll = cand.getLatLng();
+                                            if (Math.abs(ll.lat - targetLat) <= tol && Math.abs(ll.lng - targetLon) <= tol) {
+                                                m = cand;
+                                                if (window.POI_DEBUG && console && console.debug) console.debug('Coordinate fallback matched marker', { k, ll, targetLat, targetLon });
+                                                break;
+                                            }
+                                        } catch (e) { continue; }
+                                    }
+                                } catch (e) { /* ignore */ }
+                            }
+                            if (window.POI_DEBUG && console && console.debug) console.debug('Final marker lookup result', { key, found: !!m });
+                            if (m && typeof m.openPopup === 'function') {
+                                this.setMarkerSelected(m, true);
+                                const showAndOpen = () => {
+                                    try {
+                                        // If using MarkerClusterGroup, ensure cluster expands to show marker
+                                        if (this.markers && typeof this.markers.zoomToShowLayer === 'function') {
+                                            try {
+                                                this.markers.zoomToShowLayer(m, () => { try { m.openPopup(); } catch (e) {} });
+                                                return;
+                                            } catch (e) { /* fallback below */ }
+                                        }
+                                        try { m.openPopup(); } catch (e) {}
+                                    } catch (e) {}
+                                };
+                                try {
+                                    if (this.map && typeof this.map.once === 'function') {
+                                        this.map.once('moveend', showAndOpen);
+                                        setTimeout(showAndOpen, 700);
+                                    } else {
+                                        setTimeout(showAndOpen, 300);
+                                    }
+                                } catch (e) { setTimeout(showAndOpen, 300); }
+                            }
+                        } catch (e) { /* ignore popup errors */ }
+                    }
+                }
+            } catch (e) { /* non-fatal */ }
 
             // Final status (refresh after icons/markers created)
             const mysqlCountFinal = data.reduce((acc, p) => acc + ((p && (p.source === 'mysql' || p._is_app === true)) ? 1 : 0), 0);
@@ -2238,7 +2318,8 @@ export default class PoiMapManager {
     }
 
     async fetchAndRenderFullPoiList(opts = {}) {
-        const listContainer = document.getElementById('poi-list-all');
+        // Support both newer `poi-list-all` ID and legacy `poi-list` container
+        let listContainer = document.getElementById('poi-list-all') || document.getElementById('poi-list');
         if (!listContainer) return;
 
         const search = document.getElementById('poi-search')?.value || '';
@@ -2359,15 +2440,31 @@ export default class PoiMapManager {
 
         const searchInput = document.getElementById('poi-search');
         const searchBtn = document.getElementById('poi-search-btn');
+        try { if (window.POI_DEBUG && console && console.debug) console.debug('bindUIEvents: searchInput?', !!searchInput, 'searchBtn?', !!searchBtn); } catch (e) {}
         const applyFilterHandler = (ev) => {
             ev.preventDefault();
+            try { if (window.POI_DEBUG && console && console.debug) console.debug('applyFilterHandler invoked', { value: document.getElementById('poi-search')?.value }); } catch (e) {}
+            try { this._flashSearchIndicator && this._flashSearchIndicator('Searching…'); } catch (e) {}
             this.fetchAndPlot({ force: true });
             this.fetchAndRenderFullPoiList();
         };
         if (searchBtn) searchBtn.addEventListener('click', applyFilterHandler);
-        if (searchInput) searchInput.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter') applyFilterHandler(ev);
-        });
+        if (searchInput) {
+            // Primary: respond to Enter on keydown
+            searchInput.addEventListener('keydown', (ev) => {
+                try { if (window.POI_DEBUG && console && console.debug) console.debug('search keydown', ev.key); } catch (e) {}
+                if (ev.key === 'Enter') applyFilterHandler(ev);
+            });
+            // Fallback: some browsers/platforms emit Enter on keyup instead
+            searchInput.addEventListener('keyup', (ev) => {
+                try { if (window.POI_DEBUG && console && console.debug) console.debug('search keyup', ev.key); } catch (e) {}
+                if (ev.key === 'Enter') applyFilterHandler(ev);
+            });
+            // Update load button state when user types
+            searchInput.addEventListener('input', () => {
+                try { updateLoadBtnState(); } catch (e) {}
+            });
+        }
 
         const importSelBtn = document.getElementById('import-selected-pois');
         if (importSelBtn) importSelBtn.addEventListener('click', (ev) => {
@@ -2388,6 +2485,15 @@ export default class PoiMapManager {
                     } catch(e){}
                 });
                 this.updateSelectedUI();
+                	// Also clear the search input when filters are reset
+                	try {
+                    const s = document.getElementById('poi-search');
+                    if (s) {
+                        s.value = '';
+                        // update load button state helper in this scope
+                        try { updateLoadBtnState(); } catch (e) {}
+                    }
+                } catch (e) {}
                 this.hasLoadedOnce = true;
                 // Explicitly request MySQL-only results after resetting filters
                 this.fetchAndPlot({ force: true, onlyMysql: true });
