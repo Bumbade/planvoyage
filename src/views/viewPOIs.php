@@ -174,15 +174,34 @@ foreach ($allKeys as $k) {
 
     <!-- My POIs tile view (visible to logged-in users) -->
     <?php if (!empty($_SESSION['user_id'])): ?>
-        <details id="my-pois" class="my-pois-section" aria-expanded="false">
-            <summary>
-                <h2><?php echo htmlspecialchars($I18N['pois']['my_pois'] ?? 'My POIs'); ?></h2>
+        <details id="my-pois" class="my-pois-section card" aria-expanded="false">
+            <summary class="section-summary">
+                <div class="summary-left">
+                    <h2 class="section-title"><?php echo htmlspecialchars($I18N['pois']['my_pois'] ?? 'My POIs'); ?></h2>
+                </div>
+                <div class="summary-right">
+                    <span class="muted small"><?php echo htmlspecialchars($I18N['general']['click_to_expand'] ?? 'Click to expand'); ?></span>
+                </div>
             </summary>
-            <div id="my-pois-tiles" aria-live="polite" class="">
+            <div id="my-pois-tiles" aria-live="polite" class="poi-tiles">
                 <p class="muted"><?php echo htmlspecialchars($I18N['general']['loading'] ?? 'Loading...'); ?></p>
             </div>
         </details>
     <?php endif; ?>
+    <style>
+    /* My POIs section: compact, tile-like appearance to match POI grids */
+    .my-pois-section { margin-top: 1rem; border: 1px solid var(--border-color, #e6e6e6); border-radius: 6px; background: var(--bg-lighter, #ffffff); overflow: hidden; }
+    .my-pois-section .section-summary { display:flex; justify-content:space-between; align-items:center; padding:0.6rem 1rem; cursor:pointer; }
+    .my-pois-section .section-title { margin:0; font-size:1.05rem; }
+    .my-pois-section .poi-tiles { padding:0.75rem 1rem; display:block; }
+    .my-pois-section .poi-country-section { margin-bottom:0.6rem; border-bottom:1px solid rgba(0,0,0,0.04); padding-bottom:0.6rem; }
+    .poi-tiles .poi-type-section summary { cursor:pointer; }
+    .poi-tiles .poi-tiles-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem; }
+    .poi-tile { background: var(--bg-light, #fbfbfb); padding:0.6rem; border-radius:6px; border:1px solid rgba(0,0,0,0.04); }
+    .poi-tile-title { font-weight:600; margin-bottom:0.35rem; }
+    .poi-tile-actions { margin-top:0.5rem; }
+    @media (max-width:800px){ .poi-tiles .poi-tiles-grid { grid-template-columns: repeat(1, 1fr); } }
+    </style>
 </main>
 
 <!-- Leaflet JS -->
