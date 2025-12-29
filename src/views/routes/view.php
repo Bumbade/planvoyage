@@ -501,6 +501,9 @@ try {
                         } catch (e) { /* ignore invalid entries */ }
                     });
                 }
+                // Track seen location_ids and coordinate pairs to avoid duplicate planner markers
+                var seenLocationIds = new Set();
+                var seenCoords = new Set();
                 Array.from(list.querySelectorAll('li')).forEach(function(li){
                     var itemId = parseInt(li.getAttribute('data-item-id') || '0', 10);
                     var locId = parseInt(li.getAttribute('data-location-id') || '0', 10);
@@ -520,6 +523,17 @@ try {
                         }
                     }
                     if (p && p.lat && p.lon) {
+                        // dedupe by explicit location_id when present
+                        var lidKey = (p.location_id && Number(p.location_id) > 0) ? String(p.location_id) : null;
+                        var coordKey = String(Number(p.lat).toFixed(6)) + ':' + String(Number(p.lon).toFixed(6));
+                        if (lidKey && seenLocationIds.has(lidKey)) {
+                            return; // skip duplicate location
+                        }
+                        if (seenCoords.has(coordKey)) {
+                            return; // skip duplicate coordinate
+                        }
+                        if (lidKey) seenLocationIds.add(lidKey);
+                        seenCoords.add(coordKey);
                         addWaypoint(p.lat, p.lon, p.name || '', false, { location_id: p.location_id || null, logo: p.logo || '' });
                     }
                 });
