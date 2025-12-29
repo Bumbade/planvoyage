@@ -1523,7 +1523,8 @@ try {
 
     <!-- Insert Trip items (POIs) here so they appear after the Add form but before the interactive scripts -->
     <style>
-        /* POI list: icon left, text stacked right */
+        /* POI list: layout and vertical centering */
+        .route-item-info{display:flex;align-items:center;gap:12px;}
         .route-item-poi-info{display:flex;align-items:center;gap:10px;}
         .route-item-poi-info .poi-icon{width:40px;height:40px;object-fit:contain;flex:0 0 40px;}
         .route-item-poi-info .poi-text{display:flex;flex-direction:column;}
