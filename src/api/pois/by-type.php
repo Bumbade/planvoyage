@@ -57,7 +57,9 @@ try {
     $params = [];
 
     if ($locationType) {
-        $query .= ' AND type = :type';
+        // Match type case-insensitively and ignore surrounding whitespace to avoid
+        // missing results due to minor formatting differences in the `type` column.
+        $query .= ' AND LOWER(TRIM(type)) = LOWER(TRIM(:type))';
         $params[':type'] = $locationType;
     }
     if ($country) {

@@ -164,13 +164,14 @@ try {
     $db = get_db();
     $userId = $_SESSION['user_id'] ?? null;
     if ($userId) {
-        // Prefer values only from favorites mapping for this user
-        $cStmt = $db->prepare("SELECT DISTINCT l.country FROM favorites f JOIN locations l ON l.id = f.location_id WHERE l.country IS NOT NULL AND l.country != '' AND f.user_id = :uid ORDER BY l.country ASC");
+        // Prefer values from locations this user has favorited OR locations owned by this user
+        // (imported locations may have user_id set but not be present in favorites)
+        $cStmt = $db->prepare("SELECT DISTINCT l.country FROM locations l WHERE l.country IS NOT NULL AND l.country != '' AND (EXISTS (SELECT 1 FROM favorites f WHERE f.location_id = l.id AND f.user_id = :uid) OR l.user_id = :uid) ORDER BY l.country ASC");
         $cStmt->bindValue(':uid', $userId, PDO::PARAM_INT);
         $cStmt->execute();
         $cRows = $cStmt->fetchAll(PDO::FETCH_COLUMN);
 
-        $sStmt = $db->prepare("SELECT DISTINCT l.state FROM favorites f JOIN locations l ON l.id = f.location_id WHERE l.state IS NOT NULL AND l.state != '' AND f.user_id = :uid ORDER BY l.state ASC");
+        $sStmt = $db->prepare("SELECT DISTINCT l.state FROM locations l WHERE l.state IS NOT NULL AND l.state != '' AND (EXISTS (SELECT 1 FROM favorites f WHERE f.location_id = l.id AND f.user_id = :uid) OR l.user_id = :uid) ORDER BY l.state ASC");
         $sStmt->bindValue(':uid', $userId, PDO::PARAM_INT);
         $sStmt->execute();
         $sRows = $sStmt->fetchAll(PDO::FETCH_COLUMN);
@@ -196,9 +197,62 @@ try {
 }
 ?>
     <script>
-    var routePOIs = <?php echo json_encode($mapItems, JSON_UNESCAPED_UNICODE); ?>;
-    var countries = <?php echo json_encode($countries, JSON_UNESCAPED_UNICODE); ?>;
+    // Require Ctrl for wheel zoom and drag — resilient fallback that doesn't require a Leaflet map instance.
+    (function(){
+        function initCtrlMapBehavior(){
+            try {
+                var container = document.getElementById('route-map') || document.querySelector('.leaflet-container');
+                if (!container) {
+                    console.warn('tpv: ctrl-scroll behavior: map container not found');
+                    return;
+                }
+                var hintKey = 'tpv_map_ctrl_scroll_hint_shown';
+
+                // Wheel: prevent zoom unless Ctrl pressed. Use capture + passive:false so we can preventDefault.
+                container.addEventListener('wheel', function(ev){
+                    if (ev.ctrlKey) return; // allow native zoom handling (Leaflet will handle it)
+                    try { ev.preventDefault(); ev.stopPropagation(); } catch(e){}
+                    try {
+                        if (!localStorage.getItem(hintKey)) {
+                            var hint = container.querySelector('.map-ctrl-zoom-hint');
+                            if (!hint) {
+                                hint = document.createElement('div');
+                                hint.className = 'map-ctrl-zoom-hint';
+                                hint.textContent = 'Use Ctrl+Scroll to zoom the map, or use the zoom controls.';
+                                container.appendChild(hint);
+                            }
+                            localStorage.setItem(hintKey, '1');
+                        }
+                    } catch(e){}
+                }, { passive: false, capture: true });
+
+                // Pointer: prevent drag start unless Ctrl is pressed.
+                container.addEventListener('pointerdown', function(ev){
+                    if (ev.ctrlKey) return; // allow drag
+                    try { ev.preventDefault(); ev.stopPropagation(); } catch(e){}
+                }, { capture: true });
+
+                // For touch/other events also block touchstart when ctrl not pressed to avoid panning on mobile-like devices
+                container.addEventListener('touchstart', function(ev){ if (!ev.ctrlKey) { try{ ev.preventDefault(); }catch(e){} } }, { passive: false, capture: true });
+
+                // Keyboard helpers: if user holds Ctrl while interacting, let browser handle it — no extra enabling required
+                console.log('tpv: ctrl-scroll behavior initialized');
+            } catch (err) { console.warn('tpv: ctrl-scroll init failed', err); }
+        }
+
+        // Prefer running after DOM ready; also try waitForMap if available to integrate earlier.
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            initCtrlMapBehavior();
+        } else {
+            document.addEventListener('DOMContentLoaded', initCtrlMapBehavior);
+        }
+    })();
+    </script>
+
+</main>
+<script>
     var states = <?php echo json_encode($states, JSON_UNESCAPED_UNICODE); ?>;
+    var countries = <?php echo json_encode($countries, JSON_UNESCAPED_UNICODE); ?>;
     var filterAllLabel = <?php echo json_encode(t('filter_all', 'All')); ?>;
     var locTypeLabel = <?php echo json_encode(t('type_label', 'Type:')); ?>;
     var locLogoLabel = <?php echo json_encode(t('logo_label', 'Logo:')); ?>;
@@ -321,13 +375,15 @@ try {
                     if (js && js.ok) {
                         var sw = [js.minLat, js.minLon];
                         var ne = [js.maxLat, js.maxLon];
-                        map.fitBounds([sw, ne], {padding:[20,20]});
+                        try { fitBoundsSafe([sw, ne]); } catch(e) { try { map.fitBounds([sw, ne], {padding:[40,40]}); } catch(e) {} }
                     }
                 }).catch(function(err){ console.warn('bbox fetch failed', err); });
         }
         var iconsBase = '<?php echo htmlspecialchars(asset_url('assets/icons/')); ?>';
         // make available to other scripts
         window.iconsBase = iconsBase;
+        // Export route POIs (from PHP $mapItems) for planner/map usage
+        try { window.routePOIs = <?php echo json_encode($mapItems, JSON_UNESCAPED_UNICODE); ?>; } catch (e) { window.routePOIs = window.routePOIs || []; }
         var map = L.map('route-map').setView([51,10], 5);
         // expose for planner code
         window.routeMap = map;
@@ -335,6 +391,21 @@ try {
         setTimeout(function() { if (map) map.invalidateSize(); }, 100);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM contributors' }).addTo(map);
         var markers = [];
+
+        // Helper: fit bounds with adaptive padding so routes/markers aren't clipped.
+        function fitBoundsSafe(bounds, m) {
+            m = m || map;
+            if (!m) return;
+            try {
+                var size = (typeof m.getSize === 'function') ? m.getSize() : (m._container ? { x: m._container.clientWidth || window.innerWidth, y: m._container.clientHeight || window.innerHeight } : { x: window.innerWidth, y: window.innerHeight });
+                var padX = Math.max(40, Math.round((size.x || window.innerWidth) * 0.08));
+                var padY = Math.max(40, Math.round((size.y || window.innerHeight) * 0.08));
+                var bb = bounds && bounds.pad ? (typeof bounds.pad === 'function' ? bounds.pad(0.18) : bounds) : L.latLngBounds(bounds).pad(0.18);
+                m.fitBounds(bb, { padding: [padX, padY] });
+                return;
+            } catch (e) {}
+            try { m.fitBounds(bounds, { padding: [40, 40] }); } catch (e) {}
+        }
         function updateMarkers() {
             markers.forEach(function(m){ map.removeLayer(m); });
             markers = [];
@@ -355,11 +426,26 @@ try {
                     popupAnchor: [0,-28]
                 });
                 var marker = L.marker([p.lat, p.lon], {icon: icon}).addTo(map);
-                marker.bindPopup('<strong>'+p.name+'</strong><br>'+locTypeLabel+' '+p.type+'<br>'+locCountryLabel+' '+p.country+'<br>'+locStateLabel+' '+p.state + '<br><img src="' + iconsBase + logoFile + '" class="marker-popup-image" />');
+                try {
+                    var pop = document.createElement('div');
+                    var title = document.createElement('strong'); title.textContent = p.name || 'POI'; pop.appendChild(title);
+                    pop.appendChild(document.createElement('br'));
+                    pop.appendChild(document.createTextNode(locTypeLabel + ' ' + (p.type || '')));
+                    pop.appendChild(document.createElement('br'));
+                    pop.appendChild(document.createTextNode(locCountryLabel + ' ' + (p.country || '')));
+                    pop.appendChild(document.createElement('br'));
+                    pop.appendChild(document.createTextNode(locStateLabel + ' ' + (p.state || '')));
+                    pop.appendChild(document.createElement('br'));
+                    var img = document.createElement('img'); img.className = 'marker-popup-image'; img.src = (typeof iconsBase !== 'undefined' ? iconsBase : '') + logoFile; pop.appendChild(img);
+                    marker.bindPopup(pop);
+                } catch (e) {
+                    // fallback: simple text-only popup (avoid constructing HTML with src concatenation)
+                    try { marker.bindPopup('<strong>' + (p.name || 'POI') + '</strong>'); } catch (ex) { /* ignore */ }
+                }
                 markers.push(marker);
                 bounds.push([p.lat, p.lon]);
             });
-            if (bounds.length) map.fitBounds(bounds, {padding:[30,30]});
+            if (bounds.length) { try { fitBoundsSafe(bounds); } catch(e) { try { map.fitBounds(bounds, {padding:[40,40]}); } catch(e) {} } }
         }
         countrySel.addEventListener('change', function(){
             var c = countrySel.value;
@@ -455,6 +541,75 @@ try {
         }
     } catch (e) { console.warn('flatpickr monkey-patch failed', e); }
     </script>
+    <style>
+        /* Hint shown when user attempts to scroll-zoom without Ctrl */
+        .map-ctrl-zoom-hint{
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            z-index: 6500;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 220ms ease-in-out;
+        }
+        .map-ctrl-zoom-hint.show{ opacity: 1; }
+    </style>
+
+    <script>
+    // Restrict wheel zoom: require Ctrl key or use zoom controls. Show one-time hint.
+    document.addEventListener('DOMContentLoaded', function(){
+        try{
+            var container = document.getElementById('route-map');
+            if (!container) return;
+
+            // Ensure Leaflet's native scroll zoom is disabled (may already be)
+            try { if (window.routeMap && typeof window.routeMap.scrollWheelZoom === 'object') window.routeMap.scrollWheelZoom.disable(); } catch(e){}
+
+            var hintShown = false;
+            var hintEl = document.createElement('div');
+            hintEl.className = 'map-ctrl-zoom-hint';
+            hintEl.textContent = <?php echo json_encode(t('map_ctrl_zoom_hint', 'Use Ctrl+Scroll to zoom the map, or use the zoom controls.')); ?>;
+            // position relative to container
+            container.style.position = container.style.position || 'relative';
+            container.appendChild(hintEl);
+
+            var hideTimer = null;
+            function showHint(){
+                if (hintShown) return; hintShown = true;
+                hintEl.classList.add('show');
+                if (hideTimer) clearTimeout(hideTimer);
+                hideTimer = setTimeout(function(){ hintEl.classList.remove('show'); }, 3000);
+            }
+
+            // Wheel handler: only allow zoom when Ctrl is pressed. Emulate zoom by clicking zoom controls.
+            container.addEventListener('wheel', function(ev){
+                try {
+                    // Always prevent default to avoid page scroll
+                    ev.preventDefault();
+                } catch(e){}
+                if (ev.ctrlKey) {
+                    // Find zoom buttons inside the leaflet control container
+                    var inBtn = container.querySelector('.leaflet-control-zoom-in');
+                    var outBtn = container.querySelector('.leaflet-control-zoom-out');
+                    if (!inBtn || !outBtn) return;
+                    // On wheel up (deltaY < 0) -> zoom in, else zoom out
+                    if (ev.deltaY < 0) { try { inBtn.click(); } catch(e){} }
+                    else { try { outBtn.click(); } catch(e){} }
+                } else {
+                    showHint();
+                }
+            }, { passive: false });
+
+            // Also guard against touchpad two-finger pinch (ctrlKey not set on some platforms)
+            // If wheel has small delta and no ctrl, show hint but do not zoom
+        } catch(e){ console.warn('map ctrl-zoom handler init failed', e); }
+    });
+    </script>
 
 
     <script>
@@ -516,7 +671,7 @@ try {
         function updateLine(){
             if (plannerLine && map) { try{ map.removeLayer(plannerLine); }catch(e){} plannerLine = null; }
             var coords = waypoints.map(function(w){ return [w.lat,w.lon]; });
-            if (coords.length>0 && map){ plannerLine = L.polyline(coords,{color: getThemeColor('map-primary-line', '#4da6ff')}).addTo(map); try{ map.fitBounds(plannerLine.getBounds(),{padding:[20,20]}); }catch(e){} }
+            if (coords.length>0 && map){ plannerLine = L.polyline(coords,{color: getThemeColor('map-primary-line', '#4da6ff')}).addTo(map); try{ var _b = plannerLine.getBounds(); if (_b && (typeof _b.isValid !== 'function' || _b.isValid())) { try{ _b = _b.pad ? _b.pad(0.18) : _b; }catch(e){} } try { fitBoundsSafe(_b); } catch(e) { try{ map.fitBounds(_b,{padding:[40,40]}); }catch(e){} } }catch(e){} }
         }
 
         function savePlanner(){
@@ -545,6 +700,8 @@ try {
                 // Track seen location_ids and coordinate pairs to avoid duplicate planner markers
                 var seenLocationIds = new Set();
                 var seenCoords = new Set();
+                // Map a location/coord key to the waypoint index that was created for it.
+                var waypointKeyToIndex = {};
                 Array.from(list.querySelectorAll('li.route-item-row')).forEach(function(li){
                     var itemId = parseInt(li.getAttribute('data-item-id') || '0', 10);
                     var locId = parseInt(li.getAttribute('data-location-id') || '0', 10);
@@ -565,17 +722,28 @@ try {
                     }
                     if (p && p.lat && p.lon) {
                         // dedupe by explicit location_id when present
-                        var lidKey = (p.location_id && Number(p.location_id) > 0) ? String(p.location_id) : null;
-                        var coordKey = String(Number(p.lat).toFixed(6)) + ':' + String(Number(p.lon).toFixed(6));
-                        if (lidKey && seenLocationIds.has(lidKey)) {
-                            return; // skip duplicate location
+                        var lidKey = (p.location_id && Number(p.location_id) > 0) ? 'LID:' + String(p.location_id) : null;
+                        var coordKey = 'COORD:' + String(Number(p.lat).toFixed(6)) + ':' + String(Number(p.lon).toFixed(6));
+
+                        // If we've already created a waypoint for this location or coord,
+                        // reuse its index and tag the li accordingly (don't create duplicate markers).
+                        if (lidKey && waypointKeyToIndex.hasOwnProperty(lidKey)) {
+                            try { li.setAttribute('data-waypoint-index', String(waypointKeyToIndex[lidKey])); } catch(e){}
+                            return;
                         }
-                        if (seenCoords.has(coordKey)) {
-                            return; // skip duplicate coordinate
+                        if (waypointKeyToIndex.hasOwnProperty(coordKey)) {
+                            try { li.setAttribute('data-waypoint-index', String(waypointKeyToIndex[coordKey])); } catch(e){}
+                            return;
                         }
+
+                        // create new waypoint and remember mapping
                         if (lidKey) seenLocationIds.add(lidKey);
                         seenCoords.add(coordKey);
                         addWaypoint(p.lat, p.lon, p.name || '', false, { location_id: p.location_id || null, logo: p.logo || '' });
+                        var wpIdx = waypoints.length - 1;
+                        if (lidKey) waypointKeyToIndex[lidKey] = wpIdx;
+                        waypointKeyToIndex[coordKey] = wpIdx;
+                        try { li.setAttribute('data-waypoint-index', String(wpIdx)); } catch(e){}
                     }
                 });
                 try {
@@ -845,28 +1013,137 @@ try {
                                                 try {
                                                     var layer = (typeof mainLegLayerByIdx !== 'undefined' && mainLegLayerByIdx[localIdx]) ? mainLegLayerByIdx[localIdx] : null;
                                                     if (layer && typeof layer.getBounds === 'function') {
-                                                        map.fitBounds(layer.getBounds(), {padding:[20,20]});
+                                                        try { var lb = layer.getBounds(); if (lb && lb.pad) lb = lb.pad(0.18); fitBoundsSafe(lb); } catch(e){ try{ map.fitBounds(layer.getBounds(), {padding:[40,40]}); }catch(e){} }
                                                         return;
                                                     }
                                                     // fallback: zoom to the two waypoints for this leg
                                                     var a = waypoints[localIdx]; var b = waypoints[localIdx+1];
-                                                    if (a && b && map) { map.fitBounds([[a.lat,a.lon],[b.lat,b.lon]], {padding:[20,20]}); }
+                                                    if (a && b && map) {
+                                                        try { var bb = L.latLngBounds([[a.lat,a.lon],[b.lat,b.lon]]); if (bb && bb.pad) bb = bb.pad(0.18); fitBoundsSafe(bb); } catch(e) { try{ map.fitBounds([[a.lat,a.lon],[b.lat,b.lon]], {padding:[40,40]}); }catch(e){} }
+                                                    }
                                                 } catch(e) { console.warn('goto leg failed', e); }
                                             }); })(idx);
                                             entry.appendChild(gotoBtn);
                                             legsContainer.appendChild(entry);
-                                            // also populate inline leg row between list items if present
+                                            // populate inline leg rows for the Trip Items list
+                                            // We will compute per-list leg distances/durations by aggregating OSRM legs
+                                            // between the waypoint indices mapped from each list item. This handles
+                                            // deduplication where multiple list items map to the same waypoint index.
                                             try {
                                                 var list = document.getElementById('route-items');
-                                                if (list) {
-                                                    var legRow = list.querySelector('li.route-leg-row[data-leg-index="' + idx + '"]');
-                                                    if (legRow) {
-                                                        var summaryDiv = legRow.querySelector('.route-leg-summary');
-                                                        if (summaryDiv) summaryDiv.innerHTML = '<span class="route-leg-swatch" style="background: '+color+';"></span>' +
-                                                            '<span class="route-leg-summary-text"><strong>'+fromLabel+' → '+toLabel+'</strong><br/>'+distKm+' km, '+h+'h '+(m<10?('0'+m):m)+'m</span>';
+                                                if (list && Array.isArray(waypoints)) {
+                                                    var itemRows = Array.from(list.querySelectorAll('li.route-item-row'));
+                                                    for (var i = 0; i < itemRows.length - 1; i++) {
+                                                        try {
+                                                            var liA = itemRows[i];
+                                                            var liB = itemRows[i+1];
+                                                            var wa = parseInt(liA.getAttribute('data-waypoint-index') || '-1', 10);
+                                                            var wb = parseInt(liB.getAttribute('data-waypoint-index') || '-1', 10);
+                                                            var legRow = liA.nextElementSibling && liA.nextElementSibling.classList && liA.nextElementSibling.classList.contains('route-leg-row') ? liA.nextElementSibling : null;
+                                                            // fallback search if markup differs
+                                                            if (!legRow) legRow = list.querySelector('li.route-leg-row[data-leg-index="' + i + '"]');
+                                                            if (!legRow) continue;
+                                                            var summaryDiv = legRow.querySelector('.route-leg-summary');
+                                                            if (!summaryDiv) continue;
+
+                                                            // If both map to valid waypoint indices, aggregate OSRM legs between them
+                                                            if (!isNaN(wa) && !isNaN(wb) && wa >= 0 && wb >= 0 && route.legs && route.legs.length) {
+                                                                var start = Math.min(wa, wb);
+                                                                var end = Math.max(wa, wb);
+                                                                var aggDist = 0, aggDur = 0;
+                                                                for (var k = start; k < end; k++) {
+                                                                    if (route.legs[k]) { aggDist += (route.legs[k].distance || 0); aggDur += (route.legs[k].duration || 0); }
+                                                                }
+                                                                var aggKm = (aggDist/1000.0).toFixed(2);
+                                                                var hh2 = Math.floor(aggDur/3600);
+                                                                var mm2 = Math.round((aggDur % 3600)/60);
+                                                                var fromLbl = (waypoints[wa] && (waypoints[wa].label || (waypoints[wa].lat.toFixed(5)+', '+waypoints[wa].lon.toFixed(5)))) || ('#'+(i+1));
+                                                                var toLbl = (waypoints[wb] && (waypoints[wb].label || (waypoints[wb].lat.toFixed(5)+', '+waypoints[wb].lon.toFixed(5)))) || ('#'+(i+2));
+                                                                // create a swatch class and add a stylesheet rule instead of inline styles
+                                                                try {
+                                                                    // pick the dominant OSRM leg within the aggregated range (largest distance)
+                                                                    var dominantIdx = start;
+                                                                    var maxDist = 0;
+                                                                    for (var kk = start; kk < end; kk++) {
+                                                                        var ld = (route.legs[kk] && route.legs[kk].distance) ? route.legs[kk].distance : 0;
+                                                                        if (ld > maxDist) { maxDist = ld; dominantIdx = kk; }
+                                                                    }
+                                                                    var swatchClass = 'tpv-swatch-' + dominantIdx;
+                                                                    var colorValue = 'hsl('+((dominantIdx*47)%360)+',70%,40%)';
+                                                                    var styleEl = document.getElementById('tpv-route-swatch-styles');
+                                                                    if (!styleEl) {
+                                                                        styleEl = document.createElement('style');
+                                                                        styleEl.id = 'tpv-route-swatch-styles';
+                                                                        document.head.appendChild(styleEl);
+                                                                    }
+                                                                    // add rule if not present
+                                                                    var rule = '.' + swatchClass + ' { background: ' + colorValue + '; }';
+                                                                    if (styleEl.sheet) {
+                                                                        try {
+                                                                            var found = false;
+                                                                            for (var ri = 0; ri < styleEl.sheet.cssRules.length; ri++) {
+                                                                                if (styleEl.sheet.cssRules[ri].selectorText === ('.' + swatchClass)) { found = true; break; }
+                                                                            }
+                                                                            if (!found) styleEl.sheet.insertRule(rule, styleEl.sheet.cssRules.length);
+                                                                        } catch(e) {
+                                                                            if (styleEl.textContent.indexOf(rule) === -1) styleEl.appendChild(document.createTextNode(rule));
+                                                                        }
+                                                                    } else {
+                                                                        if (styleEl.textContent.indexOf(rule) === -1) styleEl.appendChild(document.createTextNode(rule));
+                                                                    }
+                                                                    // build DOM nodes
+                                                                    summaryDiv.innerHTML = '';
+                                                                    var spanSw = document.createElement('span'); spanSw.className = 'route-leg-swatch ' + swatchClass;
+                                                                    var spanTxt = document.createElement('span'); spanTxt.className = 'route-leg-summary-text';
+                                                                    spanTxt.innerHTML = '<strong>'+fromLbl+' → '+toLbl+'</strong><br/>'+aggKm+' km, '+hh2+'h '+(mm2<10?('0'+mm2):mm2)+'m';
+                                                                    summaryDiv.appendChild(spanSw);
+                                                                    summaryDiv.appendChild(spanTxt);
+                                                                } catch(e) {
+                                                                    summaryDiv.innerHTML = '<span class="route-leg-swatch"></span>' +
+                                                                        '<span class="route-leg-summary-text"><strong>'+fromLbl+' → '+toLbl+'</strong><br/>'+aggKm+' km, '+hh2+'h '+(mm2<10?('0'+mm2):mm2)+'m</span>';
+                                                                }
+                                                            } else {
+                                                                // fallback: use the original per-leg info (idx-based)
+                                                                if (summaryDiv) {
+                                                                    try {
+                                                                        var swatchClass = 'tpv-swatch-fallback-' + i;
+                                                                        var colorValue = color || 'transparent';
+                                                                        var styleEl = document.getElementById('tpv-route-swatch-styles');
+                                                                        if (!styleEl) {
+                                                                            styleEl = document.createElement('style');
+                                                                            styleEl.id = 'tpv-route-swatch-styles';
+                                                                            document.head.appendChild(styleEl);
+                                                                        }
+                                                                        var rule = '.' + swatchClass + ' { background: ' + colorValue + '; }';
+                                                                        if (styleEl.sheet) {
+                                                                            try {
+                                                                                var found = false;
+                                                                                for (var ri = 0; ri < styleEl.sheet.cssRules.length; ri++) {
+                                                                                    if (styleEl.sheet.cssRules[ri].selectorText === ('.' + swatchClass)) { found = true; break; }
+                                                                                }
+                                                                                if (!found) styleEl.sheet.insertRule(rule, styleEl.sheet.cssRules.length);
+                                                                            } catch(e) {
+                                                                                if (styleEl.textContent.indexOf(rule) === -1) styleEl.appendChild(document.createTextNode(rule));
+                                                                            }
+                                                                        } else {
+                                                                            if (styleEl.textContent.indexOf(rule) === -1) styleEl.appendChild(document.createTextNode(rule));
+                                                                        }
+                                                                        summaryDiv.innerHTML = '';
+                                                                        var spanSw = document.createElement('span'); spanSw.className = 'route-leg-swatch ' + swatchClass;
+                                                                        var spanTxt = document.createElement('span'); spanTxt.className = 'route-leg-summary-text';
+                                                                        spanTxt.innerHTML = '<strong>'+fromLabel+' → '+toLabel+'</strong><br/>'+distKm+' km, '+h+'h '+(m<10?('0'+m):m)+'m';
+                                                                        summaryDiv.appendChild(spanSw);
+                                                                        summaryDiv.appendChild(spanTxt);
+                                                                    } catch(e) {
+                                                                        summaryDiv.innerHTML = '<span class="route-leg-swatch"></span>' +
+                                                                            '<span class="route-leg-summary-text"><strong>'+fromLabel+' → '+toLabel+'</strong><br/>'+distKm+' km, '+h+'h '+(m<10?('0'+m):m)+'m</span>';
+                                                                    }
+                                                                }
+                                                            }
+                                                        } catch(e) { console.warn('failed to populate single inline leg', i, e); }
                                                     }
                                                 }
-                                            } catch(e) { console.warn('failed to populate inline leg row', idx, e); }
+                                            } catch(e) { console.warn('failed to populate inline leg rows', e); }
                                         } catch(e) { console.warn('failed to render leg info', idx, e); }
                                     });
                                         } else {
@@ -875,7 +1152,11 @@ try {
                             }
                         } catch(e) { console.warn('planner-legs build failed', e); }
                     } catch(e){ console.error('Failed to draw route legs', e); }
-                    try { if (routeLayer && map) map.fitBounds(routeLayer.getBounds(), {padding:[20,20]}); } catch(e){}
+                    try {
+                        if (routeLayer && map) {
+                            try { var rb = routeLayer.getBounds(); if (rb && rb.pad) rb = rb.pad(0.18); fitBoundsSafe(rb); } catch(e) { try{ map.fitBounds(routeLayer.getBounds(), {padding:[40,40]}); }catch(e){} }
+                        }
+                    } catch(e){}
                     // distance in meters, duration in seconds
                     var distKm = (route.distance || 0)/1000.0;
                     var durH = (route.duration || 0)/3600.0; // hours
@@ -1026,16 +1307,12 @@ try {
     require_once __DIR__ . '/../../config/mysql.php';
     $db = get_db();
     $userId = $_SESSION['user_id'] ?? null;
-    if ($userId) {
-        // Load POI types only for locations this user has favorited
-        $stmt = $db->prepare('SELECT DISTINCT l.type FROM favorites f JOIN locations l ON l.id = f.location_id WHERE l.type IS NOT NULL AND l.type != "" AND f.user_id = :uid ORDER BY l.type ASC');
-        $stmt->bindValue(':uid', $userId, PDO::PARAM_INT);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $poiTypes[] = $row['type'];
-        }
+    // Load POI types from all locations (do not restrict to favorites)
+    $stmt = $db->prepare('SELECT DISTINCT type FROM locations WHERE type IS NOT NULL AND type != "" ORDER BY type ASC');
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $poiTypes[] = $row['type'];
     }
-    // If not logged in or no favorites, $poiTypes remains empty (user sees 'Please choose' only)
 } catch (Exception $e) {
     // ignore - leave $poiTypes empty
 }
@@ -1229,14 +1506,15 @@ try {
             }
             var country = (document.getElementById('country-filter') && document.getElementById('country-filter').value) || '';
             var state = (document.getElementById('state-filter') && document.getElementById('state-filter').value) || '';
-            var url = '<?php echo htmlspecialchars(api_base_url() . '/locations/search.php'); ?>?type='+encodeURIComponent(t);
+            // Use locations search endpoint which respects user-scoped filtering (favorites)
+            var url = '<?php echo htmlspecialchars(api_base_url() . '/locations/search.php'); ?>?type='+encodeURIComponent(t)+'&mine=1';
             if (country) url += '&country=' + encodeURIComponent(country);
             if (state) url += '&state=' + encodeURIComponent(state);
             fetch(url)
                 .then(function(r){ if (!r.ok) throw new Error('Network response was not ok'); return r.json(); })
                 .then(function(data){
-                    // API returns {page, per_page, data}
-                    var rows = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+                    // locations/search.php returns { data: [...] }
+                    var rows = Array.isArray(data.data) ? data.data : [];
                     locDropdown.innerHTML = '';
                     if (rows.length) {
                         rows.forEach(function(loc){
@@ -1379,18 +1657,18 @@ try {
                 return;
             }
 
-            var params = {
-                poi_type: poiType,
-                country: country || '',
-                state: state || ''
-            };
+            var searchUrl = '<?php echo htmlspecialchars(api_base_url() . '/locations/search.php'); ?>?type=' + encodeURIComponent(poiType);
+            if (country) searchUrl += '&country=' + encodeURIComponent(country);
+            if (state) searchUrl += '&state=' + encodeURIComponent(state);
 
-            fetch('<?php echo htmlspecialchars(api_base_url() . '/pois/by-type.php'); ?>?' + new URLSearchParams(params))
+            fetch(searchUrl)
                 .then(function(r) { if (!r.ok) throw new Error('Network response was not ok'); return r.json(); })
                 .then(function(data) {
-                    mapPOIs = data.pois || [];
+                    var rows = data.data || [];
+                    // Normalize to lat/lon expected by updateMapMarkers
+                    mapPOIs = rows.map(function(r){ r.lat = r.latitude; r.lon = r.longitude; return r; });
                     updateMapMarkers();
-                    
+
                     // If no POIs found, zoom to country/state instead
                     if (mapPOIs.length === 0 && country) {
                         zoomToCountryState(country, state);
@@ -1472,7 +1750,7 @@ try {
             });
 
             if (bounds.length > 0 && mapInstance) {
-                mapInstance.fitBounds(bounds, { padding: [30, 30] });
+                try { var _mb = L.latLngBounds(bounds); if (_mb && _mb.pad) _mb = _mb.pad(0.12); mapInstance.fitBounds(_mb, { padding: [40, 40] }); } catch(e) { try { mapInstance.fitBounds(bounds, { padding: [40, 40] }); } catch(e){} }
             }
         }
 
@@ -1489,7 +1767,7 @@ try {
                     if (js && js.ok && js.minLat !== undefined) {
                         var sw = [parseFloat(js.minLat), parseFloat(js.minLon)];
                         var ne = [parseFloat(js.maxLat), parseFloat(js.maxLon)];
-                        mapInstance.fitBounds([sw, ne], { padding: [20, 20] });
+                        try { var _cb = L.latLngBounds([sw, ne]); if (_cb && _cb.pad) _cb = _cb.pad(0.12); mapInstance.fitBounds(_cb, { padding: [40, 40] }); } catch(e) { try { mapInstance.fitBounds([sw, ne], { padding: [40, 40] }); } catch(e){} }
                     }
                 })
                 .catch(function(err) { console.warn('Country bbox zoom failed:', err); });

@@ -398,7 +398,7 @@ export default class PoiMapManager {
         try {
             const resp = await fetch(url, { method: 'GET', credentials: 'same-origin' });
             if (!resp.ok) return null;
-            const j = await resp.json();
+            const j = await this._safeParseJson(resp, url);
             if (j && j.success && j.csrf_token) {
                 window.CSRF_TOKEN = j.csrf_token;
                 this._csrfToken = j.csrf_token;
@@ -408,6 +408,23 @@ export default class PoiMapManager {
             // ignore
         }
         return null;
+    }
+
+    // Robust JSON parser: always read response as text then attempt JSON.parse.
+    // This prevents unhandled SyntaxError when server returns HTML or invalid payloads.
+    async _safeParseJson(resp, label) {
+        try {
+            if (!resp) return null;
+            const txt = await resp.text();
+            try {
+                return JSON.parse(txt);
+            } catch (e) {
+                try { console.warn('Invalid JSON from', label || 'server', txt && txt.slice ? txt.slice(0,200) : txt); } catch (ex) {}
+                throw new Error(`Invalid JSON from ${label || 'server'}`);
+            }
+        } catch (e) {
+            throw e;
+        }
     }
 
     static poiDisplayName(poi) {
@@ -1587,17 +1604,17 @@ export default class PoiMapManager {
                     });
                     
                     const urls = PoiMapManager.makeApiCandidates('api/locations/search.php', params.toString());
-                    let resp = null;
+                    let resp = null; let respUrl = null;
                     for (const u of urls) {
                         try {
                             resp = await fetch(u, { credentials: 'same-origin', signal: AbortSignal.timeout(10000) });
-                            if (resp && resp.ok) break;
+                            if (resp && resp.ok) { respUrl = u; break; }
                             try { if (window.POI_DEBUG && console && console.debug) console.debug('MySQL candidate response', { url: u, status: resp && resp.status }); } catch (e) {}
                             resp = null;
                         } catch (e) { resp = null; continue; }
                     }
                     if (resp) {
-                        const j = await resp.json();
+                        const j = await this._safeParseJson(resp, respUrl || 'MySQL');
                         const rows = Array.isArray(j.data) ? j.data : (Array.isArray(j) ? j : []);
                         // Normalize rows to match overpass shape expected later
                         const normalized = rows.map(p => {
@@ -1645,7 +1662,7 @@ export default class PoiMapManager {
                 });
 
                 const queryStr = params.toString();
-                let response = null;
+                let response = null; let responseUrl = null;
                 let lastError = null;
 
                     // Build Overpass API URL candidates now that query string is prepared
@@ -1665,15 +1682,15 @@ export default class PoiMapManager {
                     if (window.POI_DEBUG && console && console.debug) console.debug('Overpass candidates:', overpassApiCandidates);
 
                 // Try Overpass candidates and take the first successful response
-                for (const candidate of overpassApiCandidates) {
+                        for (const candidate of overpassApiCandidates) {
                     try {
                         if (window.POI_DEBUG && console && console.debug) console.debug('Overpass candidate ->', candidate);
                         const resp = await fetch(candidate, { credentials: 'same-origin', signal: AbortSignal.timeout(this.options.overpassTimeoutMs) });
-                        if (resp && resp.ok) {
-                            response = resp;
-                            if (window.POI_DEBUG && console && console.debug) console.debug('Overpass candidate succeeded', { url: candidate, status: resp.status });
-                            break;
-                        }
+                                if (resp && resp.ok) {
+                                    response = resp; responseUrl = candidate;
+                                    if (window.POI_DEBUG && console && console.debug) console.debug('Overpass candidate succeeded', { url: candidate, status: resp.status });
+                                    break;
+                                }
                         // Log non-OK responses for diagnostics
                         try {
                             let bodyText = '';
@@ -1703,16 +1720,16 @@ export default class PoiMapManager {
                         const bboxParam = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()].join(',');
                         const params2 = new URLSearchParams({ bbox: bboxParam, limit: 2000, mine: onlyMine ? 1 : 0, types: (serverTypes && serverTypes.length) ? serverTypes.join(',') : '' });
                         const urls = PoiMapManager.makeApiCandidates('api/locations/search.php', params2.toString());
-                        let resp = null;
+                        let resp = null; let respUrl = null;
                         for (const u of urls) {
                             try {
                                 resp = await fetch(u, { credentials: 'same-origin', signal: AbortSignal.timeout(10000) });
-                                if (resp && resp.ok) break;
+                                if (resp && resp.ok) { respUrl = u; break; }
                                 resp = null;
                             } catch (e) { resp = null; continue; }
                         }
                         if (resp && resp.ok) {
-                            const j = await resp.json();
+                            const j = await this._safeParseJson(resp, respUrl || 'MySQL');
                             rows = Array.isArray(j.data) ? j.data : (Array.isArray(j) ? j : []);
                         } else {
                             rows = [];
@@ -1722,9 +1739,9 @@ export default class PoiMapManager {
                         console.warn('MySQL fallback failed', e);
                         rows = [];
                     }
-                } else {
+                    } else {
                     try {
-                        const postJson = await response.json();
+                        const postJson = await this._safeParseJson(response, responseUrl || 'Overpass');
                         rows = Array.isArray(postJson) ? postJson : (postJson && Array.isArray(postJson.data) ? postJson.data : []);
                     } catch (e) {
                         // parsing failed - treat as empty and allow downstream handling
@@ -1771,7 +1788,7 @@ export default class PoiMapManager {
                         try {
                             const resp = await fetch(u, { credentials: 'same-origin', signal: AbortSignal.timeout(10000) });
                             if (!resp || !resp.ok) continue;
-                            const j = await resp.json();
+                            const j = await this._safeParseJson(resp, u);
                             const rowsUser = Array.isArray(j.data) ? j.data : (Array.isArray(j) ? j : []);
                             const normalizedUser = rowsUser.map(p => {
                                 const poi = Object.assign({}, p);
@@ -2173,10 +2190,9 @@ export default class PoiMapManager {
                     }
                     // attempt JSON parse
                     try {
-                        result = await response.json();
+                        result = await this._safeParseJson(response, c.url);
                     } catch (e) {
-                        const txt = await response.text();
-                        throw new Error(`Invalid JSON from ${c.url}: ${txt.slice(0,200)}`);
+                        throw new Error(`Invalid JSON from ${c.url}`);
                     }
                     break;
                 } catch (e) {
@@ -2206,7 +2222,7 @@ export default class PoiMapManager {
                             try {
                                 const resp = await fetch(u, { credentials: 'same-origin' });
                                 if (!resp.ok) continue;
-                                const j = await resp.json();
+                                const j = await this._safeParseJson(resp, u);
                                 // search.php returns { page, per_page, data: [rows] }
                                 if (j && Array.isArray(j.data) && j.data.length) { row = j.data[0]; }
                                 else if (Array.isArray(j) && j.length) { row = j[0]; }
@@ -2283,7 +2299,7 @@ export default class PoiMapManager {
                         response = await fetch(c.url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(visiblePois) });
                     }
                     if (!response.ok) { lastErr = new Error(`HTTP ${response.status} from ${c.url}`); response = null; continue; }
-                    try { result = await response.json(); } catch (e) { const txt = await response.text(); throw new Error(`Invalid JSON from ${c.url}: ${txt.slice(0,200)}`); }
+                    try { result = await this._safeParseJson(response, c.url); } catch (e) { const txt = ''; throw new Error(`Invalid JSON from ${c.url}`); }
                     break;
                 } catch (e) { lastErr = e; response = null; continue; }
             }
@@ -2334,7 +2350,7 @@ export default class PoiMapManager {
                         response = await fetch(c.url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(selected) });
                     }
                     if (!response.ok) { lastErr = new Error(`HTTP ${response.status} from ${c.url}`); response = null; continue; }
-                    try { result = await response.json(); } catch (e) { const txt = await response.text(); throw new Error(`Invalid JSON from ${c.url}: ${txt.slice(0,200)}`); }
+                    try { result = await this._safeParseJson(response, c.url); } catch (e) { throw new Error(`Invalid JSON from ${c.url}`); }
                     break;
                 } catch (e) { lastErr = e; response = null; continue; }
             }
@@ -2376,9 +2392,10 @@ export default class PoiMapManager {
             });
             let base = window.APP_BASE || '/';
             if (base.charAt(base.length - 1) !== '/') base += '/';
-            const response = await fetch(`${base}api/locations/search.php?${params.toString()}`);
+            const fetchUrl = `${base}api/locations/search.php?${params.toString()}`;
+            const response = await fetch(fetchUrl);
             if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-            const respJson = await response.json();
+            const respJson = await this._safeParseJson(response, fetchUrl);
             // Normalize responses: API may return an array or an object { page, per_page, data: [...] }
             const rows = Array.isArray(respJson) ? respJson : (respJson && Array.isArray(respJson.data) ? respJson.data : []);
             this.renderPoiList(rows);

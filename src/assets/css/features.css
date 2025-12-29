@@ -1922,12 +1922,12 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
    --poi-card-bg:#ffffff;
    --poi-card-border:#e6e6e6;
    --poi-text:#ffffff;
-   --poi-subtext:#6b6b6b;
+   --poi-subtext:#dddddd;
    --poi-accent:#2b8af3;
 }
 
 .poi-card{
-   background:var(--poi-card-bg);
+   background:#ffffff;
    color:var(--poi-text);
    border:1px solid var(--poi-card-border);
    border-radius:8px;
@@ -2244,7 +2244,7 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
     --poi-tile-gap: 12px;
     --poi-tile-padding: 12px;
     --poi-tile-item-height: 120px; /* approx height used to cap visible items */
-    --poi-tile-bg: var(--card-bg, #fff);
+    --poi-tile-bg: var(--card-bg, #d2d2d2);
     --poi-tile-border: var(--card-border, #e6e6e6);
     --poi-tile-radius: 8px;
     --poi-tile-shadow: 0 1px 2px rgba(0,0,0,0.04);
@@ -2262,8 +2262,8 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 .poi-tiles-list{max-height:calc((var(--poi-tile-item-height) * 5) + (var(--poi-tile-gap) * 4));overflow:auto;padding-right:6px}
 .poi-tile{background:var(--poi-tile-bg);border:1px solid var(--poi-tile-border);border-radius:var(--poi-tile-radius);padding:var(--poi-tile-padding);box-shadow:var(--poi-tile-shadow);display:flex;flex-direction:column;gap:8px}
 .poi-tile .poi-tile-header{display:flex;align-items:center;gap:8px}
-.poi-tile .poi-tile-title{font-size:var(--poi-tile-title-size);font-weight:600;color:var(--poi-tile-contrast-text,#000)}
-.poi-tile .poi-tile-meta{font-size:var(--poi-tile-sub-size);color:var(--muted-color,#666)}
+.poi-tile .poi-tile-title{font-size:var(--poi-tile-title-size);font-weight:600;color:var(--poi-tile-contrast-text,#ffffff)}
+.poi-tile .poi-tile-meta{font-size:var(--poi-tile-sub-size);color:var(--muted-color,#d5d5d5)}
 .poi-tile .poi-tile-actions{margin-top:auto;display:flex;gap:8px;justify-content:flex-end}
 .poi-tile .btn-small{padding:4px 8px;font-size:0.85rem}
 
@@ -2944,11 +2944,14 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 
 /* Saving Indicator */
 .saving-indicator {
-    display: inline-flex;
+    display: none;
     align-items: center;
     gap: 8px;
     font-size: 13px;
     color: var(--text-light, #b0b0b0);
+}
+.saving-indicator:not(.hidden) {
+    display: inline-flex;
 }
 
 .saving-indicator .spinner {
@@ -2958,6 +2961,51 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
     border-top-color: #0077cc;
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
+}
+
+/* Inline route leg row between items */
+.route-leg-row {
+    list-style: none;
+    padding: 8px 12px;
+    background: var(--bg-very-light, #fafafa);
+    border-left: 3px solid transparent;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.route-leg-row .route-leg-summary {
+    color: var(--text-muted, #666);
+    font-size: 13px;
+    text-align: center;
+}
+.route-leg-swatch {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 8px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset;
+}
+.route-leg-summary-text { display: inline-block; vertical-align: middle; }
+
+/* Planner summary stats: center and display distance/duration side-by-side */
+.route-summary-stats {
+    display: flex;
+    justify-content: center;
+}
+.route-summary-stats .planner-summary-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+.route-summary-stats #planner-distance,
+.route-summary-stats #planner-duration {
+    text-align: center;
+    font-weight: 600;
+    color: var(--text, #ffffff);
 }
 
 /* Drag Ghost Preview */
@@ -3254,7 +3302,7 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 }
 
 .map-selector-container {
-    height: 300px;
+    height: 550px;
     border-top: 1px solid var(--border-color, #404040);
 }
 

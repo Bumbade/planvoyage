@@ -259,6 +259,10 @@ if (!function_exists('view_url')) {
     } catch (\Exception $e) {
         // fail silently if i18n isn't available
     }
+    // Provide a lightweight non-module `escapeHtml` shim for legacy inline scripts
+    // This ensures pages using `escapeHtml(...)` in inline scripts don't fail
+    // when the module-based utils export isn't available yet.
+    echo "<script>(function(){if(typeof window.escapeHtml==='function')return;window.escapeHtml=function(s){if(s===null||s===undefined)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');};})();</script>\n";
     ?>
 </head>
 <body>

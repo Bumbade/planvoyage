@@ -68,19 +68,26 @@ try {
     @file_put_contents($logFile, json_encode(['ts' => date('c'), 'route_id' => $route_id, 'existingRows' => $existingRows, 'availableByLoc' => $availableByLoc]) . PHP_EOL, FILE_APPEND | LOCK_EX);
 } catch (Exception $e) { }
 
+// Map to keep arrival/departure values per resolved route_item id
+$datesById = [];
 foreach ($items as $it) {
     $id = 0; $pos = $idx;
     if (is_array($it)) {
         $pos = isset($it['position']) ? (int)$it['position'] : $idx;
         if (isset($it['item_id']) && (int)$it['item_id'] > 0) {
             $id = (int)$it['item_id'];
+            // store arrival/departure if present
+            $datesById[$id] = [ 'arrival' => isset($it['arrival']) ? $it['arrival'] : null, 'departure' => isset($it['departure']) ? $it['departure'] : null ];
         } elseif (isset($it['id']) && (int)$it['id'] > 0) {
             $id = (int)$it['id'];
+            $datesById[$id] = [ 'arrival' => isset($it['arrival']) ? $it['arrival'] : null, 'departure' => isset($it['departure']) ? $it['departure'] : null ];
         } elseif (isset($it['location_id']) && (int)$it['location_id'] > 0) {
             $lid = (int)$it['location_id'];
             // pop the next available route_item id for this location
             if (isset($availableByLoc[$lid]) && count($availableByLoc[$lid]) > 0) {
                 $id = array_shift($availableByLoc[$lid]);
+                // associate dates with the resolved id
+                $datesById[$id] = [ 'arrival' => isset($it['arrival']) ? $it['arrival'] : null, 'departure' => isset($it['departure']) ? $it['departure'] : null ];
             }
         }
     } elseif (is_scalar($it)) {
@@ -160,11 +167,18 @@ try {
         exit;
     }
 
-    // Update positions (preserve arrival/departure as-is)
+    // Update positions and arrival/departure when provided
     $db->beginTransaction();
-    $upd = $db->prepare('UPDATE route_items SET position = :pos WHERE id = :id AND route_id = :rid');
+    // prepared statement will set position, arrival, departure for given id
+    $upd = $db->prepare('UPDATE route_items SET position = :pos, arrival = :arrival, departure = :departure WHERE id = :id AND route_id = :rid');
     foreach ($ordered as $row) {
-        $upd->execute([':pos' => $row['pos'], ':id' => $row['id'], ':rid' => $route_id]);
+        $aid = $row['id'];
+        $arrival = null; $departure = null;
+        if (isset($datesById[$aid])) {
+            $arrival = $datesById[$aid]['arrival'] !== null ? trim($datesById[$aid]['arrival']) : null;
+            $departure = $datesById[$aid]['departure'] !== null ? trim($datesById[$aid]['departure']) : null;
+        }
+        $upd->execute([':pos' => $row['pos'], ':arrival' => $arrival, ':departure' => $departure, ':id' => $aid, ':rid' => $route_id]);
     }
     $db->commit();
 

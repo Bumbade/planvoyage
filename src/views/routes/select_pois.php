@@ -277,17 +277,16 @@ function loadPOIsFromoverpass() {
 
     poiStatus.textContent = i18n.loadingPois;
     
-    var params = {
-        poi_type: poiType,
-        country: country || '',
-        state: state || '',
-        location_id: locationId || ''
-    };
+    var searchUrl = '<?php echo htmlspecialchars(api_base_url() . '/locations/search.php'); ?>?type=' + encodeURIComponent(poiType) + '&mine=1';
+    if (country) searchUrl += '&country=' + encodeURIComponent(country);
+    if (state) searchUrl += '&state=' + encodeURIComponent(state);
+    if (locationId) searchUrl += '&id=' + encodeURIComponent(locationId);
 
-    fetch('<?php echo htmlspecialchars(api_base_url() . '/pois/by-type.php'); ?>?' + new URLSearchParams(params))
+    fetch(searchUrl)
         .then(function(r) { if (!r.ok) throw new Error('Network response was not ok'); return r.json(); })
         .then(function(data) {
-            posGISPOIs = data.pois || [];
+            var rows = data.data || [];
+            posGISPOIs = rows.map(function(r){ r.lat = r.latitude; r.lon = r.longitude; return r; });
             updateMapMarkers();
             poiStatus.textContent = i18n.poiCountFormat.replace('%count', posGISPOIs.length);
         })
