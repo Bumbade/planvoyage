@@ -6,7 +6,6 @@
 import PoiMapManager from './PoiMapManager.js';
 import PoiTiles from './PoiTiles.js';
 import initPoiFilters from './poi-filters.js';
-import loadPoiSearch from './poi-search-loader.js';
 
 function applyServerFilters() {
     try {
@@ -47,8 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyServerFilters();
 
         __pv_poi_manager.initMap();
-        // Ensure search input/button are present before UI binding
-        try { loadPoiSearch('#poi-filter'); } catch (e) {}
+        // Search input/button should be rendered server-side in the PHP view
         __pv_poi_manager.bindUIEvents();
         // Render filters from server config and restore saved selections
         try { initPoiFilters(); } catch (e) { if (window.DEBUG) console.warn('initPoiFilters failed', e); }
