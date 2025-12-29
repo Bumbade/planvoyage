@@ -1522,6 +1522,14 @@ try {
     <a href="<?php echo htmlspecialchars(app_url('/index.php/routes')); ?>" class="btn btn-back-routes"><?php echo htmlspecialchars(t('back_to_routes', 'Back to Routes')); ?></a>
 
     <!-- Insert Trip items (POIs) here so they appear after the Add form but before the interactive scripts -->
+    <style>
+        /* POI list: icon left, text stacked right */
+        .route-item-poi-info{display:flex;align-items:center;gap:10px;}
+        .route-item-poi-info .poi-icon{width:40px;height:40px;object-fit:contain;flex:0 0 40px;}
+        .route-item-poi-info .poi-text{display:flex;flex-direction:column;}
+        .route-item-poi-info .poi-name{line-height:1.05;}
+        .route-item-poi-info .route-item-poi-type{font-size:0.9em;color:#666}
+    </style>
     <h2><?php echo htmlspecialchars(t('trip_items_heading', 'Trip items (POIs)')); ?></h2>
     <div id="route-saving-indicator" class="saving-indicator hidden"> 
         <span class="spinner" aria-hidden="true"></span>
@@ -1579,10 +1587,12 @@ try {
                                     if ($norm) $logoFile = $norm . '.png';
                                 }
                             ?>
-                            <div class="route-item-poi-info" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;">
-                                <img src="<?php echo htmlspecialchars(asset_url('assets/icons/' . $logoFile)); ?>" alt="<?php echo htmlspecialchars($it['location_type'] ?? 'POI'); ?>" style="width:40px;height:40px;object-fit:contain;" />
-                                <strong class="poi-name"><?php echo htmlspecialchars($it['location_name'] ?? ''); ?></strong>
-                                <div class="route-item-poi-type"><?php echo htmlspecialchars($it['location_type'] ?? ''); ?></div>
+                            <div class="route-item-poi-info">
+                                <img class="poi-icon" src="<?php echo htmlspecialchars(asset_url('assets/icons/' . $logoFile)); ?>" alt="<?php echo htmlspecialchars($it['location_type'] ?? 'POI'); ?>" />
+                                <div class="poi-text">
+                                    <strong class="poi-name"><?php echo htmlspecialchars($it['location_name'] ?? ''); ?></strong>
+                                    <div class="route-item-poi-type"><?php echo htmlspecialchars($it['location_type'] ?? ''); ?></div>
+                                </div>
                             </div>
 
                             <div class="route-item-controls">
