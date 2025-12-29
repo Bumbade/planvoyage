@@ -19,6 +19,30 @@ if (file_exists(__DIR__ . '/../../helpers/import_log.php')) {
 }
 header('Content-Type: application/json; charset=utf-8');
 
+// API safety wrapper: disable direct error output and convert errors/exceptions
+// to a well-formed JSON response so clients never receive HTML error pages.
+ini_set('display_errors', '0');
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+set_exception_handler(function($e) {
+    error_log('API Exception: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+    if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+    http_response_code(500);
+    echo json_encode(['page' => 1, 'per_page' => 0, 'data' => [], 'error' => 'server_exception', 'message' => $e->getMessage()]);
+    exit;
+});
+register_shutdown_function(function() {
+    $err = error_get_last();
+    if ($err && in_array($err['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
+        error_log('API fatal error: ' . json_encode($err));
+        if (!headers_sent()) header('Content-Type: application/json; charset=utf-8');
+        http_response_code(500);
+        echo json_encode(['page' => 1, 'per_page' => 0, 'data' => [], 'error' => 'fatal', 'message' => 'Server fatal error occurred']);
+        exit;
+    }
+});
+
 $q = trim((string)($_GET['q'] ?? $_GET['search'] ?? ''));
 $typeFilter = trim($_GET['type'] ?? '');
 // support multiple types as CSV when filtering from frontend (e.g. types=food,hotel)
@@ -71,6 +95,15 @@ try {
     $hasTags = in_array('tags', $colNames, true) || in_array('tags_json', $colNames, true) || in_array('tags_text', $colNames, true);
     // detect optional state column
     $hasState = in_array('state', $colNames, true);
+    // pick best tags column for text searching when present - initialize early
+    $tagsColumn = null;
+    if (in_array('tags_text', $colNames, true)) {
+        $tagsColumn = 'tags_text';
+    } elseif (in_array('tags', $colNames, true)) {
+        $tagsColumn = 'tags';
+    } elseif (in_array('tags_json', $colNames, true)) {
+        $tagsColumn = 'tags_json';
+    }
     // pick best tags column for text searching when present
         // user filter SQL (use favorites table to determine ownership). If locations has a user_id column,
         // include it as an additional ownership condition; otherwise rely on favorites membership only.
