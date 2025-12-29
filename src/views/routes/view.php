@@ -1568,7 +1568,19 @@ try {
                                 <input type="date" class="departure-input <?php if ($pos === $totalItems): ?>readonly-date-field<?php endif; ?>" value="<?php echo htmlspecialchars($departureVal); ?>" <?php if ($pos === $totalItems): ?>readonly<?php endif; ?> />
                             </div>
 
-                            <div class="route-item-poi-info">
+                            <?php
+                                // determine icon filename for this POI
+                                $logoFile = 'poi.png';
+                                if (!empty($it['logo'])) {
+                                    $logoFile = $it['logo'];
+                                } elseif (!empty($it['location_type'])) {
+                                    $tkey = strtolower((string)$it['location_type']);
+                                    $norm = preg_replace('/[^a-z0-9_]/', '', str_replace(' ', '_', $tkey));
+                                    if ($norm) $logoFile = $norm . '.png';
+                                }
+                            ?>
+                            <div class="route-item-poi-info" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;">
+                                <img src="<?php echo htmlspecialchars(asset_url('assets/icons/' . $logoFile)); ?>" alt="<?php echo htmlspecialchars($it['location_type'] ?? 'POI'); ?>" style="width:40px;height:40px;object-fit:contain;" />
                                 <strong class="poi-name"><?php echo htmlspecialchars($it['location_name'] ?? ''); ?></strong>
                                 <div class="route-item-poi-type"><?php echo htmlspecialchars($it['location_type'] ?? ''); ?></div>
                             </div>
