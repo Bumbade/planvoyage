@@ -2511,11 +2511,53 @@ export default class PoiMapManager {
         const searchBtn = document.getElementById('poi-search-btn');
         try { if (window.POI_DEBUG && console && console.debug) console.debug('bindUIEvents: searchInput?', !!searchInput, 'searchBtn?', !!searchBtn); } catch (e) {}
         const applyFilterHandler = (ev) => {
-            ev.preventDefault();
+            ev && ev.preventDefault && ev.preventDefault();
             try { if (window.POI_DEBUG && console && console.debug) console.debug('applyFilterHandler invoked', { value: document.getElementById('poi-search')?.value }); } catch (e) {}
             try { this._flashSearchIndicator && this._flashSearchIndicator('Searching…'); } catch (e) {}
-            this.fetchAndPlot({ force: true });
-            this.fetchAndRenderFullPoiList();
+
+            // If a country is selected, prefer centering the map on that country
+            // and then performing the Overpass search for that area. Otherwise
+            // search within the current map bounds.
+            try {
+                const countrySel = document.getElementById('poi-country-select');
+                const opt = countrySel && countrySel.selectedOptions && countrySel.selectedOptions[0];
+                if (opt && opt.value && opt.dataset && opt.dataset.lat && opt.dataset.lng) {
+                    const lat = parseFloat(opt.dataset.lat);
+                    const lng = parseFloat(opt.dataset.lng);
+                    const area = opt.dataset && opt.dataset.area ? parseFloat(opt.dataset.area) : null;
+                    const estimateZoomFromArea = (areaVal) => {
+                        if (!areaVal || Number.isNaN(areaVal)) return 5;
+                        if (areaVal > 3000000) return 3;
+                        if (areaVal > 1000000) return 4;
+                        if (areaVal > 300000) return 5;
+                        if (areaVal > 100000) return 6;
+                        if (areaVal > 20000) return 7;
+                        if (areaVal > 5000) return 8;
+                        return 9;
+                    };
+                    const z = estimateZoomFromArea(area);
+
+                    // Center map first, then trigger fetch once move/zoom settles
+                    if (this.map) {
+                        const once = () => {
+                            try { this.map.off('moveend', once); } catch (e) {}
+                            this.hasLoadedOnce = true;
+                            this.fetchAndPlot({ force: true, forceOverpass: true });
+                            try { this.fetchAndRenderFullPoiList(); } catch (e) {}
+                        };
+                        this.map.on('moveend', once);
+                        try { this.map.setView([lat, lng], z, { animate: true }); } catch (e) { once(); }
+                        return;
+                    }
+                }
+            } catch (e) {
+                if (window.POI_DEBUG && console && console.warn) console.warn('applyFilterHandler country-centering failed', e);
+            }
+
+            // Default: perform search in current view
+            this.hasLoadedOnce = true;
+            this.fetchAndPlot({ force: true, forceOverpass: true });
+            try { this.fetchAndRenderFullPoiList(); } catch (e) {}
         };
         if (searchBtn) searchBtn.addEventListener('click', applyFilterHandler);
         if (searchInput) {
