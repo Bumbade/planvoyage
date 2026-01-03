@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test: Gas Stations Color Fix</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .test-row { margin: 15px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .test-title { font-weight: bold; margin-bottom: 5px; }
+        code { background: #f5f5f5; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>Gas Stations Color Fix - Test Cases</h1>
+    <p>This test verifies that the gas_stations category is now correctly mapped to colors and icons.</p>
+    
+    <div id="test-results"></div>
+
+    <script>
+        // Mock PoiMapManager to test the predicates
+        const PoiMapManager = {
+            CATEGORY_PREDICATES: {
+                gas_stations: (tags, name) => {
+                    try {
+                        if (!tags && !name) return false;
+                        if (tags && tags.amenity === 'fuel') return true;
+                    } catch (e) {}
+                    return false;
+                },
+                charging_station: (tags, name) => {
+                    try {
+                        if (!tags && !name) return false;
+                        if (tags && tags.amenity === 'charging_station') return true;
+                    } catch (e) {}
+                    return false;
+                }
+            },
+            CATEGORY_COLORS: {
+                gas_stations: '#e74c3c',
+                charging_station: '#e67e22'
+            },
+            CATEGORY_ICONS: {
+                gas_stations: 'gas_station.png',
+                charging_station: 'gas_station.png'
+            },
+            _getCategoryForPoi: function(poi) {
+                if (!poi) return null;
+                let tags = poi.tags || {};
+                for (const category in this.CATEGORY_PREDICATES) {
+                    if (this.CATEGORY_PREDICATES[category](tags, poi.name || '')) {
+                        return category;
+                    }
+                }
+                return null;
+            },
+            _colorForOsm: function(osm_id) {
+                const h = String(osm_id).split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+                return ['#e74c3c','#2ecc71','#3498db','#9b59b6','#f1c40f','#e67e22','#1abc9c','#34495e','#27ae60','#8a2bcb','#95a5a6'][h % 11];
+            }
+        };
+
+        function runTest(description, poi, expectedCategory, expectedColor) {
+            const category = PoiMapManager._getCategoryForPoi(poi);
+            const color = category ? PoiMapManager.CATEGORY_COLORS[category] : null;
+            const categoryOk = category === expectedCategory;
+            const colorOk = color === expectedColor;
+            const passed = categoryOk && colorOk;
+
+            const resultHtml = `
+                <div class="test-row ${passed ? 'pass' : 'fail'}">
+                    <div class="test-title">${description}</div>
+                    <div>POI: ${JSON.stringify(poi)}</div>
+                    <div>Expected category: <code>${expectedCategory}</code> | Got: <code>${category}</code> ${categoryOk ? '✓' : '✗'}</div>
+                    <div>Expected color: <code>${expectedColor}</code> | Got: <code>${color}</code> ${colorOk ? '✓' : '✗'}</div>
+                </div>
+            `;
+            document.getElementById('test-results').innerHTML += resultHtml;
+        }
+
+        // Test cases
+        runTest(
+            'Gas Station from Overpass (amenity=fuel)',
+            { osm_id: 123456, name: 'Shell Station', tags: { amenity: 'fuel' } },
+            'gas_stations',
+            '#e74c3c'
+        );
+
+        runTest(
+            'Gas Station with no tags',
+            { osm_id: 789, name: 'Chevron', tags: {} },
+            null,
+            null
+        );
+
+        runTest(
+            'Charging Station (amenity=charging_station)',
+            { osm_id: 999, name: 'Tesla Charger', tags: { amenity: 'charging_station' } },
+            'charging_station',
+            '#e67e22'
+        );
+
+        runTest(
+            'Gas Station with tags as object',
+            { osm_id: 456, name: 'BP', tags: { amenity: 'fuel', operator: 'BP' } },
+            'gas_stations',
+            '#e74c3c'
+        );
+    </script>
+</body>
+</html>

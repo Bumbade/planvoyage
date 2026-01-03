@@ -80,6 +80,8 @@ return [
     'poi_type.hotel' => 'Hotel',
     'poi_type.bank' => 'Banco / Cajero',
     'poi_type.fuel' => 'Combustible',
+    'poi_type.gas_stations' => 'Gasolinera',
+    'poi_type.charging_station' => 'Estación de carga',
     'poi_type.parking' => 'Aparcamiento',
     'poi_type.healthcare' => 'Salud',
     'poi_type.attraction' => 'Atracción',

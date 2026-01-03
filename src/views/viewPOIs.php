@@ -1,27 +1,32 @@
 <?php
 // viewPOIs.php - POI map page
-// Load env and i18n helpers, then include the global header (which emits the <head>)
-if (file_exists(__DIR__ . '/../config/env.php')) {
-    require_once __DIR__ . '/../config/env.php';
-}
-if (file_exists(__DIR__ . '/../helpers/url.php')) {
-    require_once __DIR__ . '/../helpers/url.php';
-}
-if (file_exists(__DIR__ . '/../helpers/i18n.php')) {
-    require_once __DIR__ . '/../helpers/i18n.php';
-}
-// POI helpers (category lists etc)
-if (file_exists(__DIR__ . '/../helpers/poi.php')) {
-    require_once __DIR__ . '/../helpers/poi.php';
-}
-// ensure session helpers available for CSRF token
-if (file_exists(__DIR__ . '/../helpers/session.php')) {
-    require_once __DIR__ . '/../helpers/session.php';
-    start_secure_session();
-}
-// ensure auth helpers available for admin checks
-if (file_exists(__DIR__ . '/../helpers/auth.php')) {
-    require_once __DIR__ . '/../helpers/auth.php';
+// Use centralized helper loader for robustness and clarity
+if (file_exists(__DIR__ . '/../bootstrap/RequiredHelpers.php')) {
+    require_once __DIR__ . '/../bootstrap/RequiredHelpers.php';
+    RequiredHelpers::loadPoiHelpers();
+} else {
+    // Fallback: direct loader if bootstrap not available
+    if (file_exists(__DIR__ . '/../config/env.php')) {
+        require_once __DIR__ . '/../config/env.php';
+    }
+    if (file_exists(__DIR__ . '/../helpers/url.php')) {
+        require_once __DIR__ . '/../helpers/url.php';
+    }
+    if (file_exists(__DIR__ . '/../helpers/i18n.php')) {
+        require_once __DIR__ . '/../helpers/i18n.php';
+    }
+    if (file_exists(__DIR__ . '/../helpers/poi.php')) {
+        require_once __DIR__ . '/../helpers/poi.php';
+    }
+    if (file_exists(__DIR__ . '/../helpers/session.php')) {
+        require_once __DIR__ . '/../helpers/session.php';
+        if (function_exists('start_secure_session')) {
+            start_secure_session();
+        }
+    }
+    if (file_exists(__DIR__ . '/../helpers/auth.php')) {
+        require_once __DIR__ . '/../helpers/auth.php';
+    }
 }
 
 // CRITICAL: Set global appBase BEFORE any includes
@@ -52,6 +57,9 @@ if (!empty($envApp)) {
     $GLOBALS['appBase'] = $appBase;
 }
 
+// Cache asset version early (computed once, not via filemtime() multiple times)
+$ASSET_VERSION = defined('APP_VERSION') ? APP_VERSION : filemtime(__FILE__);
+
 // Inject Leaflet CSS and MarkerCluster CSS into the head
 // Note: poi-popups.css and poi-controls.css are now consolidated in features.css
 $HEAD_EXTRA = '';
@@ -60,17 +68,10 @@ $HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leafle
 $HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.Default.css') . '">';
 // Load centralized POI cluster overrides (no inline styles)
 require_once __DIR__ . '/../includes/header.php';
-// poi-clusters.css merged into features.css; no separate include required
-require_once __DIR__ . '/../includes/header.php';
 // All POI CSS (popups, controls) now loaded via features.css
 // single PHP close tag below to avoid accidental whitespace/output
 ?>
-<?php $flashOk = function_exists('flash_get') ? flash_get('success') : null; if ($flashOk): ?>
-    <div class="flash-success"><?php echo htmlspecialchars($flashOk); ?></div>
-<?php endif; ?>
-<?php $flashErr = function_exists('flash_get') ? flash_get('error') : null; if ($flashErr): ?>
-    <div class="error"><?php echo htmlspecialchars($flashErr); ?></div>
-<?php endif; ?>
+<?php renderFlashMessages(); ?>
 
 <main>
     <h1><?php echo t('pois', 'POIs'); ?></h1>
@@ -92,7 +93,7 @@ require_once __DIR__ . '/../includes/header.php';
                 <input id="poi-search" type="search" placeholder="<?php echo t('pois_search_placeholder','Search by name (press Enter)'); ?>" class="form-input-flex" />
                 <button id="poi-search-btn" class="btn"><?php echo t('pois_search','Search'); ?></button>
                 <!-- Country preselection: centers map on chosen country and triggers POI load -->
-                <select id="poi-country-select" class="form-input" style="min-width:200px;margin-left:6px">
+                <select id="poi-country-select" class="form-input">
                     <option value=""><?php echo htmlspecialchars(t('select_country','Select country')); ?></option>
                 </select>
             </div>
@@ -102,6 +103,7 @@ require_once __DIR__ . '/../includes/header.php';
 <?php
 // Render filter buttons client-side. Server provides an allow-list of categories
 // the current user is permitted to see to avoid rendering protected options.
+// Note: $allowed will be loaded from poi-config.php API, no need to render inline
 $allowed = [];
 // Prefer a central provider function if available, otherwise fall back to local list.
 if (function_exists('get_poi_categories')) {
@@ -119,13 +121,8 @@ foreach ($allKeys as $k) {
     }
 }
 ?>
-<script>
-    // Expose minimal allow-list for the client-side renderer
-    window.POI_ALLOWED_CATEGORIES = <?php echo json_encode($allowed, JSON_UNESCAPED_UNICODE); ?>;
-</script>
 
         <!-- POI filters loaded from server-generated API endpoint to avoid large inline scripts -->
-        <?php $ASSET_VERSION = defined('APP_VERSION') ? APP_VERSION : filemtime(__FILE__); ?>
         <script src="<?php echo htmlspecialchars(app_url('src/api/poi-config.php')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
         <!-- Filters are rendered by `src/assets/js/poi-filters.js` (imported in poi-entry.js) -->
 
@@ -188,253 +185,42 @@ foreach ($allKeys as $k) {
             </div>
         </details>
     <?php endif; ?>
-    <style>
-    /* My POIs section: compact, tile-like appearance to match POI grids */
-    .my-pois-section { margin-top: 1rem; border: 1px solid var(--border-color, #e6e6e6); border-radius: 6px; background: var(--bg-lighter, #ffffff); overflow: hidden; }
-    .my-pois-section .section-summary { display:flex; justify-content:space-between; align-items:center; padding:0.6rem 1rem; cursor:pointer; }
-    .my-pois-section .section-title { margin:0; font-size:1.05rem; }
-    .my-pois-section .poi-tiles { padding:0.75rem 1rem; display:block; }
-    .my-pois-section .poi-country-section { margin-bottom:0.6rem; border-bottom:1px solid rgba(0,0,0,0.04); padding-bottom:0.6rem; }
-    .poi-tiles .poi-type-section summary { cursor:pointer; }
-    .poi-tiles .poi-tiles-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem; }
-    .poi-tile { background: var(--bg-light, #fbfbfb); padding:0.6rem; border-radius:6px; border:1px solid rgba(0,0,0,0.04); }
-    .poi-tile-title { font-weight:600; margin-bottom:0.35rem; }
-    .poi-tile-actions { margin-top:0.5rem; }
-    @media (max-width:800px){ .poi-tiles .poi-tiles-grid { grid-template-columns: repeat(1, 1fr); } }
-    </style>
 </main>
 
-<!-- Leaflet JS -->
-<script src="<?php echo asset_url('assets/vendor/leaflet/leaflet.js'); ?>" crossorigin=""></script>
-<!-- MarkerCluster JS -->
-<script src="<?php echo asset_url('assets/vendor/leaflet.markercluster/leaflet.markercluster.js'); ?>"></script>
+<!-- Leaflet JS (defer: loaded after page render) -->
+<script src="<?php echo asset_url('assets/vendor/leaflet/leaflet.js'); ?>" crossorigin="" defer></script>
+<!-- MarkerCluster JS (defer) -->
+<script src="<?php echo asset_url('assets/vendor/leaflet.markercluster/leaflet.markercluster.js'); ?>" defer></script>
 
 <!-- Ensure Leaflet uses CDN images if local images are missing -->
-<script>
-    (function(){
-        try {
-            if (typeof L === 'undefined' || !L || !L.Icon || !L.Icon.Default) return;
-            var cdnPath = 'https://unpkg.com/leaflet@1.9.4/dist/images/';
-            L.Icon.Default.mergeOptions({
-                iconUrl: cdnPath + 'marker-icon.png',
-                iconRetinaUrl: cdnPath + 'marker-icon-2x.png',
-                shadowUrl: cdnPath + 'marker-shadow.png'
-            });
-            if (window.DEBUG) console.log('Leaflet icons: using CDN images from', cdnPath);
-        } catch (e) {
-            if (window.DEBUG) console.warn('Could not set Leaflet default icon URLs', e);
-        }
-    })();
-</script>
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/leaflet-icons-fix.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
 <script>
-    // Compute JS-visible base that points to the `src/` directory under the app base.
-    <?php
-    $norm = rtrim($GLOBALS['appBase'] ?? '', '/');
-    if ($norm === '') {
-        $jsBase = '/src';
-    } elseif (preg_match('#/src$#', $norm)) {
-        $jsBase = $norm;
-    } else {
-        $jsBase = $norm . '/src';
-    }
-    // expose asset version (computed above near poi-config)
-    $asset_ver = isset($ASSET_VERSION) ? $ASSET_VERSION : (defined('APP_VERSION') ? APP_VERSION : filemtime(__FILE__));
-    // DEBUG flag
-    $debugFlag = (bool) ((getenv('APP_DEBUG') !== false && getenv('APP_DEBUG') !== '') || (defined('DEBUG') && DEBUG));
-    ?>
-    window.APP_BASE = <?php echo json_encode($jsBase); ?>;
-    window.DEBUG = <?php echo json_encode($debugFlag); ?>;
-    if (window.DEBUG) console.log('DEBUG: window.APP_BASE set to: ' + window.APP_BASE);
-    // Expose a canonical icons base so frontend can resolve logo filenames reliably
-    try {
-        window.ICONS_BASE = (window.APP_BASE || '') + '/assets/icons/';
-        if (window.DEBUG) console.log('DEBUG: window.ICONS_BASE set to: ' + window.ICONS_BASE);
-    } catch (e) {
-        if (window.DEBUG) console.warn('Could not set ICONS_BASE', e);
-    }
-    // Enable POI-specific debug logging when app DEBUG is on
-    window.POI_DEBUG = !!window.DEBUG;
-    if (window.POI_DEBUG) console.log('POI_DEBUG enabled');
-    // Alias for console convenience: some developers type `APP_DEBUG` in DevTools
-    // Keep this in sync with `window.DEBUG` to avoid ReferenceError when inspected.
-    window.APP_DEBUG = window.DEBUG;
-    // Expose current logged-in user id (or null) for client-side logic
+    // POI-specific globals (general config in poi-globals.js)
+    // Expose current logged-in user id (or null) for POI-specific logic
     window.CURRENT_USER_ID = <?php echo json_encode($_SESSION['user_id'] ?? null); ?>;
     if (window.DEBUG) console.log('DEBUG: window.CURRENT_USER_ID set to: ' + window.CURRENT_USER_ID);
     // expose CSRF token for POST actions from the frontend
     window.CSRF_TOKEN = <?php echo json_encode(function_exists('csrf_token') ? csrf_token() : ''); ?>;
 </script>
 
-<script>
-    // Expose canonical API base for client requests. Prefer configured api_url(),
-    // otherwise derive from APP_BASE by removing trailing '/src'.
-    <?php
-    $apiCandidate = rtrim(api_url(''), '/');
-    if (empty($apiCandidate) || $apiCandidate === '/') {
-        $derived = preg_replace('#/src$#', '', $jsBase);
-        if ($derived === '') $derived = '/';
-        $apiBase = $derived;
-    } else {
-        $apiBase = $apiCandidate;
-    }
-    ?>
-    window.API_BASE = <?php echo json_encode($apiBase); ?>;
-    if (window.DEBUG) console.log('DEBUG: window.API_BASE set to: ' + window.API_BASE);
-</script>
+<!-- Global configuration (loaded early, before other modules) -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/poi-globals.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
 
-<script>
-    // Country preselection: populate from restcountries and center map on select
-    (function(){
-        function populateCountries(sel, list){
-            try{
-                list.sort((a,b)=>a.name.common.localeCompare(b.name.common));
-                for(const c of list){
-                    const o = document.createElement('option');
-                    o.value = c.cca2 || c.cca3 || (c.name && c.name.common) || '';
-                    o.textContent = (c.name && c.name.common) ? c.name.common : o.value;
-                            if (Array.isArray(c.latlng) && c.latlng.length>=2) {
-                                o.dataset.lat = String(c.latlng[0]);
-                                o.dataset.lng = String(c.latlng[1]);
-                            }
-                            if (c.area !== undefined && c.area !== null) {
-                                o.dataset.area = String(c.area);
-                            }
-                    sel.appendChild(o);
-                }
-            }catch(e){ console.warn('populateCountries failed', e); }
-        }
+<!-- Country preselection: populate from backend and center map on select (defer) -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/poi-country-select.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
-        document.addEventListener('DOMContentLoaded', ()=>{
-            const sel = document.getElementById('poi-country-select');
-            if(!sel) return;
-            // Load country list (lightweight fields, include area for zoom heuristics)
-            fetch('https://restcountries.com/v3.1/all?fields=name,cca2,cca3,latlng,area')
-                .then(r=>r.ok? r.json() : Promise.reject(r.status))
-                .then(js=> populateCountries(sel, js || []))
-                .catch(e=>{
-                    console.warn('Could not load country list', e);
-                    // Fallback: populate a small curated country list when external API fails
-                    const fallback = [
-                        { name: { common: 'Germany' }, cca2: 'DE', latlng: [51, 9], area: 357022 },
-                        { name: { common: 'United States' }, cca2: 'US', latlng: [38, -97], area: 9525067 },
-                        { name: { common: 'United Kingdom' }, cca2: 'GB', latlng: [54, -2], area: 244376 },
-                        { name: { common: 'France' }, cca2: 'FR', latlng: [46, 2], area: 643801 },
-                        { name: { common: 'Canada' }, cca2: 'CA', latlng: [60, -95], area: 9984670 }
-                    ];
-                    try { populateCountries(sel, fallback); } catch (e2) { console.warn('populateCountries fallback failed', e2); }
-                });
+<!-- I18N filter group titles (loaded before filters renderer, defer) -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/poi-i18n-loader.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
-            sel.addEventListener('change', async ()=>{
-                const opt = sel.selectedOptions && sel.selectedOptions[0];
-                if(!opt) return;
-                const lat = opt.dataset.lat, lng = opt.dataset.lng;
-                if(!lat || !lng) return;
-                try{
-                    // estimate zoom from country area (km^2) when available
-                    const area = opt.dataset && opt.dataset.area ? parseFloat(opt.dataset.area) : null;
-                    let z = 5;
-                    if (area && !Number.isNaN(area)){
-                        if (area > 3000000) z = 3;
-                        else if (area > 1000000) z = 4;
-                        else if (area > 300000) z = 5;
-                        else if (area > 100000) z = 6;
-                        else if (area > 20000) z = 7;
-                        else if (area > 5000) z = 8;
-                        else z = 9;
-                    } else {
-                        z = 5;
-                    }
-
-                    // prefer the running manager instance exposed by poi-entry.js
-                    if(window.PV_POI_MANAGER && window.PV_POI_MANAGER.map){
-                        window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], z, {animate:true});
-                        try{ window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){ if(window.DEBUG) console.warn('fetchAndPlot failed after country select', e); }
-                    } else {
-                        // if manager not ready yet, wait for it
-                        document.addEventListener('PV_POI_MANAGER_READY', ()=>{
-                            try{ window.PV_POI_MANAGER.map.setView([parseFloat(lat), parseFloat(lng)], z, {animate:true}); window.PV_POI_MANAGER.fetchAndPlot({force:true}); }catch(e){}
-                        }, {once:true});
-                    }
-                }catch(e){ console.warn('Country select handler failed', e); }
-            });
-        });
-    })();
-</script>
-
-<script>
-    // Expose localized filter group titles for client-side renderer
-    (function(){
-        try {
-            window.I18N = window.I18N || {};
-            window.I18N.filter_groups = {
-                'tourism': <?php echo json_encode(t('filter_group.tourism','Tourismus')); ?>,
-                'gastronomy': <?php echo json_encode(t('filter_group.gastronomy','Gastronomie')); ?>,
-                'mobility': <?php echo json_encode(t('filter_group.mobility','Infrastruktur')); ?>,
-                'services': <?php echo json_encode(t('filter_group.services','Dienstleistungen')); ?>,
-                'sport': <?php echo json_encode(t('filter_group.sport','Sport')); ?>,
-                'specialty': <?php echo json_encode(t('filter_group.specialty','Spezialhandel')); ?>
-            };
-        } catch (e) {
-            if (window.DEBUG) console.warn('Could not set filter group i18n', e);
-        }
-    })();
-</script>
-
-<!-- Asset diagnostic helper: checks key CSS/JS URLs and logs document.styleSheets -->
-<script>
-    (function(){
-        try {
-            if (!window.DEBUG) return; // asset diagnostics only in DEBUG
-            const urls = <?php
-                $assetChecks = [
-                    asset_url('assets/vendor/leaflet/leaflet.css'),
-                    asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.css'),
-                    asset_url('assets/vendor/leaflet.markercluster/MarkerCluster.Default.css'),
-                    // poi-popups.css now in features.css
-                    asset_url('assets/vendor/leaflet/leaflet.js'),
-                    asset_url('assets/vendor/leaflet.markercluster/leaflet.markercluster.js'),
-                    asset_url('assets/js/PoiMapManager.js')
-                ];
-                echo json_encode($assetChecks, JSON_UNESCAPED_SLASHES);
-            ?>;
-
-            async function check(u){
-                try{
-                    const res = await fetch(u, {cache: 'no-store'});
-                    console.log('[ASSET CHECK]', u, res.status, res.ok ? 'OK' : 'NOT OK');
-                    return {url:u, status:res.status, ok:res.ok};
-                }catch(e){
-                    console.warn('[ASSET CHECK] fetch failed for', u, e && e.message ? e.message : e);
-                    return {url:u, error: String(e)};
-                }
-            }
-
-            Promise.all(urls.map(u => check(u))).then(results => {
-                console.group('Asset check results');
-                results.forEach(r => console.log(r));
-                try {
-                    console.group('Loaded styleSheets');
-                    for (const ss of document.styleSheets) {
-                        console.log(ss.href, ss.ownerNode && ss.ownerNode.tagName, ss.disabled ? 'disabled' : 'enabled');
-                    }
-                    console.groupEnd();
-                } catch (e) {
-                    if (window.DEBUG) console.warn('Could not enumerate document.styleSheets', e);
-                }
-                console.groupEnd();
-            }).catch(e => console.warn('Asset checks failed', e));
-        } catch (e) {
-            if (window.DEBUG) console.error('Asset diagnostic setup failed', e);
-        }
-    })();
-</script>
+<!-- Asset diagnostic helper: only runs in DEBUG mode (defer) -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/poi-asset-diagnostics.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
 <!-- Secure popup template helper (loaded before ESM bootstrap) -->
-<script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
-<!-- ESM entry that bootstraps PoiMapManager and PoiTiles -->
-<script type="module" src="<?php echo htmlspecialchars(asset_url('assets/js/poi-entry.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
+<!-- ESM entry that bootstraps PoiMapManager and PoiTiles (defer for non-critical load) -->
+<script type="module" src="<?php echo htmlspecialchars(asset_url('assets/js/poi-entry.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
 <?php
 // Include footer with Bootstrap JS and main.js

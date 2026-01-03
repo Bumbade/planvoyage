@@ -1,4 +1,32 @@
 <?php
+// Security headers (set early, before any content)
+// Prevent clickjacking attacks
+if (!headers_sent()) {
+    header('X-Frame-Options: SAMEORIGIN');
+    // Enable XSS protection in older browsers
+    header('X-XSS-Protection: 1; mode=block');
+    // Prevent MIME type sniffing
+    header('X-Content-Type-Options: nosniff');
+    // Content Security Policy: Allow API calls, CDN resources, and dev tools
+    $csp_parts = [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net",
+        "style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net",
+        "img-src 'self' data: https:",
+        "font-src 'self' https: data:",
+        "connect-src 'self' https: http://localhost:* ws: wss:", // Allow API calls, dev server, websockets
+    ];
+    // In DEBUG mode, allow source maps from CDN
+    if ((getenv('APP_DEBUG') !== false && getenv('APP_DEBUG') !== '') || (defined('DEBUG') && DEBUG)) {
+        $csp_parts[] = "script-src-elem 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net";
+    }
+    header("Content-Security-Policy: " . implode("; ", $csp_parts));
+    // Referrer Policy: limit info sent to external sites
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    // Feature Policy / Permissions Policy (restrict browser features)
+    header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
+}
+
 // Header include with asset URL helper so CSS/JS resolve when app is in a subfolder
 if (file_exists(__DIR__ . '/../config/env.php')) {
     require_once __DIR__ . '/../config/env.php';
@@ -63,11 +91,59 @@ if (!function_exists('view_url')) {
 <head>
     
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5, user-scalable=yes">
+    <meta name="theme-color" content="#2b8af3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="<?php echo htmlspecialchars(t('site_description', 'Plan your travels with PlanVoyage')); ?>">
     <title><?php echo htmlspecialchars(t('site_title', 'PlanVoyage.de')); ?></title>
     
-    <!-- Favicon -->
+    <!-- Set global APP_BASE and API_BASE EARLY (before any scripts load) -->
+    <script>
+        <?php
+        // Compute APP_BASE from $GLOBALS if available, or from $_SERVER
+        $appBase = $GLOBALS['appBase'] ?? '';
+        if (empty($appBase)) {
+            $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+            $base = rtrim(dirname($script), '/');
+            if (preg_match('#/src/(admin|views|api|controllers)/?$#', $base)) {
+                $base = dirname($base);
+            }
+            if (basename($base) === 'src') {
+                $base = dirname($base);
+            }
+            if ($base === '/' || $base === '.') {
+                $base = '';
+            }
+            $appBase = $base;
+        }
+        
+        // Compute JS base
+        $norm = rtrim($appBase, '/');
+        if ($norm === '') {
+            $jsBase = '/src';
+        } elseif (preg_match('#/src$#', $norm)) {
+            $jsBase = $norm;
+        } else {
+            $jsBase = $norm . '/src';
+        }
+        
+        // Compute API base
+        $apiCandidate = function_exists('api_url') ? rtrim(api_url(''), '/') : '';
+        if (empty($apiCandidate) || $apiCandidate === '/') {
+            $apiBase = preg_replace('#/src$#', '', $jsBase) ?: '/';
+        } else {
+            $apiBase = $apiCandidate;
+        }
+        ?>
+        window.APP_BASE = <?php echo json_encode($jsBase); ?>;
+        window.API_BASE = <?php echo json_encode($apiBase); ?>;
+        window.DEBUG = <?php echo json_encode((bool) ((getenv('APP_DEBUG') !== false && getenv('APP_DEBUG') !== '') || (defined('DEBUG') && DEBUG))); ?>;
+    </script>
+    
+    <!-- Favicon & Apple Icon -->
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars(asset_url('assets/img/favicon.ico')); ?>">
+    <link rel="apple-touch-icon" href="<?php echo htmlspecialchars(asset_url('assets/img/apple-touch-icon.png')); ?>">>
     
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

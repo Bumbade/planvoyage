@@ -87,10 +87,17 @@ export default class PoiMapManager {
             } catch (e) {}
             return false;
         },
-        fuel: (tags, name) => {
+        gas_stations: (tags, name) => {
             try {
                 if (!tags && !name) return false;
-                if (tags && (tags.amenity === 'fuel' || tags.amenity === 'charging_station')) return true;
+                if (tags && tags.amenity === 'fuel') return true;
+            } catch (e) {}
+            return false;
+        },
+        charging_station: (tags, name) => {
+            try {
+                if (!tags && !name) return false;
+                if (tags && tags.amenity === 'charging_station') return true;
             } catch (e) {}
             return false;
         },
@@ -211,7 +218,7 @@ export default class PoiMapManager {
         gas_stations: '#e74c3c',
         charging_station: '#e67e22',
         parking: '#95a5a6',
-        bank: '#27ae60',
+        bank: '#057727ff',
         healthcare: '#27ae60',
         fitness: '#16a085',
         laundry: '#3498db',
@@ -294,7 +301,7 @@ export default class PoiMapManager {
         tourist_info: 'T',
         food: 'F',
         nightlife: 'N',
-        fuel: 'G',
+        gas_stations: 'G',
         parking: 'P',
         bank: 'B',
         healthcare: 'H',
@@ -967,13 +974,12 @@ export default class PoiMapManager {
                         window.history.replaceState(null, '', u.toString());
                     }
                 } catch (e) {}
-                // If a popup is currently open, skip the automatic refresh to avoid
-                // clearing/recreating markers which closes popups and can hide icons.
-                if (this._popupOpenFlag) return;
-                if (this.hasLoadedOnce) this.fetchAndPlot();
+                // NOTE: Disabled automatic fetchAndPlot() on moveend to prevent marker flashing
+                // when zooming into clusters. Instead, use zoomend event below.
             }, 300);
         });
-        // Also update URL when zoom changes (separate event) to ensure z is always current
+        // Load POIs when zoom level changes (with debounce to allow cluster UI to update first)
+        this._zoomDebounce = null;
         this.map.on('zoomend', () => {
             try {
                 const c = this.map.getCenter();
@@ -984,6 +990,16 @@ export default class PoiMapManager {
                 u.searchParams.set('z', String(z));
                 window.history.replaceState(null, '', u.toString());
             } catch (e) {}
+            
+            // Load POIs when zoom level changes (on cluster expansion or manual zoom)
+            // but skip if a popup is open to avoid clearing markers
+            // Use debounce to allow cluster UI to render first
+            if (!this._popupOpenFlag && this.hasLoadedOnce) {
+                clearTimeout(this._zoomDebounce);
+                this._zoomDebounce = setTimeout(() => {
+                    this.fetchAndPlot();
+                }, 600); // Wait 600ms to let cluster expand/close animations finish
+            }
         });
     }
 
