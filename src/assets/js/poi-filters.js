@@ -1,8 +1,13 @@
 export default function initPoiFilters() {
     try {
-        const container = document.getElementById('poi-filter');
-        if (!container) {
-            console.warn('POI filter container not found');
+        // Neue Container für die vier Seiten
+        const topContainer = document.getElementById('poi-filters-top');
+        const leftContainer = document.getElementById('poi-filters-left');
+        const rightContainer = document.getElementById('poi-filters-right');
+        const bottomContainer = document.getElementById('poi-filters-bottom');
+        
+        if (!topContainer || !leftContainer || !rightContainer || !bottomContainer) {
+            console.warn('POI filter containers not found');
             return;
         }
         
@@ -26,10 +31,11 @@ export default function initPoiFilters() {
         
         const labels = (window.I18N && (window.I18N.pois_types || window.I18N.pois)) || {};
         
-        // Preserve any existing load-controls element (we'll re-append after rendering)
-        const existingLoadControls = container.querySelector('#poi-load-controls');
-        // Clear container
-        container.innerHTML = '';
+        // Clear all containers
+        topContainer.innerHTML = '';
+        leftContainer.innerHTML = '';
+        rightContainer.innerHTML = '';
+        bottomContainer.innerHTML = '';
 
         // Map category keys to icon filenames (fallback to generic poi.png)
         const ICON_MAP = {
@@ -116,22 +122,29 @@ export default function initPoiFilters() {
         // Add any allowed keys not covered by GROUPS
         allowed.forEach(k => { if (orderedKeys.indexOf(k) === -1) orderedKeys.push(k); });
 
-        orderedKeys.forEach(function(k) {
+        // Verteile die Filter auf top und bottom (je 50%)
+        const halfCount = Math.ceil(orderedKeys.length / 2);
+        
+        orderedKeys.forEach(function(k, index) {
             if (!filters[k]) return;
             const item = renderFilterItem(k);
-            if (item) { container.appendChild(item); rendered.add(k); }
+            if (!item) return;
+            
+            // Erste Hälfte oben, zweite Hälfte unten
+            if (index < halfCount) {
+                topContainer.appendChild(item);
+            } else {
+                bottomContainer.appendChild(item);
+            }
+            rendered.add(k);
         });
 
         // Log rendered keys for debugging (helps identify missing categories)
         try {
             console.info('POI filters rendered:', Array.from(rendered).join(', '));
             console.info(`POI filters count: rendered=${rendered.size}, available=${Object.keys(filters).length}, allowed=${allowed.length}`);
+            console.info(`Distribution: top=${topContainer.children.length}, bottom=${bottomContainer.children.length}`);
         } catch (e) {}
-
-        // Re-append preserved load controls (so buttons placed in HTML stay visible)
-        if (existingLoadControls) {
-            container.appendChild(existingLoadControls);
-        }
         
         console.info(`POI filters initialized: ${allowed.length} categories`);
     } catch (e) {

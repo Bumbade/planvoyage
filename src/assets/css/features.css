@@ -1442,7 +1442,13 @@ label.poi-control-label {
 
 /* Center the page heading and map instruction paragraph */
 main > h1 { text-align: center; margin-bottom: 0.25rem; }
-#pois-controls { text-align: center; margin-bottom: 1rem; }
+#pois-controls { 
+    text-align: center; 
+    margin-bottom: 1rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* Center the search block when it's inside the side column */
 .pois-side .margin-top-small { text-align: center; }
@@ -1724,7 +1730,7 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
   gap:16px;
   align-items:flex-start;
 }
-.poi-main{flex:1;width:1200px}
+.poi-main{flex:1;width:1400px}
 .poi-side{width:1000px}
 .poi-img{max-width:100%;height:auto;border-radius:6px;box-shadow:0 2px 6px var(--shadow-08)}
 .poi-header{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px}
@@ -1961,11 +1967,85 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 .poi-country-content{ padding-top:8px; }
 
 /* POI map layout moved from inline viewPOIs.php */
-.pois-layout{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
-.pois-layout .pois-side{flex:0 0 800px;max-width:800px}
-#pois-map{flex:1 1 700px;max-width:1000px;background:#f5f5f5;border-radius:15px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);min-height:780px;margin-left:auto;margin-right:auto}
+/* Überschreibe main-Padding für mehr Platz auf der POI-Seite */
+main:has(.pois-layout) {
+    padding: 0.25rem;
+}
+
+/* Hauptcontainer für die neue Rahmen-Layout */
+.pois-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Controls-Side für Suche und Buttons oben */
+.pois-layout .pois-side {
+    width: 100%;
+    max-width: 1400px;
+    flex: 0 0 auto;
+}
+
+/* Container für Karte + Filter-Rahmen */
+.pois-map-with-filters {
+    position: relative;
+    width: 100%;
+    max-width: 1450px;
+    display: grid;
+    grid-template-areas:
+        "top-filters"
+        "map"
+        "bottom-filters";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    background: var(--bg-surface, #1a1a1a);
+    border-radius: 1rem;
+    border: 2px solid var(--color-border, #444);
+}
+
+/* Karte im Zentrum */
+#pois-map {
+    grid-area: map;
+    width: 100%;
+    min-height: 600px;
+    max-height: 800px;
+    background: #f5f5f5;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
 /* Ensure Leaflet controls remain visible above rounded corner */
 #pois-map .leaflet-control{z-index:650}
+
+/* Filter-Container an den vier Seiten */
+.poi-filters-top {
+    grid-area: top-filters;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.poi-filters-left,
+.poi-filters-right {
+    display: none;
+}
+
+.poi-filters-bottom {
+    grid-area: bottom-filters;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
 /* Filter item compact spacing (moved from inline styles) */
 #poi-filter .poi-filter-items{display:flex;flex-wrap:wrap;gap:3px;margin:0;padding:0}
 #poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}
@@ -1974,11 +2054,27 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 #poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex}
 /* tighten control buttons spacing */
 #poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px}
-/* Responsive: stack on narrow screens */
-@media (max-width: 900px){
-    .pois-layout{flex-direction:column}
-    .pois-layout .pois-side{width: 450px;max-width: 600px}
-    #pois-map{width:100%;max-width:none}
+
+/* Responsive: Auf schmalen Bildschirmen kleinere Filter */
+@media (max-width: 768px) {
+    #pois-map {
+        min-height: 400px;
+    }
+    
+    .poi-filter-label {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.6rem;
+    }
+    
+    .filter-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .poi-filters-top,
+    .poi-filters-bottom {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
 }
 
 /* Keep icons consistent */
@@ -2126,6 +2222,11 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 .poi-list-item-link:hover {
     color: #004085;
     text-decoration: underline;
+}
+
+/* Verstecke das veraltete poi-list Element */
+.poi-list {
+    display: none !important;
 }
 
 .list-group-item .poi-list-item-link {

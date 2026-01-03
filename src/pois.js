@@ -583,11 +583,11 @@
             var sel = [];
             // Prefer direct checkbox state if present
             try {
-                var checks = document.querySelectorAll('#poi-filter input.poi-filter-checkbox:checked');
+                var checks = document.querySelectorAll('input.poi-filter-checkbox:checked');
                 if (checks && checks.length) {
                     checks.forEach(function(cb){ if (cb.value) sel.push(cb.value); });
                 } else {
-                    var buttons = document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item');
+                    var buttons = document.querySelectorAll('.poi-filter-btn, .poi-filter-item');
                     buttons.forEach(function(btn){
                         if (btn.getAttribute && btn.getAttribute('aria-pressed') === 'true') {
                             var cat = btn.getAttribute('data-category');
@@ -615,11 +615,11 @@
                 // set checkbox states first
                 arr.forEach(function(cat){
                     try {
-                        var cb = document.querySelector('#poi-filter input[type=checkbox][value="' + cat + '"]');
+                        var cb = document.querySelector('input.poi-filter-checkbox[value="' + cat + '"]');
                         if (cb) { cb.checked = true; }
-                        var btn = document.querySelector('#poi-filter .poi-filter-btn[data-category="' + cat + '"]');
+                        var btn = document.querySelector('.poi-filter-btn[data-category="' + cat + '"]');
                         if (btn) btn.setAttribute('aria-pressed', 'true');
-                        var lbl = document.querySelector('#poi-filter .poi-filter-item[data-category="' + cat + '"]');
+                        var lbl = document.querySelector('.poi-filter-item[data-category="' + cat + '"]');
                         if (lbl) {
                             try { var lcb = lbl.querySelector('input[type=checkbox]'); if (lcb) lcb.checked = true; } catch(e){}
                         }
@@ -835,7 +835,7 @@
                 var postgisTypes = [];
                 function checkboxHasDataTags(cat) {
                     try {
-                        var cb = document.querySelector('#poi-filter input[type=checkbox][value="' + cat + '"]');
+                        var cb = document.querySelector('input.poi-filter-checkbox[value="' + cat + '"]');
                         if (!cb) return false;
                         if (cb.dataset && cb.dataset.tags) {
                             try { var a = JSON.parse(cb.dataset.tags); return Array.isArray(a) && a.length > 0; } catch(e) { return false; }
@@ -1493,7 +1493,7 @@
                 ev.preventDefault();
                 try { localStorage.removeItem('poi_selected_categories'); } catch (e) {}
                 try {
-                    var buttons = document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item');
+                    var buttons = document.querySelectorAll('.poi-filter-btn, .poi-filter-item');
                     buttons.forEach(function(btn){ 
                         try {
                             if (btn.setAttribute) btn.setAttribute('aria-pressed', 'false');
@@ -1516,7 +1516,7 @@
 
         // Auto-apply filters when buttons are clicked: toggle active state and trigger fetch
         try {
-            var filterButtons = document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item');
+            var filterButtons = document.querySelectorAll('.poi-filter-btn, .poi-filter-item');
             filterButtons.forEach(function(btn){
                 try {
                     btn.addEventListener('click', function (ev) {
@@ -1767,7 +1767,7 @@
     // render small color swatches and icons inside each filter button
     function renderFilterSwatches() {
         try {
-            var buttons = document.querySelectorAll('#poi-filter .poi-filter-btn');
+            var buttons = document.querySelectorAll('.poi-filter-btn');
             buttons.forEach(function(btn){
                 try {
                     var cat = btn.getAttribute('data-category');

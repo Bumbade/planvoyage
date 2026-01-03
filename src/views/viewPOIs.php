@@ -98,8 +98,15 @@ require_once __DIR__ . '/../includes/header.php';
                 </select>
             </div>
         </div>
-        <h3 id="poi-filter-heading"><?php echo t('pois_filter','Filter POIs'); ?></h3>
-        <fieldset id="poi-filter">
+        
+        <!-- Load/Reset Controls oben -->
+        <div id="poi-load-controls" style="margin-top: 1rem;">
+            <button id="load-pois-btn" class="btn"><?php echo htmlspecialchars(t('load_pois', 'Load POIs')); ?></button>
+            <button id="reset-poi-filters" class="btn"><?php echo htmlspecialchars(t('reset_filters', 'Reset Filters')); ?></button>
+        </div>
+        
+        <h3 id="poi-filter-heading" style="display:none;"><?php echo t('pois_filter','Filter POIs'); ?></h3>
+        <fieldset id="poi-filter" style="display:none;">
 <?php
 // Render filter buttons client-side. Server provides an allow-list of categories
 // the current user is permitted to see to avoid rendering protected options.
@@ -127,14 +134,9 @@ foreach ($allKeys as $k) {
         <!-- Filters are rendered by `src/assets/js/poi-filters.js` (imported in poi-entry.js) -->
 
         <!-- POI Filter Container (populated by JavaScript) -->
-        <fieldset id="poi-filter-section">
+        <fieldset id="poi-filter-section" style="display:none;">
             <legend id="poi-filter-heading"><?php echo t('pois_filter_categories', 'Categories'); ?></legend>
             <div id="poi-filter" role="group" aria-labelledby="poi-filter-heading">
-                <!-- Load / Reset buttons centered under the filter (placed inside the grid so they span all columns) -->
-                <div id="poi-load-controls">
-                    <button id="load-pois-btn" class="btn"><?php echo htmlspecialchars(t('load_pois', 'Load POIs')); ?></button>
-                    <button id="reset-poi-filters" class="btn"><?php echo htmlspecialchars(t('reset_filters', 'Reset filters')); ?></button>
-                </div>
             </div>
         </fieldset>
         <!-- POI Control Buttons -->
@@ -164,7 +166,24 @@ foreach ($allKeys as $k) {
                 </div>
             </div>
     </div>
-    <div id="pois-map" class="pois-map"></div>
+    
+    <!-- Karte mit Filter-Rahmen -->
+    <div class="pois-map-with-filters">
+        <!-- Filter oben -->
+        <div class="poi-filters-top" id="poi-filters-top"></div>
+        
+        <!-- Filter links -->
+        <div class="poi-filters-left" id="poi-filters-left"></div>
+        
+        <!-- Karte in der Mitte -->
+        <div id="pois-map" class="pois-map"></div>
+        
+        <!-- Filter rechts -->
+        <div class="poi-filters-right" id="poi-filters-right"></div>
+        
+        <!-- Filter unten -->
+        <div class="poi-filters-bottom" id="poi-filters-bottom"></div>
+    </div>
     </div><!-- .pois-layout -->
 
     <div id="poi-list" class="poi-list" aria-live="polite"></div>
@@ -220,6 +239,8 @@ foreach ($allKeys as $k) {
 <script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
 <!-- ESM entry that bootstraps PoiMapManager and PoiTiles (defer for non-critical load) -->
+<!-- Quick-search module (separate from filter-driven map search) -->
+<script type="module" src="<?php echo htmlspecialchars(asset_url('assets/js/PoiMapManager_Quick.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 <script type="module" src="<?php echo htmlspecialchars(asset_url('assets/js/poi-entry.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
 <?php

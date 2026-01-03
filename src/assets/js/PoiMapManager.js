@@ -2493,7 +2493,8 @@ export default class PoiMapManager {
                 const loadBtn = document.getElementById('load-pois-btn');
                 if (!loadBtn) return;
                 // Active if any checkbox selected, search text present, or 'only mine' checked
-                const anyChecked = !!document.querySelector('#poi-filter input[type=checkbox]:checked');
+                // Updated: Check for checkboxes in new filter containers (poi-filters-top, poi-filters-bottom)
+                const anyChecked = !!document.querySelector('.poi-filter-checkbox:checked');
                 const searchVal = (document.getElementById('poi-search') && document.getElementById('poi-search').value) || '';
                 const onlyMine = (document.getElementById('poi-only-mine') && document.getElementById('poi-only-mine').checked);
                 const active = anyChecked || (searchVal && String(searchVal).trim().length > 0) || !!onlyMine;
@@ -2504,60 +2505,18 @@ export default class PoiMapManager {
         // Initialize state and wire up filter changes to update the button state
         try { updateLoadBtnState(); } catch (e) {}
         document.addEventListener('change', ev => {
-            if (ev.target && (ev.target.closest && ev.target.closest('#poi-filter') || ev.target.id === 'poi-search' || ev.target.id === 'poi-only-mine')) updateLoadBtnState();
+            if (ev.target && (ev.target.classList && ev.target.classList.contains('poi-filter-checkbox') || ev.target.id === 'poi-search' || ev.target.id === 'poi-only-mine')) updateLoadBtnState();
         });
 
         const searchInput = document.getElementById('poi-search');
         const searchBtn = document.getElementById('poi-search-btn');
         try { if (window.POI_DEBUG && console && console.debug) console.debug('bindUIEvents: searchInput?', !!searchInput, 'searchBtn?', !!searchBtn); } catch (e) {}
         const applyFilterHandler = (ev) => {
-            ev && ev.preventDefault && ev.preventDefault();
+            ev.preventDefault();
             try { if (window.POI_DEBUG && console && console.debug) console.debug('applyFilterHandler invoked', { value: document.getElementById('poi-search')?.value }); } catch (e) {}
             try { this._flashSearchIndicator && this._flashSearchIndicator('Searching…'); } catch (e) {}
-
-            // If a country is selected, prefer centering the map on that country
-            // and then performing the Overpass search for that area. Otherwise
-            // search within the current map bounds.
-            try {
-                const countrySel = document.getElementById('poi-country-select');
-                const opt = countrySel && countrySel.selectedOptions && countrySel.selectedOptions[0];
-                if (opt && opt.value && opt.dataset && opt.dataset.lat && opt.dataset.lng) {
-                    const lat = parseFloat(opt.dataset.lat);
-                    const lng = parseFloat(opt.dataset.lng);
-                    const area = opt.dataset && opt.dataset.area ? parseFloat(opt.dataset.area) : null;
-                    const estimateZoomFromArea = (areaVal) => {
-                        if (!areaVal || Number.isNaN(areaVal)) return 5;
-                        if (areaVal > 3000000) return 3;
-                        if (areaVal > 1000000) return 4;
-                        if (areaVal > 300000) return 5;
-                        if (areaVal > 100000) return 6;
-                        if (areaVal > 20000) return 7;
-                        if (areaVal > 5000) return 8;
-                        return 9;
-                    };
-                    const z = estimateZoomFromArea(area);
-
-                    // Center map first, then trigger fetch once move/zoom settles
-                    if (this.map) {
-                        const once = () => {
-                            try { this.map.off('moveend', once); } catch (e) {}
-                            this.hasLoadedOnce = true;
-                            this.fetchAndPlot({ force: true, forceOverpass: true });
-                            try { this.fetchAndRenderFullPoiList(); } catch (e) {}
-                        };
-                        this.map.on('moveend', once);
-                        try { this.map.setView([lat, lng], z, { animate: true }); } catch (e) { once(); }
-                        return;
-                    }
-                }
-            } catch (e) {
-                if (window.POI_DEBUG && console && console.warn) console.warn('applyFilterHandler country-centering failed', e);
-            }
-
-            // Default: perform search in current view
-            this.hasLoadedOnce = true;
-            this.fetchAndPlot({ force: true, forceOverpass: true });
-            try { this.fetchAndRenderFullPoiList(); } catch (e) {}
+            this.fetchAndPlot({ force: true });
+            this.fetchAndRenderFullPoiList();
         };
         if (searchBtn) searchBtn.addEventListener('click', applyFilterHandler);
         if (searchInput) {
@@ -2588,7 +2547,7 @@ export default class PoiMapManager {
             resetBtn.addEventListener('click', (ev) => {
                 ev.preventDefault();
                 localStorage.removeItem('poi_selected_categories');
-                document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item').forEach(btn => {
+                document.querySelectorAll('.poi-filter-btn, .poi-filter-item').forEach(btn => {
                     try {
                         if (btn.setAttribute) btn.setAttribute('aria-pressed', 'false');
                         const checkbox = btn.querySelector && btn.querySelector('input[type=checkbox]');
@@ -2611,7 +2570,7 @@ export default class PoiMapManager {
             });
         }
 
-        document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item').forEach(btn => {
+        document.querySelectorAll('.poi-filter-btn, .poi-filter-item').forEach(btn => {
             btn.addEventListener('click', (ev) => {
                 try {
                     const isLabel = btn.classList && btn.classList.contains('poi-filter-item');
@@ -2745,7 +2704,7 @@ export default class PoiMapManager {
     }
 
     renderFilterSwatches() {
-        document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item').forEach(btn => {
+        document.querySelectorAll('.poi-filter-btn, .poi-filter-item').forEach(btn => {
             const cat = btn.getAttribute && btn.getAttribute('data-category');
             if (!cat || btn.querySelector('.filter-icon') || btn.querySelector('.filter-swatch')) return;
 
@@ -2891,11 +2850,11 @@ export default class PoiMapManager {
     getSelectedCategories() {
         const sel = [];
         try {
-            const checks = document.querySelectorAll('#poi-filter input.poi-filter-checkbox:checked');
+            const checks = document.querySelectorAll('input.poi-filter-checkbox:checked');
             if (checks && checks.length) {
                 checks.forEach(cb => { if (cb.value) sel.push(cb.value); });
             } else {
-                document.querySelectorAll('#poi-filter .poi-filter-btn, #poi-filter .poi-filter-item').forEach(btn => {
+                document.querySelectorAll('.poi-filter-btn, .poi-filter-item').forEach(btn => {
                     try {
                         if (btn.getAttribute && btn.getAttribute('aria-pressed') === 'true') {
                             const cat = btn.getAttribute('data-category');
@@ -2922,11 +2881,11 @@ export default class PoiMapManager {
             if (!Array.isArray(arr)) return;
             arr.forEach(cat => {
                 try {
-                    const btn = document.querySelector('#poi-filter .poi-filter-btn[data-category="' + cat + '"]');
+                    const btn = document.querySelector('.poi-filter-btn[data-category="' + cat + '"]');
                     if (btn) btn.setAttribute('aria-pressed', 'true');
-                    const cb = document.querySelector('#poi-filter input[type=checkbox][value="' + cat + '"]');
+                    const cb = document.querySelector('input.poi-filter-checkbox[value="' + cat + '"]');
                     if (cb) cb.checked = true;
-                    const lbl = document.querySelector('#poi-filter .poi-filter-item[data-category="' + cat + '"]');
+                    const lbl = document.querySelector('.poi-filter-item[data-category="' + cat + '"]');
                     if (lbl) {
                         try { const lcb = lbl.querySelector('input[type=checkbox]'); if (lcb) lcb.checked = true; } catch(e){}
                     }
