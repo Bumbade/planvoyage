@@ -11,9 +11,9 @@ function safe_json($arr) { echo json_encode($arr, JSON_UNESCAPED_UNICODE); exit(
 
 // Robust log writer: attempt to write into project logs, fallback to error_log() and tmp
 function write_qlog($msg) {
-    // paths relative to project root (src/api/locations -> ../../../logs)
-    $logPath = __DIR__ . '/../../../logs/overpass_quick.log';
-    $tmpLog  = __DIR__ . '/../../../tmp/overpass_quick_cache/overpass_quick.log';
+    // paths relative to project root (api/locations -> ../../logs)
+    $logPath = __DIR__ . '/../../logs/overpass_quick.log';
+    $tmpLog  = __DIR__ . '/../../tmp/overpass_quick_cache/overpass_quick.log';
 
     $dir = dirname($logPath);
     if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
@@ -35,7 +35,7 @@ $scriptStart = microtime(true);
 
 // --- Mirror stats (auto-rank) ---------------------------------------------
 $statsKey = 'overpass_quick_mirror_stats_v1';
-$statsFile = __DIR__ . '/../../../tmp/overpass_quick_cache/mirror_stats.json';
+$statsFile = __DIR__ . '/../../tmp/overpass_quick_cache/mirror_stats.json';
 
 function load_mirror_stats() {
     global $statsKey, $statsFile;
@@ -117,35 +117,66 @@ $bboxParts = preg_split('/\s*,\s*/', $bbox);
 if (count($bboxParts) !== 4) {
     $bbox = null;
 } else {
-    // Check if bbox is too large (>40° lat span or >60° lon span = roughly continental size)
-    // Large bbox + regex is very slow on Overpass servers → paradoxically faster without bbox
+    // Check if bbox is too large (>0.5° lat span or >0.7° lon span)
+    // Even with tag-constrained search, regex on large areas is slow
+    // Stuttgart area ~0.2° × 0.3° works well, so 0.5° × 0.7° is reasonable maximum
     $latSpan = abs(floatval($bboxParts[2]) - floatval($bboxParts[0]));
     $lonSpan = abs(floatval($bboxParts[3]) - floatval($bboxParts[1]));
-    if ($latSpan > 40 || $lonSpan > 60) {
-        $bbox = null; // Ignore oversized bbox → use global query (faster with name index)
+    if ($latSpan > 0.5 || $lonSpan > 0.7) {
+        write_qlog(date('c') . " BBOX TOO LARGE: lat={$latSpan}° lon={$lonSpan}° - rejecting search\n");
+        // Return error asking user to zoom in
+        $payload = [
+            'page' => 1,
+            'per_page' => 0,
+            'data' => [],
+            'error' => 'bbox_too_large',
+            'message' => 'Bitte zoomen Sie näher heran. Die aktuelle Ansicht ist zu groß für die Namenssuche.',
+            'diagnostic' => ['lat_span' => round($latSpan, 2), 'lon_span' => round($lonSpan, 2), 'max_lat' => 0.5, 'max_lon' => 0.7]
+        ];
+        safe_json($payload);
     }
 }
 
 // Escape double quotes and backslashes for Overpass
 $safeSearch = str_replace(['\\','"'], ['\\\\','\\"'], $search);
 
-// Build bbox clause only when provided
+// Build bbox clause for queries that use it
 $bboxClause = '';
 if (!is_null($bbox)) {
     $bboxClause = '(' . $bbox . ')';
 }
 
-// Build a flexible search pattern that matches if search term appears anywhere in the name
-// Replace spaces AND hyphens with flexible separator pattern to match all variants
-// This allows "Mercedes Benz", "Mercedes-Benz", "Mercedes_Benz" to all match each other
-$flexibleSearch = preg_replace('/[\s\-_]+/', '[\\s\\-_]+', $safeSearch);
+// Build flexible search pattern: replace spaces/hyphens/underscores with .* (any chars)
+// This matches any combination of characters between words
+// Example: "Mercedes Benz Museum" → ".*Mercedes.*Benz.*Museum.*"
+// This finds: "Mercedes-Benz Museum", "Mercedes Benz Museum", "Mercedes_Benz_Museum", etc.
+$flexibleSearch = preg_replace('/[\s\-_]+/', '.*', $safeSearch);
 $searchPattern = '.*' . $flexibleSearch . '.*';
 
-// Increase Overpass internal timeout to match client expectations
-$ql = '[out:json][timeout:25];(';
-$ql .= 'node["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
-$ql .= 'way["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
-$ql .= 'relation["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+// PERFORMANCE OPTIMIZATION: Tag-constrained search is MUCH faster than name-only
+// Instead of searching all nodes/ways/relations by name, we search within POI categories
+// Common POI tags: tourism, amenity, shop, leisure, historic, natural, office
+$timeout = 25;
+write_qlog(date('c') . " TAG-CONSTRAINED SEARCH: pattern='{$searchPattern}' bbox=" . ($bbox ? "yes" : "no") . "\n");
+
+$ql = '[out:json][timeout:' . $timeout . '];(';
+// Tourism POIs (hotels, museums, attractions, viewpoints, etc.)
+$ql .= 'node["tourism"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'way["tourism"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'relation["tourism"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+// Amenities (restaurants, cafes, parking, fuel, etc.)
+$ql .= 'node["amenity"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'way["amenity"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'relation["amenity"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+// Shops
+$ql .= 'node["shop"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'way["shop"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+// Leisure (parks, sports centers, etc.)
+$ql .= 'node["leisure"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'way["leisure"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+// Historic sites
+$ql .= 'node["historic"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
+$ql .= 'way["historic"]["name"~"' . $searchPattern . '",i]' . $bboxClause . ';';
 $ql .= ');out center ' . intval($limit) . ';';
 
 // Simple file cache to reduce repeated Overpass calls for identical queries
@@ -297,11 +328,23 @@ foreach ($json['elements'] as $el) {
             $lon = floatval($el['center']['lon'] ?? 0);
         }
     }
+    
+    // Extract POI type from tags for display in popup
+    // Check common POI tags in order of priority
+    $poiType = null;
+    if (isset($tags['tourism'])) $poiType = $tags['tourism'];
+    elseif (isset($tags['amenity'])) $poiType = $tags['amenity'];
+    elseif (isset($tags['shop'])) $poiType = $tags['shop'];
+    elseif (isset($tags['leisure'])) $poiType = $tags['leisure'];
+    elseif (isset($tags['historic'])) $poiType = $tags['historic'];
+    
     $out[] = [
         'id' => $id,
         'osm_id' => $id,
         'osm_type' => ($type ? strtoupper(substr($type,0,1)) : null),
         'name' => $name,
+        'type' => $poiType, // Add type field for popup template
+        'source' => 'overpass', // Mark as external source for popup template
         'lat' => $lat,
         'lon' => $lon,
         'tags' => $tags

@@ -165,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id > 0) {
         } elseif (!$canEdit) {
             $error = t('permission_denied', 'Permission denied');
     } else {
-        $exclude = ['id','osm_id','coordinates','created_at','updated_at'];
+        $exclude = ['id','osm_id','coordinates','created_at','updated_at','tags'];
         $set = [];
         $params = [];
         foreach ($tableCols as $col) {
@@ -694,7 +694,7 @@ require_once __DIR__ . '/../includes/header.php';
                                 echo '</div></details>';
                             }
                         ?>
-                        <div class="form-actions"><button class="btn" type="submit"><?php echo htmlspecialchars(t('save_changes','Save changes')); ?></button><a class="btn btn-cancel" href="<?php echo htmlspecialchars(app_url('/locations/view') . '?id=' . urlencode($id)); ?>"><?php echo htmlspecialchars(t('cancel','Cancel')); ?></a></div>
+                        <div class="form-actions"><button class="btn" type="submit"><?php echo htmlspecialchars(t('save_changes','Save changes')); ?></button><a class="btn btn-cancel" href="<?php echo htmlspecialchars(app_url('/index.php/locations/view') . '?id=' . urlencode($id)); ?>"><?php echo htmlspecialchars(t('back','Zurück')); ?></a></div>
                     </form>
                 <?php else: ?>
                     <div class="error"><?php echo htmlspecialchars(t('no_permission_edit_poi','You do not have permission to edit this POI.')); ?></div>
@@ -714,7 +714,16 @@ require_once __DIR__ . '/../includes/header.php';
             function initMap(id, lat, lon, opts) {
                 if (!document.getElementById(id)) return;
                 var hasCoords = lat !== null && lon !== null && !isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0;
-                var map = L.map(id);
+                var mapOpts = opts.draggable ? {} : {
+                    dragging: false,
+                    touchZoom: false,
+                    doubleClickZoom: false,
+                    scrollWheelZoom: false,
+                    boxZoom: false,
+                    keyboard: false,
+                    zoomControl: false
+                };
+                var map = L.map(id, mapOpts);
                 if (hasCoords) map.setView([lat, lon], 15);
                 else map.setView([0,0], 2);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);

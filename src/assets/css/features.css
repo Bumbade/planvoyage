@@ -107,7 +107,7 @@
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
@@ -196,7 +196,7 @@
 .form-actions .btn-secondary {
     background-color: var(--bg-lighter, #2d2d2d);
     color: var(--text-dark, #e0e0e0);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
 }
 
 .form-actions .btn-secondary:hover {
@@ -674,7 +674,7 @@
 #doc-q {
     width: 60%;
     padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 0.95rem;
 }
@@ -944,7 +944,7 @@
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
@@ -986,7 +986,7 @@
     align-items: center;
     justify-content: center;
     padding: var(--spacing-lg, 1.5rem);
-    border: 2px dashed var(--border-color, #404040);
+    border: 2px dashed var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-light, #1a1a1a);
     cursor: pointer;
@@ -1485,6 +1485,7 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 
 .poi-filter-label {
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
@@ -1547,8 +1548,9 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 }
 #poi-filter .poi-filter-label {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 0.5rem;
     width: 100%;
     padding: 0.5rem 0.75rem;
@@ -1657,11 +1659,12 @@ main > h1 { text-align: center; margin-bottom: 0.25rem; }
 
 /* Filter icon: normalize appearance and override any inline sizing */
 .filter-icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 6px;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
     vertical-align: middle;
-    display: inline-block;
+    display: block;
+    overflow: visible;
 }
 
 /* Ensure labels wrap nicely when space is constrained */
@@ -2006,7 +2009,7 @@ main:has(.pois-layout) {
     padding: 0.25rem;
     background: var(--bg-surface, #1a1a1a);
     border-radius: 1rem;
-    border: 2px solid var(--color-border, #444);
+    border: 2px solid var(--color-border);
 }
 
 /* Karte im Zentrum */
@@ -2027,9 +2030,10 @@ main:has(.pois-layout) {
 /* Filter-Container an den vier Seiten */
 .poi-filters-top {
     grid-area: top-filters;
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 0.5rem;
+    justify-content: center;
     padding: 0.5rem;
 }
 
@@ -2040,10 +2044,10 @@ main:has(.pois-layout) {
 
 .poi-filters-bottom {
     grid-area: bottom-filters;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    display: flex;
     gap: 0.5rem;
     padding: 0.5rem;
+    justify-content: center;
 }
 
 /* Filter item compact spacing (moved from inline styles) */
@@ -2051,7 +2055,7 @@ main:has(.pois-layout) {
 #poi-filter .poi-filter-item{margin:0;padding:4px 1px;border-radius:6px;background:transparent;border:0;display:inline-flex;align-items:center;gap:1px}
 #poi-filter .poi-filter-item input[type="checkbox"]{margin:0 4px 0 0}
 #poi-filter .poi-filter-label{display:inline-flex;align-items:center;gap:1px}
-#poi-filter .filter-icon{width:60px;height:60px;align-items:center;overflow:flex}
+#poi-filter .filter-icon{width:40px;height:40px;align-items:left;overflow:visible}
 /* tighten control buttons spacing */
 #poi-filter-buttons .btn{margin:2px 3px 2px 0;padding:3px 4px}
 
@@ -2606,7 +2610,7 @@ main:has(.pois-layout) {
 .form-group select,
 .form-group textarea {
     padding: var(--spacing-md, 1rem);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: var(--font-size-base, 1rem);
     transition: var(--transition-fast, all 0.15s ease);
@@ -2773,7 +2777,7 @@ main:has(.pois-layout) {
 /* Quick Map Planner Section */
 #quick-planner {
     margin-top: 1rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     padding: 15px;
     background: var(--bg-light, #1a1a1a);
     border-radius: 6px;
@@ -2801,7 +2805,7 @@ main:has(.pois-layout) {
     background: var(--bg-lighter, #2d2d2d);
     padding: 12px;
     border-radius: 4px;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     height: fit-content;
     position: sticky;
     top: 10px;
@@ -2821,7 +2825,7 @@ main:has(.pois-layout) {
 .planner-controls select {
     width: 100%;
     padding: 8px;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 14px;
 }
@@ -2859,7 +2863,7 @@ main:has(.pois-layout) {
 .planner-stats {
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid var(--border-color, #404040);
+    border-top: 1px solid var(--border-color);
     font-size: 12px;
     color: var(--text-light, #b0b0b0);
 }
@@ -2871,14 +2875,14 @@ main:has(.pois-layout) {
 /* Summary Panel */
 .planner-summary-container {
     background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
 .planner-summary-header {
     padding: 12px;
-    border-bottom: 1px solid var(--border-color, #404040);
+    border-bottom: 1px solid var(--border-color);
     background: var(--bg-light, #1a1a1a);
     font-weight: bold;
     font-size: 16px;
@@ -3117,7 +3121,7 @@ main:has(.pois-layout) {
     opacity: 0.95;
     transform: translate(-50%, -50%);
     background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     padding: 6px 10px;
     border-radius: 6px;
@@ -3146,7 +3150,7 @@ main:has(.pois-layout) {
 /* Select POIs Modal Card Styles */
 .poi-select-card {
     background: var(--bg-lighter, #2d2d2d);
-    border: 2px solid var(--border-color, #404040);
+    border: 2px solid var(--border-color);
     border-radius: 6px;
     padding: 10px;
     cursor: pointer;
@@ -3202,7 +3206,7 @@ main:has(.pois-layout) {
     margin-bottom: 1rem;
     padding: 10px;
     background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
 }
 
 .trip-header h2 {
@@ -3218,7 +3222,7 @@ main:has(.pois-layout) {
     margin-bottom: 1.5rem;
     padding: 15px;
     background: var(--bg-light, #1a1a1a);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
 
@@ -3246,7 +3250,7 @@ main:has(.pois-layout) {
 .filter-group-select select {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
 }
@@ -3274,7 +3278,7 @@ main:has(.pois-layout) {
 
 #pois-map-select {
     height: 500px;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
 
@@ -3337,7 +3341,7 @@ main:has(.pois-layout) {
     margin-bottom: 1rem;
     padding: 10px;
     background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
 }
 
 
@@ -3354,7 +3358,7 @@ main:has(.pois-layout) {
 .route-map {
     height: 600px;
     margin-top: 1rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
 }
 
 .route-controls {
@@ -3385,14 +3389,14 @@ main:has(.pois-layout) {
 .form-group-half input,
 .form-group-half select {
     padding: 0.5rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
 }
 
 .map-selector-panel {
     display: none;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     overflow: hidden;
     background: var(--bg-lighter, #2d2d2d);
@@ -3404,13 +3408,13 @@ main:has(.pois-layout) {
 
 .map-selector-container {
     height: 550px;
-    border-top: 1px solid var(--border-color, #404040);
+    border-top: 1px solid var(--border-color);
 }
 
 .map-selected-info {
     padding: 0.75rem;
     background: rgba(52, 152, 219, 0.2);
-    border-top: 1px solid var(--border-color, #404040);
+    border-top: 1px solid var(--border-color);
     font-size: 0.9rem;
     text-align: center;
     color: var(--info-color, #3498db);
@@ -3434,7 +3438,7 @@ main:has(.pois-layout) {
 
 .route-items-list li {
     padding: 8px;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     margin-bottom: 6px;
     background: var(--bg-lighter, #2d2d2d);
     display: flex;
@@ -3480,7 +3484,7 @@ main:has(.pois-layout) {
 .move-down,
 .remove-item {
     padding: 6px 10px;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-lighter, #2d2d2d);
     color: var(--text-dark, #e0e0e0);
@@ -3600,7 +3604,7 @@ main:has(.pois-layout) {
 
 
 /* ===== My POIs tile styles (moved from inline in viewPOIs.php) ===== */
-.my-pois-section { margin-top: 1rem; border: 1px solid var(--border-color, #e6e6e6); border-radius: 6px; background: var(--bg-lighter, #ffffff); overflow: hidden; }
+.my-pois-section { margin-top: 1rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-lighter, #ffffff); overflow: hidden; }
 .my-pois-section .section-summary { display:flex; justify-content:space-between; align-items:center; padding:0.6rem 1rem; cursor:pointer; }
 .my-pois-section .section-title { margin:0; font-size:1.05rem; }
 .my-pois-section .poi-tiles { padding:0.75rem 1rem; display:block; }
@@ -3635,7 +3639,7 @@ html, body {
 /* My POIs section: compact, tile-like appearance to match POI grids */
 .my-pois-section {
     margin-top: 1rem;
-    border: 1px solid var(--border-color, #e6e6e6);
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     background: var(--bg-lighter, #ffffff);
     overflow: hidden;

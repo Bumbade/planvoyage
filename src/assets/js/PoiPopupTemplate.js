@@ -280,5 +280,5 @@ class PoiPopupTemplate {
     }
 }
 
-// Export for use in PoiMapManager
-// window.PoiPopupTemplate = PoiPopupTemplate; // Uncomment if not using modules
+// Export for use in PoiMapManager and Quick Search
+window.PoiPopupTemplate = PoiPopupTemplate;

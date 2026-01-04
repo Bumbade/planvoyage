@@ -6,9 +6,15 @@
 <?php
 // Include site-wide JS
 if (!function_exists('asset_url')) {
-    // try to load header helpers if not already loaded
-    if (file_exists(__DIR__ . '/../includes/header.php')) {
-        require_once __DIR__ . '/../includes/header.php';
+    // load the URL/asset helpers (do not include the full header which prints navigation)
+    if (file_exists(__DIR__ . '/../helpers/url.php')) {
+        require_once __DIR__ . '/../helpers/url.php';
+    }
+}
+// Ensure translation helper `t()` is available for footer strings
+if (!function_exists('t')) {
+    if (file_exists(__DIR__ . '/../helpers/i18n.php')) {
+        require_once __DIR__ . '/../helpers/i18n.php';
     }
 }
 ?>

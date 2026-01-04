@@ -1050,7 +1050,7 @@ class LocationController
                 if ($hasTag('tourism', 'hotel') || stripos($nameStr, 'hotel') !== false) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Hotel';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'hotel.png';
-                } elseif ($hasTag('tourism', 'attraction') || $hasTag('tourism', 'viewpoint') || $hasTag('tourism', 'zoo') || $hasTag('natural', 'waterfall') || $hasTag('waterway', 'waterfall')) {
+                } elseif ($hasTag('tourism', 'attraction') || $hasTag('tourism', 'viewpoint') || $hasTag('tourism', 'museum') || $hasTag('tourism', 'zoo') || $hasTag('natural', 'waterfall') || $hasTag('waterway', 'waterfall')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Attraction';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'Attractions.png';
                 } elseif ($hasTag('tourism', 'information')) {

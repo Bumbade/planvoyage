@@ -70,8 +70,8 @@ $HEAD_EXTRA .= '<link rel="stylesheet" href="' . asset_url('assets/vendor/leafle
 require_once __DIR__ . '/../includes/header.php';
 // All POI CSS (popups, controls) now loaded via features.css
 // single PHP close tag below to avoid accidental whitespace/output
+renderFlashMessages();
 ?>
-<?php renderFlashMessages(); ?>
 
 <main>
     <h1><?php echo t('pois', 'POIs'); ?></h1>
@@ -218,8 +218,8 @@ foreach ($allKeys as $k) {
 <!-- Asset diagnostic helper: only runs in DEBUG mode (defer) -->
 <script src="<?php echo htmlspecialchars(asset_url('assets/js/poi-asset-diagnostics.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
 
-<!-- Secure popup template helper (loaded before ESM bootstrap) -->
-<script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>" defer></script>
+<!-- Secure popup template helper (loaded before ESM bootstrap) - NO DEFER to ensure availability -->
+<script src="<?php echo htmlspecialchars(asset_url('assets/js/PoiPopupTemplate.js')); ?>?v=<?php echo $ASSET_VERSION; ?>"></script>
 
 <!-- ESM entry that bootstraps PoiMapManager and PoiTiles (defer for non-critical load) -->
 <!-- Quick-search module (separate from filter-driven map search) -->

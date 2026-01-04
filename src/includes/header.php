@@ -143,7 +143,7 @@ if (!function_exists('view_url')) {
     
     <!-- Favicon & Apple Icon -->
     <link rel="icon" type="image/x-icon" href="<?php echo htmlspecialchars(asset_url('assets/img/favicon.ico')); ?>">
-    <link rel="apple-touch-icon" href="<?php echo htmlspecialchars(asset_url('assets/img/apple-touch-icon.png')); ?>">>
+    <link rel="apple-touch-icon" href="<?php echo htmlspecialchars(asset_url('assets/img/apple-touch-icon.png')); ?>">
     
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -339,7 +339,7 @@ if (!function_exists('view_url')) {
     // This ensures pages using `escapeHtml(...)` in inline scripts don't fail
     // when the module-based utils export isn't available yet.
     echo "<script>(function(){if(typeof window.escapeHtml==='function')return;window.escapeHtml=function(s){if(s===null||s===undefined)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');};})();</script>\n";
-    ?>
+?>
 </head>
 <body>
     <header>

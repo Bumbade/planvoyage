@@ -18,7 +18,7 @@
     --color-on-surface: var(--text-dark, #e0e0e0);
     --color-link: var(--primary-light, #4d94ff);
     --color-primary-dark: var(--primary-dark, #003366);
-    --color-border: var(--border-color, #404040);
+    --color-border: var(--border-color);
     /* Alpha tokens for dark theme */
     --surface-95: rgba(26, 26, 26, 0.95);
     --overlay-04: rgba(255, 255, 255, 0.04);

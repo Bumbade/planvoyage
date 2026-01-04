@@ -100,14 +100,51 @@ function renderResults(rows) {
         const li = document.createElement('li'); li.style.listStyle = 'none'; li.style.padding = '6px 4px'; li.style.cursor = 'pointer';
         li.textContent = name;
         li.dataset.lat = lat; li.dataset.lon = lon;
+        // Store full POI data for popup
+        li.dataset.poiData = JSON.stringify(r);
         li.addEventListener('click', (ev) => {
             try {
-                ev.preventDefault(); const la = parseFloat(li.dataset.lat); const lo = parseFloat(li.dataset.lon);
+                ev.preventDefault(); 
+                const la = parseFloat(li.dataset.lat); 
+                const lo = parseFloat(li.dataset.lon);
                 if (!isNaN(la) && !isNaN(lo) && window.PV_POI_MANAGER && window.PV_POI_MANAGER.map) {
                     window.PV_POI_MANAGER.map.setView([la, lo], 16);
-                    try { L.popup().setLatLng([la, lo]).setContent(name).openOn(window.PV_POI_MANAGER.map); } catch (e) {}
+                    try { 
+                        // Use PoiPopupTemplate for consistent popup formatting
+                        const poi = JSON.parse(li.dataset.poiData);
+                        const displayName = name;
+                        let popupHtml;
+                        
+                        // Check if PoiPopupTemplate is available
+                        const hasTemplate = typeof window.PoiPopupTemplate !== 'undefined' && 
+                                          window.PoiPopupTemplate && 
+                                          typeof window.PoiPopupTemplate.createPopupHtmlString === 'function';
+                        
+                        console.log('Quick Search Popup Debug:', {
+                            hasTemplate: hasTemplate,
+                            poi: poi,
+                            displayName: displayName
+                        });
+                        
+                        if (hasTemplate) {
+                            // Use the full popup template with Import button
+                            popupHtml = window.PoiPopupTemplate.createPopupHtmlString(poi, displayName);
+                            console.log('Using PoiPopupTemplate, HTML length:', popupHtml.length);
+                        } else {
+                            console.warn('PoiPopupTemplate not available, using fallback');
+                            // Fallback to simple popup
+                            popupHtml = name;
+                        }
+                        
+                        L.popup().setLatLng([la, lo]).setContent(popupHtml).openOn(window.PV_POI_MANAGER.map);
+                    } catch (e) {
+                        console.error('Error creating popup:', e);
+                        L.popup().setLatLng([la, lo]).setContent(name).openOn(window.PV_POI_MANAGER.map);
+                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error('Error in click handler:', e);
+            }
         });
         ul.appendChild(li);
     });
@@ -169,8 +206,8 @@ async function doQuickSearch(term, opts = {}) {
     let bbox = '';
     try { if (window.PV_POI_MANAGER && window.PV_POI_MANAGER.map) { const b = window.PV_POI_MANAGER.map.getBounds(); bbox = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].join(','); } } catch (e) {}
     const overParams = new URLSearchParams({ search: term, limit: 10 }); if (bbox) overParams.set('bbox', bbox);
-    // Only use the lightweight quick Overpass proxy for quick search (no v2 fallback)
-    let overCandidates = makeApiCandidates('api/locations/search_overpass_quick.php', overParams.toString());
+    // Use v2 endpoint with new mirrors (VK Russia, Japan) - bypasses opcache issue
+    let overCandidates = makeApiCandidates('api/locations/search_overpass_quick_v2.php', overParams.toString());
     // Limit to a single Overpass proxy attempt to avoid repeated long waits
     if (Array.isArray(overCandidates) && overCandidates.length > 1) {
         overCandidates = [overCandidates[0]];
@@ -198,6 +235,11 @@ async function doQuickSearch(term, opts = {}) {
                     renderOverpassUnavailable(term, j.diagnostic);
                     return [];
                 }
+                if (j.error === 'bbox_too_large') {
+                    // Show message asking user to zoom in
+                    renderStatus('error', j.message || 'Bitte zoomen Sie näher heran, um zu suchen.');
+                    return [];
+                }
                 // Try next candidate for other errors
                 diagnostics.push({ url: u, error: j.error, diagnostic: j.diagnostic || null });
                 continue;
@@ -222,8 +264,8 @@ function bindQuickSearch() {
     const btn = document.getElementById('poi-search-btn');
     if (!input || !btn) return;
     
-    // Minimum zoom level required to enable search (zoom 8 = city level)
-    const MIN_ZOOM = 8;
+    // Minimum zoom level required to enable search (zoom 11 = city level)
+    const MIN_ZOOM = 11;
     
     // Start with input disabled until zoom check passes
     input.disabled = true;

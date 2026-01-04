@@ -221,7 +221,7 @@ input[type="submit"]:hover {
     --bg-lighter: #2d2d2d;              /* Lighter Dark BG */
     
     /* Border Colors - Dark Mode */
-    --border-color: #404040;            /* Dark Borders */
+    --border-color: #0025f5;            /* Dark Borders */
     
     /* Shadows - Dark Mode */
     --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -271,7 +271,7 @@ input[type="submit"]:hover {
         --text-lighter: #95a5a6;
         --bg-light: #2c3e50;
         --bg-lighter: #34495e;
-        --border-color: #7f8c8d;
+        --border-color: #0025f5;
     }
 }
 
@@ -741,7 +741,7 @@ tr:hover {
 .debug-box {
     padding: 1rem;
     background: var(--bg-lighter, #2d2d2d);
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     margin: 1rem;
 }
 
@@ -768,7 +768,7 @@ tr:hover {
 .notice {
     margin: 1rem 0;
     padding: 1rem;
-    border: 1px solid var(--border-color, #404040);
+    border: 1px solid var(--border-color);
     background: var(--bg-lighter, #2d2d2d);
 }
 
@@ -1028,13 +1028,13 @@ body {
 
 /* Additional tokens for common uses - mapped to theme system */
 :root {
-    --color-border: var(--border-color, #404040);
+    --color-border: var(--border-color);
     --color-success-bg: var(--success-color, #27ae60);
-    --color-success-border: var(--border-color, #404040);
+    --color-success-border: var(--border-color);
     --color-success-text: var(--text-dark, #e0e0e0);
 
     --color-error-bg: var(--error-color, #e74c3c);
-    --color-error-border: var(--border-color, #404040);
+    --color-error-border: var(--border-color);
     --color-error-text: var(--text-dark, #e0e0e0);
 
     --color-muted: var(--text-lighter, #808080);
@@ -1047,7 +1047,7 @@ body {
     --color-link: var(--primary-color, #0044ff);
 
     --color-warning-bg: var(--warning-color, #f39c12);
-    --color-warning-border: var(--border-color, #404040);
+    --color-warning-border: var(--border-color);
     --color-warning-text: var(--text-dark, #e0e0e0);
 
     --color-primary-dark: var(--primary-dark, #003366);
