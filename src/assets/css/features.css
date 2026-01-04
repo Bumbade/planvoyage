@@ -2830,8 +2830,7 @@ main:has(.pois-layout) {
     font-size: 14px;
 }
 
-#planner-calc,
-#planner-export {
+#planner-calc {
     width: 100%;
     padding: 10px;
     margin-bottom: 8px;
@@ -2842,22 +2841,11 @@ main:has(.pois-layout) {
     font-weight: 600;
     font-size: 14px;
     transition: background 0.3s;
-}
-
-#planner-calc {
     background: var(--primary-color, #0044ff);
 }
 
 #planner-calc:hover {
     background: #003366;
-}
-
-#planner-export {
-    background: #27ae60;
-}
-
-#planner-export:hover {
-    background: #229954;
 }
 
 .planner-stats {
@@ -3358,7 +3346,8 @@ main:has(.pois-layout) {
 .route-map {
     height: 600px;
     margin-top: 1rem;
-    border: 1px solid var(--border-color);
+    border: 4px solid var(--border-color);
+    border-radius: 15px;
 }
 
 .route-controls {

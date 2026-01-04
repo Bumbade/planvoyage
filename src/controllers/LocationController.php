@@ -316,11 +316,21 @@ class LocationController
         $type = 'poi';
         if (is_array($tagsArr)) {
             if (!empty($tagsArr['amenity'])) {
-                $type = ucfirst($tagsArr['amenity']);
+                $amen = strtolower(trim($tagsArr['amenity']));
+                if ($amen === 'fuel') {
+                    $type = 'GasStation';
+                } else {
+                    $type = ucfirst($amen);
+                }
             } elseif (!empty($tagsArr['tourism'])) {
-                $type = ucfirst($tagsArr['tourism']);
+                $type = ucfirst(strtolower(trim($tagsArr['tourism'])));
             } elseif (!empty($tagsArr['shop'])) {
-                $type = ucfirst($tagsArr['shop']);
+                $shop = strtolower(trim($tagsArr['shop']));
+                if ($shop === 'fuel') {
+                    $type = 'GasStation';
+                } else {
+                    $type = ucfirst($shop);
+                }
             }
         }
 
@@ -362,7 +372,8 @@ class LocationController
                 try {
                     $amenityTag = is_array($tagsArr) && !empty($tagsArr['amenity']) ? strtolower($tagsArr['amenity']) : null;
                     $shopTag = is_array($tagsArr) && !empty($tagsArr['shop']) ? strtolower($tagsArr['shop']) : null;
-                    if (strtolower($type) === 'fuel' || $amenityTag === 'fuel' || $shopTag === 'fuel') {
+                    $typel_local = is_string($type) ? strtolower($type) : null;
+                    if ($typel_local === 'fuel' || $typel_local === 'gasstation' || $typel_local === 'gas_station' || $typel_local === 'gas stations' || $amenityTag === 'fuel' || $shopTag === 'fuel') {
                         $candidateGas = __DIR__ . '/../assets/icons/gas_station.png';
                         if (file_exists($candidateGas)) {
                             $inferredLogo = 'gas_station.png';
@@ -393,7 +404,7 @@ class LocationController
                 if ($inferredLogo === null) {
                     $amen = is_array($tagsArr) && !empty($tagsArr['amenity']) ? strtolower($tagsArr['amenity']) : null;
                     $typel = is_string($type) ? strtolower($type) : null;
-                    if ($amen === 'fuel' || $typel === 'fuel' || $typel === 'gas stations' || $typel === 'gas_stations') {
+                    if ($amen === 'fuel' || $typel === 'fuel' || $typel === 'gas stations' || $typel === 'gas_stations' || $typel === 'gasstation' || $typel === 'gas_station' || $typel === 'gasstation' || $typel === 'gas station') {
                         $candidateGas = __DIR__ . '/../assets/icons/gas_station.png';
                         if (file_exists($candidateGas)) $inferredLogo = 'gas_station.png';
                     }
@@ -1083,7 +1094,7 @@ class LocationController
                         $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'gas_station.png';
                     }
                 } elseif ($hasTag('amenity', 'fuel') || $hasTag('shop', 'fuel')) {
-                    $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Fuel';
+                    $updates[] = 'type = :type_val'; $binds[':type_val'] = 'GasStation';
                     $updates[] = 'logo = :logo_val'; $binds[':logo_val'] = 'gas_station.png';
                 } elseif ($hasTag('shop', 'supermarket') || $hasTag('amenity', 'supermarket')) {
                     $updates[] = 'type = :type_val'; $binds[':type_val'] = 'Supermarket';

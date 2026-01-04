@@ -80,7 +80,7 @@ if ($flashErr): ?>
     <!-- Leaflet Map & Filter UI -->
     <div class="margin-bottom-large">
         <div class="route-controls">
-            <div class="flex-row gap-large">
+            <div class="flex-row gap-large" style="align-items:center;">
                 <div>
                     <label for="country-filter"><strong><?php echo htmlspecialchars(t('country_label', 'Country:')); ?></strong></label>
                     <select id="country-filter"><option value=""><?php echo htmlspecialchars(t('filter_all', 'All')); ?></option></select>
@@ -88,6 +88,15 @@ if ($flashErr): ?>
                 <div>
                     <label for="state-filter"><strong><?php echo htmlspecialchars(t('state_label', 'State:')); ?></strong></label>
                     <select id="state-filter"><option value=""><?php echo htmlspecialchars(t('filter_all', 'All')); ?></option></select>
+                </div>
+                <div>
+                    <label for="planner-speed"><strong><?php echo htmlspecialchars(t('avg_speed', 'Speed')); ?>:</strong></label>
+                    <select id="planner-speed">
+                        <option value="60">60 km/h</option>
+                        <option value="80" selected>80 km/h</option>
+                        <option value="100">100 km/h</option>
+                        <option value="120">120 km/h</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -104,18 +113,6 @@ if ($flashErr): ?>
             <div>
                 <!-- Controls Panel -->
                 <div class="planner-controls">
-                    <div>
-                        <label for="planner-speed"><?php echo htmlspecialchars(t('avg_speed_label', 'Avg Speed:')); ?></label>
-                        <select id="planner-speed">
-                            <option value="80"><?php echo htmlspecialchars(t('speed_80', '80 km/h')); ?></option>
-                            <option value="100" selected><?php echo htmlspecialchars(t('speed_100', '100 km/h')); ?></option>
-                            <option value="120"><?php echo htmlspecialchars(t('speed_120', '120 km/h')); ?></option>
-                        </select>
-                    </div>
-                    
-                    <button id="planner-export" class="btn">
-                        <?php echo htmlspecialchars(t('planner_export_gpx', 'Export GPX')); ?>
-                    </button>
                     <div class="planner-stats">
                         <div id="poi-count">POIs: <strong>0</strong></div>
                         <div id="leg-count">Legs: <strong>0</strong></div>
@@ -162,16 +159,20 @@ if (!empty($route->items)) {
 try {
     require_once __DIR__ . '/../../config/mysql.php';
     $db = get_db();
-    $userId = $_SESSION['user_id'] ?? null;
+    // Prefer the route owner when available, otherwise fall back to the current session user
+    $userId = $route->user_id ?? ($_SESSION['user_id'] ?? null);
     if ($userId) {
-        // Prefer values from locations this user has favorited OR locations owned by this user
-        // (imported locations may have user_id set but not be present in favorites)
-        $cStmt = $db->prepare("SELECT DISTINCT l.country FROM locations l WHERE l.country IS NOT NULL AND l.country != '' AND (EXISTS (SELECT 1 FROM favorites f WHERE f.location_id = l.id AND f.user_id = :uid) OR l.user_id = :uid) ORDER BY l.country ASC");
+        // Load countries/states from locations that this user has favorited (using favorites table)
+        // Initialize in case queries fail
+        $cRows = [];
+        $sRows = [];
+
+        $cStmt = $db->prepare("SELECT DISTINCT l.country FROM locations l JOIN favorites f ON f.location_id = l.id WHERE f.user_id = :uid AND l.country IS NOT NULL AND l.country != '' ORDER BY l.country ASC");
         $cStmt->bindValue(':uid', $userId, PDO::PARAM_INT);
         $cStmt->execute();
         $cRows = $cStmt->fetchAll(PDO::FETCH_COLUMN);
 
-        $sStmt = $db->prepare("SELECT DISTINCT l.state FROM locations l WHERE l.state IS NOT NULL AND l.state != '' AND (EXISTS (SELECT 1 FROM favorites f WHERE f.location_id = l.id AND f.user_id = :uid) OR l.user_id = :uid) ORDER BY l.state ASC");
+        $sStmt = $db->prepare("SELECT DISTINCT l.state FROM locations l JOIN favorites f ON f.location_id = l.id WHERE f.user_id = :uid AND l.state IS NOT NULL AND l.state != '' ORDER BY l.state ASC");
         $sStmt->bindValue(':uid', $userId, PDO::PARAM_INT);
         $sStmt->execute();
         $sRows = $sStmt->fetchAll(PDO::FETCH_COLUMN);
@@ -253,6 +254,8 @@ try {
 <script>
     var states = <?php echo json_encode($states, JSON_UNESCAPED_UNICODE); ?>;
     var countries = <?php echo json_encode($countries, JSON_UNESCAPED_UNICODE); ?>;
+    var favCountriesCount = <?php echo json_encode(isset($cRows) ? count($cRows) : 0); ?>;
+    var favStatesCount = <?php echo json_encode(isset($sRows) ? count($sRows) : 0); ?>;
     var filterAllLabel = <?php echo json_encode(t('filter_all', 'All')); ?>;
     var locTypeLabel = <?php echo json_encode(t('type_label', 'Type:')); ?>;
     var locLogoLabel = <?php echo json_encode(t('logo_label', 'Logo:')); ?>;
@@ -489,6 +492,20 @@ try {
         stateSel.addEventListener('change', saveFilters);
         // restore any saved filters
         loadFilters();
+        // Restore last used arrival/departure so user doesn't need to re-enter after Add
+        try {
+            var _la = localStorage.getItem('tpv_last_arrival');
+            var _ld = localStorage.getItem('tpv_last_departure');
+            if (_la && document.getElementById('arrival')) document.getElementById('arrival').value = _la;
+            if (_ld && document.getElementById('departure')) document.getElementById('departure').value = _ld;
+        } catch (e) {}
+        // Persist last-entered dates whenever user changes them
+        try {
+            var _aEl = document.getElementById('arrival');
+            var _dEl = document.getElementById('departure');
+            if (_aEl) _aEl.addEventListener('change', function(){ try{ localStorage.setItem('tpv_last_arrival', this.value || ''); }catch(e){} });
+            if (_dEl) _dEl.addEventListener('change', function(){ try{ localStorage.setItem('tpv_last_departure', this.value || ''); }catch(e){} });
+        } catch (e) {}
         updateMarkers();
     });
     // Guard native cssRules property to avoid SecurityError when reading
@@ -1248,16 +1265,7 @@ try {
             saveAndRedraw();
         }
 
-        // Export GPX
-        function exportGPX(){
-            if (waypoints.length===0) return;
-            var gpx = '<' + '?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="TravelPlannerV3">\n<trk><name>Route '+routeId+'</name><trkseg>\n';
-            waypoints.forEach(function(w){ gpx += '<trkpt lat="'+w.lat+'" lon="'+w.lon+'"></trkpt>\n'; });
-            gpx += '</trkseg></trk>\n</gpx>';
-            var blob = new Blob([gpx], {type: 'application/gpx+xml'});
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a'); a.href = url; a.download = 'route-'+routeId+'-'+(new Date().toISOString().slice(0,19).replace(/[:T]/g,'-'))+'.gpx'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        }
+        // Export GPX removed
 
         // wire buttons (bound on DOMContentLoaded below to ensure elements exist)
 
@@ -1278,7 +1286,6 @@ try {
             // Bind calc/export buttons now that DOM is ready
             try {
                 var _calc = document.getElementById('planner-calc'); if (_calc && !_calc._tpv_bound) { _calc.addEventListener('click', function(){ try{ calcRoute({save:false}); }catch(e){ console.warn('calcRoute failed', e); } }); _calc._tpv_bound = true; }
-                var _exp = document.getElementById('planner-export'); if (_exp && !_exp._tpv_bound) { _exp.addEventListener('click', function(){ try{ exportGPX(); }catch(e){ console.warn('exportGPX failed', e); } }); _exp._tpv_bound = true; }
             } catch (e) { console.warn('planner button bind failed', e); }
 
             // Expose calcRoute for debugging and add onclick fallback in case addEventListener didn't attach
@@ -1353,31 +1360,11 @@ try {
                 <div class="form-actions" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:8px;">
                     <button type="submit" class="btn"><?php echo htmlspecialchars(t('add_to_trip', 'Add to trip')); ?></button>
                     
-                    <button type="button" id="planner-export" class="btn"><?php echo htmlspecialchars(t('planner_export', 'Export GPX')); ?></button>
-                    <label for="planner-speed" style="margin-left:4px;"><?php echo htmlspecialchars(t('avg_speed', 'Speed')); ?>:</label>
-                    <select id="planner-speed" class="select-min-width" style="min-width:110px;">
-                        <option value="60">60 km/h</option>
-                        <option value="80" selected>80 km/h</option>
-                        <option value="100">100 km/h</option>
-                        <option value="120">120 km/h</option>
-                    </select>
+                    <!-- Export GPX button removed -->
                 </div>
             </form>
         </div>
-
-        <!-- Map Selector Panel -->
-        <div>
-            <button id="toggle-map-selector" class="btn w-full">
-                🗺️ <?php echo htmlspecialchars(t('select_on_map', 'Select on Map')); ?>
-            </button>
-            <div id="map-selector-panel" class="map-selector-panel">
-                <div id="map-selector-container" class="map-selector-container"></div>
-                <div id="map-selected-info" class="map-selected-info">
-                    <strong id="map-selected-name"></strong><br>
-                    <small id="map-selected-meta"></small>
-                </div>
-            </div>
-        </div>
+        <!-- Map Selector Panel removed per request -->
     </div>
     <script src="<?php echo asset_url('assets/vendor/flatpickr/flatpickr.min.js'); ?>" crossorigin=""></script>
     <script>
@@ -1875,8 +1862,12 @@ try {
                             </div>
 
                             <div class="route-item-controls">
-                                <button class="move-up" type="button" title="<?php echo htmlspecialchars(t('move_up', 'Move up')); ?>">▲</button>
-                                <button class="move-down" type="button" title="<?php echo htmlspecialchars(t('move_down', 'Move down')); ?>">▼</button>
+                                <?php if ($pos !== 1): ?>
+                                    <button class="move-up" type="button" title="<?php echo htmlspecialchars(t('move_up', 'Move up')); ?>">▲</button>
+                                <?php endif; ?>
+                                <?php if ($pos !== $totalItems): ?>
+                                    <button class="move-down" type="button" title="<?php echo htmlspecialchars(t('move_down', 'Move down')); ?>">▼</button>
+                                <?php endif; ?>
                                 <button class="remove-item" type="button" title="<?php echo htmlspecialchars(t('remove', 'Remove')); ?>"><?php echo htmlspecialchars(t('remove', 'Remove')); ?></button>
                             </div>
                         </div>
@@ -1956,9 +1947,13 @@ try {
                 body: data
             }).then(function (r) { return r.json(); }).then(function (json) {
                 if (json && json.ok) {
-                    try { saveFilters(); } catch (e) {}
-                                       location.reload();
-                } else {
+                        try { saveFilters(); } catch (e) {}
+                        try {
+                            localStorage.setItem('tpv_last_arrival', form.querySelector('#arrival').value || '');
+                            localStorage.setItem('tpv_last_departure', form.querySelector('#departure').value || '');
+                        } catch (e) {}
+                        location.reload();
+                    } else {
                     try{ alert(locFailedToAddItem + ': ' + (json && json.error ? json.error : 'unknown')); }catch(e){ alert(locFailedToAddItem); }
                 }
             }).catch(function (err) { try{ alert(locGenericError + ': ' + err); }catch(e){ alert(locGenericError); } });
@@ -2272,5 +2267,37 @@ try {
         })();
     </script>
 </main>
+
+<style>
+    /* Layout helper: place form beside the map; keep route-controls full-width above */
+    .route-form-section { box-sizing: border-box; }
+    @media (min-width: 900px) {
+        .margin-bottom-large.map-and-form { }
+        /* Ensure controls span full width above the map+form row */
+        .margin-bottom-large.map-and-form > .route-controls { width: 100%; box-sizing: border-box; margin-bottom: 12px; }
+        /* Place map and form side-by-side */
+        .margin-bottom-large.map-and-form > #route-map { display: inline-block; width: calc(100% - 380px); min-height: 420px; vertical-align: top; }
+        .margin-bottom-large.map-and-form > .route-form-section { display: inline-block; width: 360px; max-width: 380px; vertical-align: top; }
+    }
+</style>
+
+<script>
+// Move the Add-Item form next to the map on wide screens.
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        var mb = document.querySelector('.margin-bottom-large');
+        var formSection = document.querySelector('.route-form-section');
+        var mapEl = document.getElementById('route-map');
+        if (!mb || !formSection || !mapEl) return;
+        // ensure the form is placed directly before the map element inside the same container
+        if (formSection.parentNode !== mb) {
+            // move it into the container
+            mb.appendChild(formSection);
+        }
+        // add marker class so CSS applies
+        mb.classList.add('map-and-form');
+    } catch (e) { console.warn('move form beside map failed', e); }
+});
+</script>
 
 <?php include __DIR__ . '/../../includes/footer.php'; ?>
