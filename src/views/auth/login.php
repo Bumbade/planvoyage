@@ -106,10 +106,31 @@ if ($flash): ?>
             </label>
             <label>
                 <span><?php echo htmlspecialchars(t('password_label', 'Password:')); ?></span>
-                <input type="password" name="password" required autocomplete="current-password">
+                <div style="position: relative; display: inline-block; width: 100%;">
+                    <input type="password" name="password" id="password-field" required autocomplete="current-password" style="width: 100%; padding-right: 45px;">
+                    <button type="button" id="toggle-password" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; padding: 5px 10px; font-size: 18px;" title="Passwort anzeigen/verbergen">
+                        👁️
+                    </button>
+                </div>
             </label>
             <button type="submit"><?php echo htmlspecialchars(t('login_button', 'Login')); ?></button>
         </form>
     </div>
 </main>
+<script>
+// Toggle password visibility
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.getElementById('toggle-password');
+    const passwordField = document.getElementById('password-field');
+    
+    if (toggleBtn && passwordField) {
+        toggleBtn.addEventListener('click', function() {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            // Toggle icon between eye and crossed-out eye
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+    }
+});
+</script>
 <?php include __DIR__ . '/../../includes/footer.php'; ?>

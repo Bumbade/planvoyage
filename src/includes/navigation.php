@@ -94,6 +94,13 @@ if (!empty($_SESSION['is_admin'])) {
                     </a>
                 </li>
                 
+                <!-- My POIs -->
+                <li class="nav-item">
+                    <a class="nav-link nav-btn" href="<?php echo app_url('/views/poi-list.php'); ?>">
+                        <span class="nav-emoji">⭐</span><span class="nav-label"> <?php echo t('my_pois') ?? 'My POIs'; ?></span>
+                    </a>
+                </li>
+                
                 <!-- Routes/Trips -->
                 <li class="nav-item">
                     <a class="nav-link nav-btn" href="<?php echo app_url('/index.php/routes'); ?>">

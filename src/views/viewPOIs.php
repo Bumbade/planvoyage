@@ -187,23 +187,6 @@ foreach ($allKeys as $k) {
     </div><!-- .pois-layout -->
 
     <div id="poi-list" class="poi-list" aria-live="polite"></div>
-
-    <!-- My POIs tile view (visible to logged-in users) -->
-    <?php if (!empty($_SESSION['user_id'])): ?>
-        <details id="my-pois" class="my-pois-section card" aria-expanded="false">
-            <summary class="section-summary">
-                <div class="summary-left">
-                    <h2 class="section-title"><?php echo htmlspecialchars($I18N['pois']['my_pois'] ?? 'My POIs'); ?></h2>
-                </div>
-                <div class="summary-right">
-                    <span class="muted small"><?php echo htmlspecialchars($I18N['general']['click_to_expand'] ?? 'Click to expand'); ?></span>
-                </div>
-            </summary>
-            <div id="my-pois-tiles" aria-live="polite" class="poi-tiles">
-                <p class="muted"><?php echo htmlspecialchars($I18N['general']['loading'] ?? 'Loading...'); ?></p>
-            </div>
-        </details>
-    <?php endif; ?>
 </main>
 
 <!-- Leaflet JS (defer: loaded after page render) -->
