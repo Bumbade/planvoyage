@@ -1,0 +1,261 @@
+/* ============================================================
+   Styles for src/printout.php - Leaflet-based route printing
+   ============================================================ */
+
+/* Force light background for printout page */
+body {
+  background-color: #f5f5f5 !important;
+  color: #000000 !important;
+}
+
+/* Force all text elements to be black */
+h1, h2, h3, h4, h5, h6, p, span, div, a, strong, b, em, i, li, td, th, label {
+  color: #000000 !important;
+}
+
+/* -------------------- Base Container -------------------- */
+/* Main content wrapper with centered layout */
+.printout-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000 !important;
+}
+
+/* Timestamp footer text */
+.printout-generated { 
+  margin-top: 18px; 
+  font-size: 0.9em; 
+  color: #000000 !important;
+}
+
+/* Print button - hidden during actual printing */
+.print-button { 
+  margin: 16px 0; 
+}
+
+/* -------------------- Route Segments -------------------- */
+/* Individual route segment container */
+.segment { 
+  margin: 18px 0; 
+}
+
+/* Segment heading (e.g., "Location A → Location B") */
+.segment-title { 
+  font-size: 1.2em; 
+  font-weight: 600; 
+  margin-bottom: 8px;
+  color: #000000 !important;
+  background-color: #8dcfff;
+  padding: 8px 12px;
+  border-left: 4px solid #2196f3;
+  border-right: 4px solid #2196f3;
+  border-radius: 4px;
+}
+
+/* Segment metadata (distance, departure/arrival times) */
+.segment-info { 
+  font-size: 0.95em; 
+  color: #000000; 
+  margin-bottom: 12px; 
+}
+
+/* -------------------- Leaflet Maps -------------------- */
+/* Interactive Leaflet map container - requires explicit height for rendering */
+.pv-leaflet {
+  width: 100%;
+  height: 600px;
+  background: #f7f9fb;
+  border: 1px solid #ddd;
+  margin: 12px auto;
+  display: block;
+}
+
+/* Wrapper around map divs for consistent spacing */
+.map-wrapper { 
+  width: 100%; 
+  margin: 12px 0; 
+}
+
+/* -------------------- Map Labels -------------------- */
+/* Custom Leaflet tooltip styling for station labels */
+.pv-map-label {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #ff4d4d;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: 0.85em;
+  color: #000000 !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  white-space: nowrap;
+}
+
+.pv-map-label::before {
+  display: none; /* Hide Leaflet's default tooltip arrow */
+}
+
+/* -------------------- A4 Print Layout -------------------- */
+/* A4-sized page container (210mm × 297mm) with page breaks */
+.a4page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 40px;
+  padding: 30px;
+  box-sizing: border-box;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Overview page layout - centers content vertically */
+.a4-overview {
+  display: block;
+  color: #000;
+}
+
+/* Remove container constraints on A4 pages */
+.a4-overview .printout-container {
+  width: 100%;
+  padding: 0;
+  text-align: left;
+}
+
+/* Full-width segments on A4 pages */
+.a4-overview .segment {
+  width: 100%;
+  margin: 20px 0;
+  padding: 0;
+}
+
+/* -------------------- Print Media Query -------------------- */
+/* Adjustments when printing or saving as PDF */
+@media print {
+  /* Force landscape orientation */
+  @page {
+    size: A4 landscape;
+    margin: 15mm;
+  }
+  
+  /* Hide navigation, header, footer and print button */
+  .print-button,
+  nav,
+  header,
+  footer,
+  .navbar,
+  .navigation,
+  .header,
+  .footer,
+  .breadcrumb,
+  .menu { 
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  /* Remove body/html margins for print */
+  body, html {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  
+  /* A4 page dimensions for print in landscape */
+  .a4page {
+    width: 297mm !important;  /* A4 landscape width */
+    height: 210mm !important; /* A4 landscape height */
+    padding: 8mm 10mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-after: auto !important;
+    page-break-before: auto !important;
+    page-break-inside: avoid !important;
+    display: block !important;
+  }
+  
+  /* Each segment with map starts on a new page */
+  .a4-overview {
+    page-break-before: always !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    height: auto !important;
+    max-height: 210mm !important;
+  }
+  
+  /* First page should not have page break before */
+  .a4-overview:first-child,
+  .a4page:first-child {
+    page-break-before: avoid !important;
+  }
+  
+  /* Maximize maps for landscape print - reduced to fit better */
+  .pv-leaflet {
+    height: 160mm !important;
+    width: 270mm !important;
+    max-height: 160mm !important;
+    border: none !important;
+    margin: 2mm auto !important;
+    page-break-inside: avoid !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    display: block !important;
+  }
+  
+  /* Reduce text size to maximize map space */
+  .segment {
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    margin: 0 !important;
+  }
+  
+  .segment-title {
+    font-size: 0.9em !important;
+    color: #000000 !important;
+    margin: 1mm 0 !important;
+    page-break-after: avoid !important;
+  }
+  
+  .segment-info {
+    font-size: 0.75em !important;
+    color: #000000 !important;
+    margin: 1mm 0 !important;
+    page-break-after: avoid !important;
+  }
+  
+  h1 {
+    font-size: 1.2em !important;
+    color: #000000 !important;
+    margin: 1mm 0 !important;
+    page-break-after: avoid !important;
+  }
+  
+  h3 {
+    font-size: 0.9em !important;
+    color: #000000 !important;
+    margin: 1mm 0 !important;
+    page-break-after: avoid !important;
+  }
+  
+  p {
+    margin: 1mm 0 !important;
+  }
+  
+  .print-header {
+    margin-bottom: 2mm !important;
+    padding-bottom: 1mm !important;
+    color: #000;
+  }
+  
+  .printout-container {
+    padding: 0 !important;
+    page-break-inside: avoid !important;
+  }
+  
+  .map-wrapper {
+    margin: 1mm 0 !important;
+    page-break-inside: avoid !important;
+    page-break-before: avoid !important;
+    page-break-after: avoid !important;
+    color: #000;
+  }
+}
