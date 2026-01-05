@@ -949,6 +949,7 @@ export default class PoiMapManager {
         this.map.addLayer(this.markers);
 
         this.createSpinner();
+        this.createZoomHintOverlay();
         this.addImportControl();
         this.addZoomControl();
         this.addLegend();
@@ -1001,6 +1002,47 @@ export default class PoiMapManager {
                 }, 600); // Wait 600ms to let cluster expand/close animations finish
             }
         });
+    }
+
+    createZoomHintOverlay() {
+        // Create an overlay that displays a zoom hint until correct zoom level is reached
+        if (document.getElementById('pois-zoom-hint-overlay')) return;
+        const mapEl = document.getElementById(this.options.mapId);
+        if (!mapEl) return;
+        mapEl.style.position = mapEl.style.position || 'relative';
+
+        const overlay = document.createElement('div');
+        overlay.id = 'pois-zoom-hint-overlay';
+        overlay.style.cssText = 'display:none; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index:9997; pointer-events:none;';
+        overlay.setAttribute('aria-live', 'polite');
+
+        const hintBox = document.createElement('div');
+        hintBox.className = 'poi-zoom-hint-box';
+        hintBox.style.cssText = 'background:rgba(255,255,255,0.95); padding:16px 24px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:16px; color:#444; text-align:center; max-width:400px;';
+        hintBox.innerHTML = '<div class="poi-zoom-hint">POI search disabled, zoom below 10 (only MySQL POIs visible)</div>';
+
+        overlay.appendChild(hintBox);
+        mapEl.appendChild(overlay);
+    }
+
+    showZoomHintOverlay(message) {
+        try {
+            const overlay = document.getElementById('pois-zoom-hint-overlay');
+            if (!overlay) return;
+            if (typeof message === 'string' && message.length) {
+                const hintEl = overlay.querySelector('.poi-zoom-hint');
+                if (hintEl) hintEl.textContent = message;
+            }
+            overlay.style.display = 'block';
+        } catch (e) {}
+    }
+
+    hideZoomHintOverlay() {
+        try {
+            const overlay = document.getElementById('pois-zoom-hint-overlay');
+            if (!overlay) return;
+            overlay.style.display = 'none';
+        } catch (e) {}
     }
 
     createSpinner() {
@@ -1194,15 +1236,14 @@ export default class PoiMapManager {
                 onAdd: (map) => {
                     const container = L.DomUtil.create('div', 'leaflet-bar poi-zoom-control');
                         container.style.padding = '6px 8px';
-                        container.style.fontSize = '12px';
+                        container.style.fontSize = '16px';
                         container.style.borderRadius = '4px';
                         container.style.background = 'rgba(255,255,255,0.95)';
                         container.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15)';
-                        container.innerHTML = `<div class="poi-zoom-main">Zoom: ${map.getZoom()}</div><div class="poi-zoom-hint" style="font-size:11px;color:#444"></div>`;
+                        container.innerHTML = `<div class="poi-zoom-main">Zoom: ${map.getZoom()}</div>`;
                     // prevent map interactions when clicking the control
                     L.DomEvent.disableClickPropagation(container);
                     this._zoomContainer = container;
-                        this._overpassHintEl = container.querySelector('.poi-zoom-hint');
                     return container;
                 }
             });
@@ -1213,26 +1254,42 @@ export default class PoiMapManager {
                         const main = this._zoomContainer.querySelector('.poi-zoom-main');
                         if(main) main.textContent = 'Zoom: ' + this.map.getZoom();
                     }
-                    if (this._overpassHintEl) {
-                        const z = this.map.getZoom();
-                        if (z >= (this.options.overpassMinZoom || 0)) {
-                            this._overpassHintEl.textContent = 'Overpass enabled';
-                        } else {
-                            const uid = window.CURRENT_USER_ID ? ' (you see only your MySQL POIs)' : '';
-                            this._overpassHintEl.textContent = 'Overpass disabled below zoom ' + (this.options.overpassMinZoom || 0) + uid;
+                    const z = this.map.getZoom();
+                    const minZ = this.options.overpassMinZoom || 10;
+                    const loadBtn = document.getElementById('load-pois-btn');
+                    if (z < minZ) {
+                        const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
+                        this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ}${uid}`);
+                        if (loadBtn) {
+                            loadBtn.disabled = true;
+                            loadBtn.title = (window.I18N?.pois?.zoom_required) ? (window.I18N.pois.zoom_required.replace('{z}', minZ)) : `Zoom to ${minZ} to enable Load POIs`;
+                        }
+                    } else {
+                        this.hideZoomHintOverlay();
+                        if (loadBtn) {
+                            loadBtn.disabled = false;
+                            loadBtn.title = (window.I18N?.pois?.load_pois) || 'Load POIs';
                         }
                     }
                 }catch(e){}
             });
-            // Initial hint update
+            // Initial hint and button state update
             try {
-                if (this._overpassHintEl) {
-                    const z0 = this.map.getZoom();
-                    if (z0 >= (this.options.overpassMinZoom || 0)) {
-                        this._overpassHintEl.textContent = 'Overpass enabled';
-                    } else {
-                        const uid = window.CURRENT_USER_ID ? ' (you see only your MySQL POIs)' : '';
-                        this._overpassHintEl.textContent = 'Overpass disabled below zoom ' + (this.options.overpassMinZoom || 0) + uid;
+                const z = this.map.getZoom();
+                const minZ = this.options.overpassMinZoom || 10;
+                const loadBtnInit = document.getElementById('load-pois-btn');
+                if (z < minZ) {
+                    const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
+                    this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ}${uid}`);
+                    if (loadBtnInit) {
+                        loadBtnInit.disabled = true;
+                        loadBtnInit.title = (window.I18N?.pois?.zoom_required) ? (window.I18N.pois.zoom_required.replace('{z}', minZ)) : `Zoom to ${minZ} to enable Load POIs`;
+                    }
+                } else {
+                    this.hideZoomHintOverlay();
+                    if (loadBtnInit) {
+                        loadBtnInit.disabled = false;
+                        loadBtnInit.title = (window.I18N?.pois?.load_pois) || 'Load POIs';
                     }
                 }
             } catch (e) {}

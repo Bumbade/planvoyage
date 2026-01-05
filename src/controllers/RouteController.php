@@ -128,13 +128,31 @@ class RouteController
         $obj->updated_at = $row['updated_at'] ?? null;
         // Load route items (if the table exists)
         try {
-            $itStmt = $this->db->prepare(
-                'SELECT ri.id AS item_id, ri.position, ri.arrival, ri.departure, ri.notes, l.id AS location_id, l.name AS location_name, l.type AS location_type, l.latitude, l.longitude, l.logo AS logo, l.country AS country, l.state AS state
-                 FROM route_items ri
-                 LEFT JOIN locations l ON ri.location_id = l.id
-                 WHERE ri.route_id = :rid
-                 ORDER BY ri.position ASC'
-            );
+            // Determine which optional contact/address columns exist in `locations` and include them if present.
+            $availableCols = [];
+            try {
+                $colsStmt = $this->db->query("SHOW COLUMNS FROM locations");
+                $cols = $colsStmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($cols as $c) {
+                    $availableCols[] = $c['Field'];
+                }
+            } catch (Exception $e) {
+                // If SHOW COLUMNS fails, fall back to an empty list (no extras)
+                $availableCols = [];
+            }
+
+            $wanted = ['address','addr_street','addr_housenumber','addr_city','addr_postcode','phone','email','website','opening_hours'];
+            $extras = array_values(array_intersect($wanted, $availableCols));
+
+            $extraSelect = '';
+            foreach ($extras as $col) {
+                // alias to keep same key in result
+                $extraSelect .= ", l." . $col . " AS " . $col;
+            }
+
+            $sql = 'SELECT ri.id AS item_id, ri.position, ri.arrival, ri.departure, ri.notes, l.id AS location_id, l.name AS location_name, l.type AS location_type, l.latitude, l.longitude, l.logo AS logo, l.country AS country, l.state AS state' . $extraSelect . "\n                 FROM route_items ri\n                 LEFT JOIN locations l ON ri.location_id = l.id\n                 WHERE ri.route_id = :rid\n                 ORDER BY ri.position ASC";
+
+            $itStmt = $this->db->prepare($sql);
             $itStmt->execute([':rid' => $id]);
             $items = $itStmt->fetchAll(PDO::FETCH_ASSOC);
             $obj->items = $items;

@@ -120,17 +120,23 @@ $flashErr = flash_get('error');
                         <td><?php echo htmlspecialchars($route['start_date']); ?></td>
                         <td><?php echo htmlspecialchars($route['end_date']); ?></td>
                         <td>
-                            <?php $viewUrl = app_url('/index.php/routes/view') . '?id=' . urlencode($route['id']); ?>
-                            <a href="<?php echo htmlspecialchars($viewUrl); ?>" class="btn btn-info">
-                                <?php echo htmlspecialchars(t('view', 'View')); ?>
-                            </a>
-                            <form method="POST" class="form-inline" onsubmit="return confirm('<?php echo t('confirm_delete_route', 'Are you sure you want to delete this route?'); ?>');">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="route_id" value="<?php echo htmlspecialchars($route['id']); ?>">
-                                <button type="submit" class="btn btn-danger">
-                                    <?php echo htmlspecialchars(t('delete', 'Delete')); ?>
-                                </button>
-                            </form>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                <?php $viewUrl = app_url('/index.php/routes/view') . '?id=' . urlencode($route['id']); ?>
+                                <a href="<?php echo htmlspecialchars($viewUrl); ?>" class="btn btn-info">
+                                    <?php echo htmlspecialchars(t('view', 'View')); ?>
+                                </a>
+                                <form method="POST" class="form-inline" style="margin:0;background-color:transparent;box-shadow:none;border:none;" onsubmit="return confirm('<?php echo t('confirm_delete_route', 'Are you sure you want to delete this route?'); ?>');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="route_id" value="<?php echo htmlspecialchars($route['id']); ?>">
+                                    <button type="submit" class="btn btn-danger">
+                                        <?php echo htmlspecialchars(t('delete', 'Delete')); ?>
+                                    </button>
+                                </form>  
+                                <?php $viewUrl = app_url('/printout.php') . '?id=' . urlencode($route['id']); ?>
+                                <a href="<?php echo htmlspecialchars($viewUrl); ?>" class="btn btn-info">
+                                    Print Overview
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>

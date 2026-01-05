@@ -1,35 +1,5 @@
 
-/* ==== STYLE ====
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-family: var(--font-body);
-}
-
-header {
-    background: var(--color-primary);
-    color: var(--color-text-on-primary);
-    padding: 10px 0;
-    text-align: center;
-}
-
-nav {
-    margin: 10px 0;
-}
-
-nav a {
-    color: var(--color-text-on-primary);
-    text-decoration: none;
-    padding: 10px 15px;
-}
-
-nav a:hover {
-    background: var(--color-secondary);
-}
-
-/* .container styling moved to src/styles/global.css */
+/* ==== STYLE ==== */
 
 h1, h2, h3 {
     color: var(--color-primary);
@@ -1108,7 +1078,7 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Map container sizing and POI status styles (no inline styles) */
-.pois-map { height: 600px; border: 1px solid var(--color-border); position: relative; }
+.pois-map { height: 600px; border: 3px solid var(--color-border); position: relative; }
 .pois-status {
     position: absolute;
     top: 8px;

@@ -83,7 +83,18 @@ if ($flashOk): ?>
             }
         }
 
-        start.addEventListener('change', validateDates);
+        start.addEventListener('change', function() {
+            // Auto-fill end date with start date + 2 weeks if end date is empty
+            if (start.value && !end.value) {
+                var startDate = new Date(start.value);
+                startDate.setDate(startDate.getDate() + 14); // Add 14 days (2 weeks)
+                var year = startDate.getFullYear();
+                var month = String(startDate.getMonth() + 1).padStart(2, '0');
+                var day = String(startDate.getDate()).padStart(2, '0');
+                end.value = year + '-' + month + '-' + day;
+            }
+            validateDates();
+        });
         end.addEventListener('change', validateDates);
         // run once on load
         validateDates();
