@@ -14,7 +14,9 @@ export default class PoiTiles{
         if(!this.container) return;
         try{
             this.setLoading(true);
-            const url = (window.APP_BASE || '') + '/api/locations/search.php?mine=1&limit=1000';
+            const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+            const apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+            const url = apiBase + '/locations/search.php?mine=1&limit=1000';
             const resp = await fetch(url, {credentials:'same-origin'});
             if(!resp.ok) throw new Error('HTTP '+resp.status);
             const j = await resp.json();

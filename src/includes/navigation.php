@@ -113,9 +113,9 @@ if (!empty($_SESSION['is_admin'])) {
                         ⚙️ <?php echo t('admin') ?? 'Admin'; ?>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                        <li><a class="dropdown-item" href="<?php echo app_url('/admin/themes.php'); ?>"><?php echo t('admin_themes') ?? 'Themes'; ?></a></li>
-                        <li><a class="dropdown-item" href="<?php echo app_url('/admin/user_permissions.php'); ?>"><?php echo t('user_permissions') ?? 'User Permissions'; ?></a></li>
-                       <li><a class="dropdown-item" href="<?php echo app_url('/admin/overpass_quick_status.php'); ?>">Overpass Quick Proxy</a></li>
+                        <li><a class="dropdown-item" href="<?php echo app_url('/src/admin/themes.php'); ?>"><?php echo t('admin_themes') ?? 'Themes'; ?></a></li>
+                        <li><a class="dropdown-item" href="<?php echo app_url('/src/admin/user_permissions.php'); ?>"><?php echo t('user_permissions') ?? 'User Permissions'; ?></a></li>
+                       <li><a class="dropdown-item" href="<?php echo app_url('/src/admin/overpass_quick_status.php'); ?>">Overpass Quick Proxy</a></li>
                     </ul>
                 </li>
                 <?php endif; ?>

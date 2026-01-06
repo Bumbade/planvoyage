@@ -7,7 +7,11 @@ function makeApiCandidates(relPath, queryString) {
     // Normalize: ensure trailing slash and strip any trailing index.php or /src segment
     if (b.charAt(b.length-1) !== '/') b += '/';
     b = b.replace(/\/index\.php\/?$/i, '/');
-    const rootBase = b.replace(/\/src\/?$/i, '/');
+    // Normalize root base: strip trailing /src/api, /api or /src so we don't duplicate segments
+    const rootBase = b
+        .replace(/\/src\/api\/?$/i, '/')
+        .replace(/\/api\/?$/i, '/')
+        .replace(/\/src\/?$/i, '/');
     const withTrailing = base => (base.charAt(base.length-1) === '/' ? base : base + '/');
     // Build candidates: prefer absolute origin-prefixed top-level API path first,
     // then origin + src/, then relative top-level and relative src/.

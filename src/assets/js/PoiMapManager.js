@@ -44,6 +44,15 @@ export default class PoiMapManager {
         this._initDone = false;
         // No heavy work in constructor: network and async logic live in `fetchAndPlot()`
         // which is called by the bootstrapping code once the map is initialised.
+        // If initial configured zoom is below the overpass min, disable filters immediately.
+        try {
+            const initialZoom = Number.isFinite(Number(this.options.mapZoom)) ? Number(this.options.mapZoom) : null;
+            const minZ = Number.isFinite(Number(this.options.overpassMinZoom)) ? Number(this.options.overpassMinZoom) : 10;
+            if (initialZoom !== null && initialZoom < minZ) {
+                // Defer slightly to allow DOM elements to exist
+                setTimeout(() => { try { this._disableFilters(); } catch (e) {} }, 0);
+            }
+        } catch (e) {}
     }
 
     static CATEGORY_PREDICATES = {
@@ -336,13 +345,15 @@ export default class PoiMapManager {
 
         // Derive a root base without a trailing '/src' to avoid duplicating 'src' when
         // constructing candidates. Example: if API_BASE is '/app/src', rootBase becomes '/app/'.
-        const rootBase = b.replace(/\/src\/?$/i, '/');
+        // Normalize root base: strip trailing /src/api, /api or /src so we don't duplicate segments
+        const rootBase = b
+            .replace(/\/src\/api\/?$/i, '/')
+            .replace(/\/api\/?$/i, '/')
+            .replace(/\/src\/?$/i, '/');
         const withTrailing = (base) => (base.charAt(base.length - 1) === '/' ? base : base + '/');
 
-        // Preferred ordering: (1) root + src/index.php/, (2) root + index.php/, (3) root + src/, (4) root
+        // Preferred ordering: direct src/ and root (do not use index.php in URLs)
         const orderedBases = [
-            withTrailing(rootBase) + 'src/index.php/',
-            withTrailing(rootBase) + 'index.php/',
             withTrailing(rootBase) + 'src/',
             withTrailing(rootBase)
         ];
@@ -399,9 +410,10 @@ export default class PoiMapManager {
     // Ensure CSRF token is available for scripted imports. Caches token in instance and sets window.CSRF_TOKEN.
     async _ensureCsrfToken() {
         if (this._csrfToken) return this._csrfToken;
-        let base = window.APP_BASE || '/';
-        if (base.charAt(base.length - 1) !== '/') base += '/';
-        const url = `${base}index.php/api/session/csrf`;
+        const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+        let apiBase = apiBaseRaw.replace(/\/\/+/g, '/');
+        apiBase = apiBase.replace(/\/$/, '');
+        const url = apiBase + '/session/csrf';
         try {
             const resp = await fetch(url, { method: 'GET', credentials: 'same-origin' });
             if (!resp.ok) return null;
@@ -950,6 +962,16 @@ export default class PoiMapManager {
 
         this.createSpinner();
         this.createZoomHintOverlay();
+        try {
+            const z0 = (this.map && typeof this.map.getZoom === 'function') ? this.map.getZoom() : null;
+            const minZ0 = this.options.overpassMinZoom || 10;
+            if (z0 !== null && z0 < minZ0) {
+                const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
+                this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ0}${uid}`);
+            } else {
+                this.hideZoomHintOverlay();
+            }
+        } catch (e) {}
         this.addImportControl();
         this.addZoomControl();
         this.addLegend();
@@ -1001,6 +1023,27 @@ export default class PoiMapManager {
                     this.fetchAndPlot();
                 }, 600); // Wait 600ms to let cluster expand/close animations finish
             }
+
+            // Show or hide the zoom hint overlay depending on current zoom
+            try {
+                const z2 = this.map.getZoom();
+                const minZ = this.options.overpassMinZoom || 10;
+                const loadBtn = document.getElementById('load-pois-btn');
+                const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
+                if (z2 < minZ) {
+                    this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ}${uid}`);
+                    if (loadBtn) {
+                        loadBtn.disabled = true;
+                        loadBtn.title = (window.I18N?.pois?.zoom_required) ? (window.I18N.pois.zoom_required.replace('{z}', minZ)) : `Zoom to ${minZ} to enable Load POIs`;
+                    }
+                } else {
+                    this.hideZoomHintOverlay();
+                    if (loadBtn) {
+                        loadBtn.disabled = false;
+                        loadBtn.title = (window.I18N?.pois?.load_pois) || 'Load POIs';
+                    }
+                }
+            } catch (e) {}
         });
     }
 
@@ -1013,12 +1056,12 @@ export default class PoiMapManager {
 
         const overlay = document.createElement('div');
         overlay.id = 'pois-zoom-hint-overlay';
-        overlay.style.cssText = 'display:none; position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); z-index:9997; pointer-events:none;';
+        overlay.style.cssText = 'display:none; position:absolute; left:50%; top:10%; transform:translate(-50%, -50%); z-index:9997; pointer-events:none;';
         overlay.setAttribute('aria-live', 'polite');
 
         const hintBox = document.createElement('div');
         hintBox.className = 'poi-zoom-hint-box';
-        hintBox.style.cssText = 'background:rgba(255,255,255,0.95); padding:16px 24px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:16px; color:#444; text-align:center; max-width:400px;';
+        hintBox.style.cssText = 'background:rgba(255,255,255,0.35); padding:16px 24px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:16px; color:#444; text-align:center; max-width:400px;';
         hintBox.innerHTML = '<div class="poi-zoom-hint">POI search disabled, zoom below 10 (only MySQL POIs visible)</div>';
 
         overlay.appendChild(hintBox);
@@ -1034,6 +1077,8 @@ export default class PoiMapManager {
                 if (hintEl) hintEl.textContent = message;
             }
             overlay.style.display = 'block';
+
+            try { this._disableFilters(); } catch (e) {}
         } catch (e) {}
     }
 
@@ -1042,6 +1087,47 @@ export default class PoiMapManager {
             const overlay = document.getElementById('pois-zoom-hint-overlay');
             if (!overlay) return;
             overlay.style.display = 'none';
+            try { this._enableFilters(); } catch (e) {}
+        } catch (e) {}
+    }
+
+    _disableFilters() {
+        try {
+            const boxes = Array.from(document.querySelectorAll('.poi-filter-checkbox')) || [];
+            boxes.forEach(cb => {
+                try { cb.disabled = true; cb.setAttribute('aria-disabled', 'true'); } catch (e) {}
+                try {
+                    const lbl = cb.closest('.poi-filter-item') || cb.parentElement;
+                    if (lbl) {
+                        lbl.style.opacity = '0.6';
+                        lbl.style.pointerEvents = 'none';
+                        try {
+                            const img = lbl.querySelector && lbl.querySelector('.filter-icon');
+                            if (img) img.style.filter = 'grayscale(100%) brightness(0.7)';
+                        } catch (e) {}
+                    }
+                } catch (e) {}
+            });
+        } catch (e) {}
+    }
+
+    _enableFilters() {
+        try {
+            const boxes = Array.from(document.querySelectorAll('.poi-filter-checkbox')) || [];
+            boxes.forEach(cb => {
+                try { cb.disabled = false; cb.removeAttribute('aria-disabled'); } catch (e) {}
+                try {
+                    const lbl = cb.closest('.poi-filter-item') || cb.parentElement;
+                    if (lbl) {
+                        lbl.style.opacity = '';
+                        lbl.style.pointerEvents = '';
+                        try {
+                            const img = lbl.querySelector && lbl.querySelector('.filter-icon');
+                            if (img) img.style.filter = '';
+                        } catch (e) {}
+                    }
+                } catch (e) {}
+            });
         } catch (e) {}
     }
 
@@ -1228,19 +1314,13 @@ export default class PoiMapManager {
             this.map.addControl(new ShareControl());
         } catch (e) { if (window.DEBUG) console.warn('addShareView failed', e); }
     }
-
     addZoomControl(){
         try{
             const ZoomControl = L.Control.extend({
                 options: { position: 'topright' },
                 onAdd: (map) => {
                     const container = L.DomUtil.create('div', 'leaflet-bar poi-zoom-control');
-                        container.style.padding = '6px 8px';
-                        container.style.fontSize = '16px';
-                        container.style.borderRadius = '4px';
-                        container.style.background = 'rgba(255,255,255,0.95)';
-                        container.style.boxShadow = '0 1px 4px rgba(0,0,0,0.15)';
-                        container.innerHTML = `<div class="poi-zoom-main">Zoom: ${map.getZoom()}</div>`;
+                    container.textContent = `Zoom: ${map.getZoom()}`;
                     // prevent map interactions when clicking the control
                     L.DomEvent.disableClickPropagation(container);
                     this._zoomContainer = container;
@@ -1249,50 +1329,8 @@ export default class PoiMapManager {
             });
             this.map.addControl(new ZoomControl());
             this.map.on('zoomend', ()=>{
-                try{
-                    if(this._zoomContainer) {
-                        const main = this._zoomContainer.querySelector('.poi-zoom-main');
-                        if(main) main.textContent = 'Zoom: ' + this.map.getZoom();
-                    }
-                    const z = this.map.getZoom();
-                    const minZ = this.options.overpassMinZoom || 10;
-                    const loadBtn = document.getElementById('load-pois-btn');
-                    if (z < minZ) {
-                        const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
-                        this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ}${uid}`);
-                        if (loadBtn) {
-                            loadBtn.disabled = true;
-                            loadBtn.title = (window.I18N?.pois?.zoom_required) ? (window.I18N.pois.zoom_required.replace('{z}', minZ)) : `Zoom to ${minZ} to enable Load POIs`;
-                        }
-                    } else {
-                        this.hideZoomHintOverlay();
-                        if (loadBtn) {
-                            loadBtn.disabled = false;
-                            loadBtn.title = (window.I18N?.pois?.load_pois) || 'Load POIs';
-                        }
-                    }
-                }catch(e){}
+                try{ if(this._zoomContainer) this._zoomContainer.textContent = 'Zoom: ' + this.map.getZoom(); }catch(e){}
             });
-            // Initial hint and button state update
-            try {
-                const z = this.map.getZoom();
-                const minZ = this.options.overpassMinZoom || 10;
-                const loadBtnInit = document.getElementById('load-pois-btn');
-                if (z < minZ) {
-                    const uid = window.CURRENT_USER_ID ? ' (only MySQL POIs visible)' : '';
-                    this.showZoomHintOverlay(`POI search disabled, zoom below ${minZ}${uid}`);
-                    if (loadBtnInit) {
-                        loadBtnInit.disabled = true;
-                        loadBtnInit.title = (window.I18N?.pois?.zoom_required) ? (window.I18N.pois.zoom_required.replace('{z}', minZ)) : `Zoom to ${minZ} to enable Load POIs`;
-                    }
-                } else {
-                    this.hideZoomHintOverlay();
-                    if (loadBtnInit) {
-                        loadBtnInit.disabled = false;
-                        loadBtnInit.title = (window.I18N?.pois?.load_pois) || 'Load POIs';
-                    }
-                }
-            } catch (e) {}
         }catch(e){ console.warn('addZoomControl failed', e); }
     }
 
@@ -1742,7 +1780,7 @@ export default class PoiMapManager {
                     let overpassApiCandidates = PoiMapManager.makeApiCandidates('api/locations/search_overpass_v2.php', queryStr);
                     // Some server setups require the `src/index.php/` prefix — ensure we include that variant
                     try {
-                        const rel = 'api/locations/search_overpass_v2.php';
+                        const rel = 'src/api/locations/search_overpass_v2.php';
                         if (window.API_BASE && !String(window.API_BASE).includes('/src')) {
                             let base = String(window.API_BASE);
                             if (base.charAt(base.length - 1) !== '/') base += '/';
@@ -2197,17 +2235,15 @@ export default class PoiMapManager {
             return;
         }
         this.setStatus(`Importing ${osmType} ${osmId}...`, false, true);
-        try {
-            let base = window.APP_BASE || '/';
-            if (base.charAt(base.length - 1) !== '/') base += '/';
-            // Prefer the fast Overpass importer directly to avoid slow legacy fallbacks
-            const candidates = [
-                // Direct fast importer (optimized, expects form POST with osm_id/osm_ids)
-                { url: `${base}api/locations/import_from_overpass_fast.php`, type: 'form' },
-                // Prefer the API route (front-controller) as a secondary option
-                { url: `${base}index.php/api/locations/import`, type: 'form' },
-                { url: `${base}api/locations/import`, type: 'json' }
-            ];
+            try {
+                const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+                let apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+                // Prefer the fast Overpass importer (direct under src/api/locations)
+                const candidates = [
+                    { url: `${apiBase}/locations/import_from_overpass_fast.php`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'json' }
+                ];
             let response = null;
             let result = null;
             let lastErr = null;
@@ -2288,8 +2324,9 @@ export default class PoiMapManager {
                     const newId = found && (found.id || found.inserted_id || found.insertedId || found.ID) ? (found.id || found.inserted_id || found.insertedId || found.ID) : null;
                     if (newId) {
                         // fetch single row by id from search API
-                        let base = window.APP_BASE || '/'; if (base.charAt(base.length - 1) !== '/') base += '/';
-                        const urls = [`${base}api/locations/search.php?id=${encodeURIComponent(newId)}`, `${base}index.php/api/locations/search?id=${encodeURIComponent(newId)}`];
+                        const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+                        let apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+                        const urls = [`${apiBase}/locations/search.php?id=${encodeURIComponent(newId)}`];
                         let row = null;
                         for (const u of urls) {
                             try {
@@ -2350,16 +2387,14 @@ export default class PoiMapManager {
         if (!confirm(`Import ${visiblePois.length} visible POIs?`)) return;
 
         this.setStatus(`Importing ${visiblePois.length} POIs...`, false, true);
-        try {
-            let base = window.APP_BASE || '/';
-            if (base.charAt(base.length - 1) !== '/') base += '/';
-            const candidates = [
-                { url: `${base}index.php/api/locations/import_batch`, type: 'form' },
-                { url: `${base}index.php/api/locations/import`, type: 'form' },
-                { url: `${base}api/locations/import`, type: 'json' },
-                { url: `${base}index.php/locations/import`, type: 'form' },
-                { url: `${base}api/import.php`, type: 'json' }
-            ];
+            try {
+                const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+                let apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+                const candidates = [
+                    { url: `${apiBase}/locations/import_batch`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'json' }
+                ];
             let response = null;
             let result = null;
             let lastErr = null;
@@ -2401,16 +2436,14 @@ export default class PoiMapManager {
         }
 
         this.setStatus(`Importing ${selected.length} selected POIs...`, false, true);
-        try {
-            let base = window.APP_BASE || '/';
-            if (base.charAt(base.length - 1) !== '/') base += '/';
-            const candidates = [
-                { url: `${base}index.php/api/locations/import_batch`, type: 'form' },
-                { url: `${base}index.php/api/locations/import`, type: 'form' },
-                { url: `${base}api/locations/import`, type: 'json' },
-                { url: `${base}index.php/locations/import`, type: 'form' },
-                { url: `${base}api/import.php`, type: 'json' }
-            ];
+            try {
+                const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+                let apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+                const candidates = [
+                    { url: `${apiBase}/locations/import_batch`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'form' },
+                    { url: `${apiBase}/locations/import`, type: 'json' }
+                ];
             let response = null;
             let result = null;
             let lastErr = null;
@@ -2463,9 +2496,9 @@ export default class PoiMapManager {
                 search: search,
                 only_mine: onlyMine ? '1' : '0'
             });
-            let base = window.APP_BASE || '/';
-            if (base.charAt(base.length - 1) !== '/') base += '/';
-            const fetchUrl = `${base}api/locations/search.php?${params.toString()}`;
+            const apiBaseRaw = String(window.API_BASE || ((window.APP_BASE || '') + '/src/api'));
+            let apiBase = apiBaseRaw.replace(/\/\/+/g, '/').replace(/\/$/, '');
+            const fetchUrl = `${apiBase}/locations/search.php?${params.toString()}`;
             const response = await fetch(fetchUrl);
             if (!response.ok) throw new Error(`HTTP error ${response.status}`);
             const respJson = await this._safeParseJson(response, fetchUrl);

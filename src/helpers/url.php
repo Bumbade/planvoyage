@@ -23,9 +23,33 @@ if (!function_exists('app_url')) {
         if (!empty($configured)) {
             $base = rtrim($configured, '/');
         } else {
+            // Try to robustly derive the app base from the server environment.
+            // First prefer SCRIPT_NAME dirname (fast), but fall back to comparing
+            // SCRIPT_FILENAME with DOCUMENT_ROOT to compute the web-relative path
             $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
             $base = rtrim(dirname($script), '/');
             if ($base === '/') $base = '';
+
+            // If base looks like it's pointing to ANY src subfolder (views, api, admin, controllers, etc.),
+            // attempt to derive the application root by comparing filesystem paths.
+            if (empty($base) || preg_match('#/src/(views|api|admin|controllers|assets|helpers|config)#', $base)) {
+                $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])) : '';
+                $scriptFile = isset($_SERVER['SCRIPT_FILENAME']) ? str_replace('\\', '/', realpath($_SERVER['SCRIPT_FILENAME'])) : '';
+                if ($docRoot && $scriptFile && strpos($scriptFile, $docRoot) === 0) {
+                    // Find the 'src' directory in the script path and go up one level to get app root
+                    if (preg_match('#^(.*?)/src/#', substr($scriptFile, strlen($docRoot)), $match)) {
+                        $base = $match[1];
+                        if ($base === '') $base = '';
+                    } else {
+                        // Fallback: go up to grandparent directory
+                        $appDir = dirname(dirname($scriptFile));
+                        $rel = substr($appDir, strlen($docRoot));
+                        $rel = '/' . trim(str_replace('\\', '/', $rel), '/');
+                        if ($rel === '/') $rel = '';
+                        $base = $rel;
+                    }
+                }
+            }
         }
 
         $path = ltrim((string)$path, '/');
@@ -47,11 +71,19 @@ if (!function_exists('app_url')) {
 if (!function_exists('asset_url')) {
     function asset_url($path = '') {
         $p = ltrim((string)$path, '/');
-        if (strpos($p, 'assets/') === 0) {
-            // caller already prefixed with 'assets/' - avoid duplication
+        
+        // If path already starts with 'src/assets/', use it as-is
+        if (strpos($p, 'src/assets/') === 0) {
             return app_url($p);
         }
-        return app_url('assets/' . $p);
+        
+        // If path starts with 'assets/', prepend 'src/'
+        if (strpos($p, 'assets/') === 0) {
+            return app_url('src/' . $p);
+        }
+        
+        // Otherwise add full 'src/assets/' prefix
+        return app_url('src/assets/' . $p);
     }
 }
 

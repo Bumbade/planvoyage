@@ -69,7 +69,7 @@ function _build_config(): array
 
         // ========== Database (MySQL) ==========
         'db' => [
-            'host'     => env('DB_HOST', '192.168.178.115'),
+            'host'     => env('DB_HOST', '192.168.178.2'),
             'port'     => (int)env('DB_PORT', '3306'),
             'name'     => env('DB_NAME', 'travel_planner_v4'),
             'user'     => env('DB_USER', 'travel'),
@@ -237,7 +237,29 @@ function api_base_url(): string
 {
     $base = config('app.base');
     $base = rtrim($base, '/');
-    return $base !== '' ? $base . '/api' : '/api';
+
+    // If APP_BASE is set use it. Otherwise attempt to derive the application
+    // base path from the current script location so URLs include any folder
+    // components (e.g. /Allgemein/planvoyage_V2). This avoids missing
+    // path segments when the environment variable isn't configured.
+    if ($base !== '') {
+        // Prefer direct API paths under src/api (avoid index.php in URLs)
+        return rtrim($base, '/') . '/src/api';
+    }
+
+    // Try to derive from SCRIPT_NAME or PHP_SELF: expect path like
+    // /Allgemein/planvoyage_V2/src/index.php -> we want /Allgemein/planvoyage_V2
+    $script = $_SERVER['SCRIPT_NAME'] ?? $_SERVER['PHP_SELF'] ?? '';
+    if ($script !== '') {
+        $maybeBase = dirname(dirname($script));
+        if ($maybeBase === '/' || $maybeBase === '.' || $maybeBase === '\\') {
+            $maybeBase = '';
+        }
+        return rtrim($maybeBase, '/') . '/src/api';
+    }
+
+    // Fallback to previous behaviour
+    return '/src/api';
 }
 
 /**

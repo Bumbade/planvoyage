@@ -1,0 +1,37 @@
+{"ts":"2025-12-22T15:00:32+00:00","pid":31,"entry":{"location_id":48,"osm_id":"13116912321","previous":{"type":"Charging_station","logo":null},"changes":{"type_val":"Charging Station","logo_val":"charging.png"}}}
+{"ts":"2025-12-22T15:07:11+00:00","pid":33,"entry":{"location_id":51,"osm_id":"11470394429","previous":{"type":"Charging_station","logo":null},"changes":{"type_val":"Charging Station","logo_val":"charging.png"}}}
+{"ts":"2025-12-22T15:20:11+00:00","pid":52,"entry":{"location_id":54,"osm_id":"541721931","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-22T15:57:54+00:00","pid":84,"entry":{"location_id":61,"osm_id":"193984471","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-23T07:41:48+00:00","pid":28,"entry":{"location_id":65,"osm_id":"2722209323","previous":{"type":"Pub","logo":null},"changes":{"type_val":"Nightlife","logo_val":"nightlife.png"}}}
+{"ts":"2025-12-23T09:19:41+00:00","pid":183,"entry":{"location_id":68,"osm_id":"243668170","previous":{"type":"Restaurant","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-23T12:12:21+00:00","pid":45,"entry":{"location_id":70,"osm_id":"534915696","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-26T15:17:27+00:00","pid":147,"entry":{"location_id":71,"osm_id":"12075140669","previous":{"type":"Restaurant","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-26T15:28:19+00:00","pid":156,"entry":{"location_id":72,"osm_id":"462275616","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-26T16:31:34+00:00","pid":162,"entry":{"location_id":74,"osm_id":"13289255017","previous":{"type":"Cannabis","logo":null},"changes":{"type_val":"Cannabis","logo_val":"Cannabis.png"}}}
+{"ts":"2025-12-26T16:32:01+00:00","pid":224,"entry":{"location_id":75,"osm_id":"13262827286","previous":{"type":"Cannabis","logo":null},"changes":{"type_val":"Cannabis","logo_val":"Cannabis.png"}}}
+{"ts":"2025-12-28T08:53:58+00:00","pid":472,"entry":{"location_id":79,"osm_id":"310614125","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-28T09:13:43+00:00","pid":487,"entry":{"location_id":80,"osm_id":"883378920","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-28T09:24:27+00:00","pid":530,"entry":{"location_id":81,"osm_id":"7140625973","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-28T09:56:12+00:00","pid":545,"entry":{"location_id":82,"osm_id":"2441082715","previous":{"type":"Hotel","logo":null},"changes":{"type_val":"Hotel","logo_val":"hotel.png"}}}
+{"ts":"2025-12-28T14:30:50+00:00","pid":666,"entry":{"location_id":83,"osm_id":"12774575671","previous":{"type":"Fast_food","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-28T14:31:20+00:00","pid":664,"entry":{"location_id":84,"osm_id":"8170028356","previous":{"type":"Restaurant","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-28T14:33:46+00:00","pid":666,"entry":{"location_id":89,"osm_id":"3537391893","previous":{"type":"Cannabis","logo":null},"changes":{"type_val":"Cannabis","logo_val":"Cannabis.png"}}}
+{"ts":"2025-12-28T14:40:01+00:00","pid":661,"entry":{"location_id":90,"osm_id":"408870781","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-28T14:41:55+00:00","pid":707,"entry":{"location_id":92,"osm_id":"7993620658","previous":{"type":"Viewpoint","logo":null},"changes":{"type_val":"Attraction","logo_val":"Attractions.png"}}}
+{"ts":"2025-12-28T14:54:55+00:00","pid":637,"entry":{"location_id":93,"osm_id":"10740325155","previous":{"type":"Fast_food","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-28T14:57:28+00:00","pid":733,"entry":{"location_id":94,"osm_id":"229501955","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-28T15:05:20+00:00","pid":658,"entry":{"location_id":95,"osm_id":"676667335","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-28T15:05:48+00:00","pid":664,"entry":{"location_id":96,"osm_id":"287957667","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-28T15:13:16+00:00","pid":661,"entry":{"location_id":97,"osm_id":"6652969835","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-28T21:10:39+00:00","pid":129,"entry":{"location_id":99,"osm_id":"4855724","previous":{"type":"poi","logo":null},"changes":{"type_val":"natureparks","logo_val":"national_park.png"}}}
+{"ts":"2025-12-28T21:18:05+00:00","pid":148,"entry":{"location_id":100,"osm_id":"75464706","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-29T20:30:17+00:00","pid":828,"entry":{"location_id":101,"osm_id":"602744164","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-29T20:49:07+00:00","pid":853,"entry":{"location_id":102,"osm_id":"409132598","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2025-12-29T20:51:00+00:00","pid":861,"entry":{"location_id":104,"osm_id":"5618377421","previous":{"type":"Restaurant","logo":null},"changes":{"type_val":"Food","logo_val":"food.png"}}}
+{"ts":"2025-12-29T21:32:12+00:00","pid":960,"entry":{"location_id":106,"osm_id":"409132598","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2026-01-04T12:06:21+00:00","pid":47,"entry":{"location_id":108,"osm_id":"703754423","previous":{"type":"Clock","logo":null},"changes":{"type_val":"Attraction","logo_val":"Attractions.png"}}}
+{"ts":"2026-01-05T13:55:27+00:00","pid":71,"entry":{"location_id":110,"osm_id":"884566464","previous":{"type":"Camp_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2026-01-05T15:20:40+00:00","pid":51,"entry":{"location_id":111,"osm_id":"1170553812","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2026-01-05T15:21:29+00:00","pid":82,"entry":{"location_id":112,"osm_id":"11588926","previous":{"type":"poi","logo":null},"changes":{"type_val":"natureparks","logo_val":"national_park.png"}}}
+{"ts":"2026-01-05T15:27:39+00:00","pid":94,"entry":{"location_id":113,"osm_id":"1354908272","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}
+{"ts":"2026-01-05T15:28:07+00:00","pid":162,"entry":{"location_id":114,"osm_id":"1354910003","previous":{"type":"Caravan_site","logo":null},"changes":{"type_val":"Campground","logo_val":"campground.png"}}}

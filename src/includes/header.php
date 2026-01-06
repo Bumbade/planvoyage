@@ -117,6 +117,21 @@ if (!function_exists('view_url')) {
             }
             $appBase = $base;
         }
+        // If $appBase is still empty, try to derive the web-path of the
+        // application by comparing SCRIPT_FILENAME with DOCUMENT_ROOT. This
+        // helps when the server's SCRIPT_NAME lacks the mount point but the
+        // filesystem layout reveals the app folder (e.g. /Allgemein/planvoyage_V2).
+        if (empty($appBase)) {
+            $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT'])) : '';
+            $scriptFile = isset($_SERVER['SCRIPT_FILENAME']) ? str_replace('\\', '/', realpath($_SERVER['SCRIPT_FILENAME'])) : '';
+            if ($docRoot && $scriptFile && strpos($scriptFile, $docRoot) === 0) {
+                $appDir = dirname(dirname($scriptFile));
+                $rel = substr($appDir, strlen($docRoot));
+                $rel = '/' . trim(str_replace('\\', '/', $rel), '/');
+                if ($rel === '/') $rel = '';
+                $appBase = $rel;
+            }
+        }
         
         // Compute JS base
         $norm = rtrim($appBase, '/');
@@ -128,11 +143,17 @@ if (!function_exists('view_url')) {
             $jsBase = $norm . '/src';
         }
         
-        // Compute API base
-        $apiCandidate = function_exists('api_url') ? rtrim(api_url(''), '/') : '';
-        if (empty($apiCandidate) || $apiCandidate === '/') {
-            $apiBase = preg_replace('#/src$#', '', $jsBase) ?: '/';
+        // Compute API base (direct to src/api, avoid index.php in URLs)
+        $baseNoSrc = preg_replace('#/src$#', '', $norm);
+        if ($baseNoSrc === '') {
+            $apiBase = '/src/api';
         } else {
+            $apiBase = rtrim($baseNoSrc, '/') . '/src/api';
+        }
+        // If an explicit api_url() is configured, prefer it but strip any index.php
+        $apiCandidate = function_exists('api_url') ? rtrim(api_url(''), '/') : '';
+        if (!empty($apiCandidate) && $apiCandidate !== '/') {
+            $apiCandidate = preg_replace('#/index\.php#', '', $apiCandidate);
             $apiBase = $apiCandidate;
         }
         ?>

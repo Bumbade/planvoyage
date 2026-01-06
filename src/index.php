@@ -103,6 +103,18 @@ $router->get('/api/locations/search', function () {
     require_once __DIR__ . '/api/locations/search.php';
 })
     ->name('api.locations.search');
+
+// Expose distinct values endpoint used by frontend filters
+$router->get('/api/locations/distinct.php', function () {
+    require_once __DIR__ . '/api/locations/distinct.php';
+})
+    ->name('api.locations.distinct');
+
+// OSRM route proxy endpoint (expects POST)
+$router->post('/api/route/osrm_route.php', function () {
+    require_once __DIR__ . '/api/route/osrm_route.php';
+})
+    ->name('api.route.osrm');
 // ============================================
 // Locations Routes
 // ============================================
@@ -345,7 +357,7 @@ $router->get('/', function () {
             }
         </style>
         <div class="home-logo-container">
-            <img src="<?php echo htmlspecialchars(app_url('assets/logos/PlanVoyage-Logo_400.png')); ?>" alt="PlanVoyage Logo">
+            <img src="<?php echo htmlspecialchars(asset_url('logos/PlanVoyage-Logo_400.png')); ?>" alt="PlanVoyage Logo">
         </div>
         <div class="home-content">
             <h1><?php echo htmlspecialchars(t('site_title', 'PlanVoyage.de')); ?></h1>

@@ -1,0 +1,2 @@
+This runtime log has been archived to `_dev/logs_archive/app.log`.
+Please do not commit runtime logs to the repository; they are now ignored via `.gitignore`.
